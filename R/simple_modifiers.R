@@ -1,0 +1,116 @@
+
+# paste asteriks to significant results
+paste_p <- function(x, p) {
+
+  # Obtain asteriks based on significance
+  asteriks <- dplyr::case_when(
+    p < 0.05 & p >= 0.01 ~ "*",
+    p < 0.01 & p >= 0.001 ~ "**",
+    p < 0.001 ~ "***",
+    .default = ""
+  )
+
+  # Paste asteriks
+  result <- paste0(x, asteriks)
+
+  return(result)
+
+}
+
+
+format_dec <-  function(x, digits = 2, comma = T) {
+
+  decimal <- if (comma)  "," else "."
+  round(x, digits = digits) %>%
+    formatC(digits = digits, format = "f", decimal.mark = decimal)
+}
+
+
+
+
+
+#' Return more elements of an object
+#'
+#' print_rows is a wrapper around head with the default number of printed elements
+#' increased
+#'
+#' @param x an R object
+#' @param n number of elements to be printed
+#'
+#' @returns object of the same type as x
+#'
+#' @export
+head_more <- function(x, n = 25) {
+
+  if(tibble::is_tibble(x)) {print(x, n = n)
+
+  } else {head(x, n = n)}
+
+  }
+
+
+
+#' reverse the values of a numeric vector
+#'
+#' reverse() takes a numeric vector and returns
+#'
+#'
+#' @export
+reverse <- function(x, range = c(1, 5)) {
+  stopifnot(length(range) == 2)
+  range <- range[1]:range[2]
+  plyr::mapvalues(x, range, sort(range, decreasing = TRUE))
+}
+
+#' Concatenate two numeric vectors
+#'
+#' `str_stat` concatenates two numeric vectors into a character vector such that the
+#' values from the second vector are in parentheses.
+#'
+#' The main purpose of the function is to provide an easy and quick way to create output that is
+#' compatible with APA table formatting standards.
+#'
+#' @param x,y A pair of numeric vector. y is put in parenthesis
+#' @param .round Controls the rounding of both vectors
+#' @param percent Adds percent character in the parenthesis
+#' @param comma Turns the decimal mark into a comma
+#' @returns A character vector.
+#' @examples
+#' x <- c(10.10, 11.55, 12.80)
+#' y <- c(85.160, 19.840, 45.401)
+#' str_stat(x, y)
+#' str_stat(x, y, percent = T)
+#' str_stat(x, y, comma = F)
+#'
+#' @export
+str_stat <- function(x, y, .round = c(2, 2), percent = F, comma = T) {
+
+  if (percent) {per <- "%"} else {per <- ""}
+
+  result <- stringr::str_c(formatC(round(x, .round[1]), digits = .round[1], format = "f"),
+                           " (",
+                           formatC(round(y, .round[2]), digits = .round[2], format = "f"),
+                           per,
+                           ")")
+
+  if (comma) {stringr::str_replace_all(result, "[.]", ",")} else {result}
+}
+
+
+#' Round numeric vectors in a data frame
+#'
+#' round_df() takes a data frame and rounds of all its numeric vectors to the specified
+#' number of decimal places (default = 0).
+#'
+#' @param df a data frame.
+#' @param digits integer indicating the decimal place of the rounding.
+#'
+#' @returns an object of the same type as df. The general order of rows and columns is
+#' maintained.
+#'
+#' @export
+
+round_df <- function(df, digits = 3) {
+  dplyr::mutate(df, dplyr::across(where(is.double), ~round(., digits = digits)))
+}
+
