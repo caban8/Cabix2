@@ -295,10 +295,15 @@ reg_mod(model1)
 
 signif_coef(model1, standarize = T)
 
+
 reg_hier(list(model1, model2, model3), standarize = F)
 
+
+
 reg_hier(list(model1, model2, model3), standarize = F) %>%
-  select()
+  t() %>%
+  tibble::as_tibble(rownames = "term") %>%
+  purrr::set_names(nm = c("term", paste0("mod", seq_along())))
 
 
 

@@ -25,9 +25,9 @@ reg_mod <- function(mod, digits = 2) {
                                 ~format_dec(., digits = digits))) %>%
     dplyr::mutate(
       statistic = stringr::str_c(statistic, " (", df, ", ", df.residual, ")"),
-      p.model = dplyr::if_else(p.value < 0.001, "<0.001", format_dec(p.value, 3)),
+      statistic = paste_p(statistic, p.value)
     ) %>%
-    dplyr::select(statistic, adj.r.squared, p.model) %>%
+    dplyr::select(statistic, adj.r.squared) %>%
     dplyr::mutate(term = "Ogólne oszacowanie")
 }
 
@@ -70,23 +70,33 @@ signif_coef <- function(model, standarize = TRUE, digits = 2) {
 }
 
 
-
+#' compute a linear hierarchical regression APA table
+#'
+#' @export
 reg_hier <- function(models, standarize = T, digits = 2) {
 
   # Obtain models' summaries
   mod_summaries <- models %>%
-    purrr::map_df(reg_mod)
+    purrr::map_df(reg_mod) %>%
+    dplyr::select(-term) %>%
+    dplyr::mutate(n = purrr::map_dbl(models, nobs), .before = 1) %>%
+    t() %>%
+    tibble::as_tibble(rownames = "term") %>%
+    purrr::set_names(nm = c("term", paste0("mod", seq_along(models))))
 
   # Obtain models' coefficients
   mod_coefs <- models %>%
     purrr::map(signif_coef) %>%
     purrr::map2(
       seq_along(models),
-      function(x, lab) {purrr::set_names(x, c("value", paste0("mod", lab)))}
+      function(x, lab) {purrr::set_names(x, c("term", paste0("mod", lab)))}
       ) %>%
     purrr::reduce(dplyr::full_join)
 
-  return(mod_summaries)
+  # Connect summaries and coefficients dfs
+  result <- dplyr::add_row(mod_coefs, mod_summaries)
+
+  return(result)
 
 }
 
