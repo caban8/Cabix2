@@ -54,13 +54,16 @@ signif_coef <- function(model, standarize = TRUE, digits = 2) {
 
   # Standardize if
   if (standarize) {coefs <- lm.beta::lm.beta(model) %>%
-    broom::tidy() %>%
-    dplyr::mutate(estimate = std_estimate)
-  } else {coefs <- lm.beta::lm.beta(model) %>% broom::tidy()}
+    broom::tidy(conf.int = T) %>%
+    dplyr::mutate(estimate = round(std_estimate, digits))
+  } else {coefs <- lm.beta::lm.beta(model) %>%
+    broom::tidy(conf.int = T) %>%
+    dplyr::mutate(estimate = paste0(round(estimate, digits), " (", round(std.error, digits), ")"))
+  }
 
   # Obtain coefficients with asteriks
   result <- coefs %>%
-    dplyr::mutate(estimate = paste_p(round(estimate, digits), p.value)) %>%
+    dplyr::mutate(estimate = paste_p(estimate, p.value)) %>%
     dplyr::slice(-1) %>%
     dplyr::select(term, estimate)
 
@@ -70,28 +73,51 @@ signif_coef <- function(model, standarize = TRUE, digits = 2) {
 }
 
 
-#' compute a linear hierarchical regression APA table
+#' compute a hierarchical linear regression APA table
 #'
 #' @export
-reg_hier <- function(models, standarize = T, digits = 2) {
+reg_hier <- function(models, standarize = T, digits = 2, labels = NULL) {
+
+
+
+
+  # Obtain models' comparisons
+  mod_comparisons <- do.call(anova, models) %>%
+    tibble::as_tibble() %>%
+    dplyr::mutate(
+      F_change = stringr::str_c(round(F, 2), " (", Df, ", ", Res.Df, ")"),
+      F_change = paste_p(F_change, `Pr(>F)`)
+    ) %>%
+    dplyr::pull(F_change) %>%
+    stringr::str_replace("NA", "")
+
+
 
   # Obtain models' summaries
   mod_summaries <- models %>%
     purrr::map_df(reg_mod) %>%
     dplyr::select(-term) %>%
-    dplyr::mutate(n = purrr::map_dbl(models, nobs), .before = 1) %>%
+    dplyr::mutate(
+      N = purrr::map_dbl(models, nobs),
+      F_change = mod_comparisons,
+      .before = 1
+      ) %>%
     t() %>%
     tibble::as_tibble(rownames = "term") %>%
+    dplyr::mutate(term = c("N", "F-change", "F", "Adj. R\U000B2")) %>%
     purrr::set_names(nm = c("term", paste0("mod", seq_along(models))))
 
   # Obtain models' coefficients
   mod_coefs <- models %>%
-    purrr::map(signif_coef) %>%
+    purrr::map(signif_coef, standarize = standarize) %>%
     purrr::map2(
       seq_along(models),
       function(x, lab) {purrr::set_names(x, c("term", paste0("mod", lab)))}
       ) %>%
     purrr::reduce(dplyr::full_join)
+
+  # Add user defined labels
+  if (!is.null(labels)) {mod_coefs$term <- labels}
 
   # Connect summaries and coefficients dfs
   result <- dplyr::add_row(mod_coefs, mod_summaries)

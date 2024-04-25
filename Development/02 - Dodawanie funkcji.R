@@ -7,7 +7,7 @@
   # recommend binding this to a keyboard shortcut; we use Ctrl/Cmd + T.
 
 
-
+library(devtools)
 
 # Chi square analysis -----------------------------------------------------
 
@@ -28,10 +28,6 @@ use_r("startup")
 
 
 # Funkcja do szybkiego i tabelkowego obliczania mean i sd -----------------
-
-
-
-
 
 
 
@@ -134,6 +130,13 @@ use_test("one_sample")
 
 use_r("multiple_comparisons_bg2")
 use_test("multiple_comparisons_bg2")
+
+
+
+# Factor analysis functions -----------------------------------------------
+
+use_r("factor_analysis_functions")
+use_test("factor_analysis_functions")
 
 
 # Mediation and moderation ------------------------------------------------

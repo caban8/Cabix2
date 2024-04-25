@@ -27,7 +27,7 @@ purrr::walk(pakiety, use_package)
 
 
 document()
-
+install()
 
 file.edit("DESCRIPTION")
 file.edit("NAMESPACE")

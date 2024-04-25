@@ -5,12 +5,12 @@
 #' Compute one-sample test
 one_helper <- function(df, formula, mu = 0, test = c("t_test", "wilcoxon")) {
 
-  test <- test[1]
-  stopifnot(test == "t_test" | test == "wilcoxon")
+test <- test[1]
+stopifnot(test == "t_test" | test == "wilcoxon")
 
-  if (test == "t_test")  {t_Test(df = df, formula = formula, mu = mu)
-  } else if (test == "wilcoxon") {wilcox_Test(df = df, formula = formula, mu = mu)
-  }
+if (test == "t_test")  {t_Test(df = df, formula = formula, mu = mu)
+} else if (test == "wilcoxon") {wilcox_Test(df = df, formula = formula, mu = mu)
+}
 
 
 }

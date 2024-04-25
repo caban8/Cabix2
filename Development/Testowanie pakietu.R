@@ -293,10 +293,31 @@ model2 <- lm(mpg ~ disp + drat + cyl + hp, data = mtcars)
 model3 <- lm(mpg ~ disp + drat + cyl + hp + gear + carb, data = mtcars)
 reg_mod(model1)
 
+
 signif_coef(model1, standarize = T)
+signif_coef(model1, standarize = F)
 
 
-reg_hier(list(model1, model2, model3), standarize = F)
+
+all_models <- list(model1, model2, model3)
+
+
+
+do.call(anova, all_models) %>%
+  tibble::as_tibble() %>%
+  dplyr::mutate(
+    F_change = stringr::str_c(round(F, 2), " (", Df, ", ", Res.Df, ")"),
+    F_change = paste_p(F_change, `Pr(>F)`)
+    ) %>%
+  dplyr::pull(F_change) %>%
+  stringr::str_replace("NA", "")
+
+
+rstatix::Anova(model1, model2) %>%
+  tibble::as_tibble()
+
+reg_hier(all_models, standarize = T)
+reg_hier(all_models, standarize = T, labels = paste("Predyktor", 1:6))
 
 
 

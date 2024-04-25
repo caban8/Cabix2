@@ -1,5 +1,7 @@
 
-# paste asteriks to significant results
+#' paste asteriks to significant results
+#'
+#' @export
 paste_p <- function(x, p) {
 
   # Obtain asteriks based on significance
@@ -12,6 +14,57 @@ paste_p <- function(x, p) {
 
   # Paste asteriks
   result <- paste0(x, asteriks)
+
+  return(result)
+
+}
+
+
+#' Change p-value to an APA format for table
+#'
+#' @export
+apa_p <- function(x, comma = T) {
+
+  # Set a decimal mark
+  decimal <- if (comma)  "," else "."
+
+  # Add a smaller sign when necessary
+  x <- dplyr::if_else(
+    x < 0.001,
+    paste0("<0", decimal ,"001"),
+    format_dec(x, digits = 3, comma = comma)
+    )
+
+  return(x)
+}
+
+#' Change p-value to an APA format for interpretation
+#'
+#' @export
+apa_p2 <- function(x, comma = T) {
+
+  # Set a decimal mark
+  decimal <- if (comma)  "," else "."
+
+  # Add a smaller sign when necessary
+  x <- dplyr::if_else(
+    x < 0.001,
+    paste0("< 0", decimal ,"001"),
+    paste0("= ", format_dec(x, digits = 3, comma = comma))
+    )
+
+  return(x)
+}
+
+
+#' Create an APA formated regression result
+#'
+#' @export
+apa_regression <- function(df1, df2, f, p, comma = T) {
+
+  result <- stringr::str_c("F(", df1, "; ", df2, ") = ", round(f, 2), "; p ", apa_p2(p, comma = comma))
+
+  if (comma) {result <- stringr::str_replace_all(result, "[.]", ",")}
 
   return(result)
 
@@ -110,7 +163,8 @@ str_stat <- function(x, y, .round = c(2, 2), percent = F, comma = T) {
 #'
 #' @export
 
-round_df <- function(df, digits = 3) {
-  dplyr::mutate(df, dplyr::across(where(is.double), ~round(., digits = digits)))
+round_df <- function(df, ..., digits = 3) {
+  df %>%
+    dplyr::mutate(dplyr::across(c(...), ~round(., digits = digits)))
 }
 
