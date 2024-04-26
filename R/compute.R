@@ -15,17 +15,26 @@
 #' @returns A numeric vector.
 #'
 #' @export
-compute_var <- function(..., type = c("mean", "sum", "count"), count = 1,  na.rm = T) {
+compute_var <- function(..., type = c("mean", "sum", "count"), count_element = 1,  na.rm = T) {
 
-  df <- data.frame(...)
-  type <- type[1]
+  # Determine the type of summarization
+  type <- match.arg(type)
 
-  if (type == "mean") {
-    rowMeans(df, na.rm = na.rm)
-  } else if (type == "sum") {
-    rowSums(df, na.rm = na.rm)
-  } else if (type == "count") {
-    purrr::map_df(df, is.element, count) %>% rowSums()
-  } else {stop("Error: unrecognizable type of summarization")}
+
+  # Select columns based on provided arguments
+  df_selected <- dplyr::cur_data() %>%
+    dplyr::select(...)
+
+
+  # Perform the appropriate computation based on the 'type'
+  result <- switch(
+    type,
+    mean = rowMeans(df_selected, na.rm = na.rm),
+    sum = rowSums(df_selected, na.rm = na.rm),
+    count = purrr::map_df(df_selected, is.element, count_element) %>% rowSums(),
+    stop("Error: unrecognizable type of summarization")
+  )
+
+  return(result)
 
 }
