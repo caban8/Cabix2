@@ -115,7 +115,7 @@ wilcox_Test <- function(df, formula, mu = 0) {
                         mu = mu,
                         correct = F,
                         exact = F)
-  result <- tibble::tibble(statistic = qnorm(result$p.value / 2),
+  result <- tibble::tibble(statistic = round(qnorm(result$p.value / 2), 2),
                            p = result$p.value)
   efekt <- rstatix::wilcox_effsize(df, formula, mu = mu) %>%
     dplyr::select(effsize)
@@ -136,7 +136,7 @@ kruskal_Test <- function(df, formula) {
   result <- tibble::add_column(result, efekt)
 
   result <- dplyr::mutate(result,
-                          stat_df = str_stat(statistic, df, .round = c(2, 0), comma = F),
+                          stat_df = str_stat(round(statistic, 2), df, .round = c(2, 0), comma = F),
                           effsize = round(effsize, 2))
   dplyr::select(result, stat_df, p, effsize)
 

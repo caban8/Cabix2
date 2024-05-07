@@ -41,7 +41,7 @@ apa_p <- function(x, comma = T) {
 #' Change p-value to an APA format for interpretation
 #'
 #' @export
-apa_p2 <- function(x, comma = T) {
+apa_p2 <- function(x, comma = T, digits = 3) {
 
   # Set a decimal mark
   decimal <- if (comma)  "," else "."
@@ -49,8 +49,8 @@ apa_p2 <- function(x, comma = T) {
   # Add a smaller sign when necessary
   x <- dplyr::if_else(
     x < 0.001,
-    paste0("< 0", decimal ,"001"),
-    paste0("= ", format_dec(x, digits = 3, comma = comma))
+    paste0("\U01D631 < 0", decimal ,"001"),
+    paste0("\U01D631 = ", format_dec(round(x, digits), digits = digits, comma = comma))
     )
 
   return(x)
@@ -62,7 +62,7 @@ apa_p2 <- function(x, comma = T) {
 #' @export
 apa_regression <- function(df1, df2, f, p, comma = T) {
 
-  result <- stringr::str_c("F(", df1, "; ", df2, ") = ", round(f, 2), "; p ", apa_p2(p, comma = comma))
+  result <- stringr::str_c("\U01D60D(", df1, "; ", df2, ") = ", round(f, 2), "; \U01D631 ", apa_p2(p, comma = comma))
 
   if (comma) {result <- stringr::str_replace_all(result, "[.]", ",")}
 
@@ -79,6 +79,18 @@ format_dec <-  function(x, digits = 2, comma = T) {
 }
 
 
+#' Create an APA formatted chi-square result
+#'
+#' @export
+apa_chi <- function(df, chi, p, comma = T) {
+
+  result <- stringr::str_c("\U{03C7}\U{00B2}(", df, ") = ", round(chi, 2), "; ", apa_p2(p, comma = comma))
+
+  if (comma) {result <- stringr::str_replace_all(result, "[.]", ",")}
+
+  return(result)
+
+}
 
 
 
