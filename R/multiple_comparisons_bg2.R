@@ -78,7 +78,6 @@ aov2_posthoc <- function(df, DV, IV1, IV2 = NULL, p.adj = "bonferroni") {
 
   result <- df %>%
     rstatix::emmeans_test(formula, p.adjust.method = p.adj) %>%
-    dplyr::filter(p.adj <= 0.05) %>%
     dplyr::mutate(group1 = dplyr::if_else(statistic > 0, paste0(group1, "*"), group1),
                   group2 = dplyr::if_else(statistic < 0, paste0(group2, "*"), group2),
                   p.adj = round(p.adj,3)) %>%

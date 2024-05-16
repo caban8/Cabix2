@@ -20,6 +20,22 @@ paste_p <- function(x, p) {
 }
 
 
+#' Format mean and standard deviation in an APA format
+#'
+#' @export
+apa_msd <- function(mean, sd, comma = T) {
+
+
+  # Format both statistics
+  x <- paste0("(*M* = ", round(mean, 2), "; *SD* = ", round(sd, 2), ")")
+
+  #
+  if (comma)  {x <- stringr::str_replace_all(x, "[.]", ",")}
+
+  return(x)
+
+}
+
 #' Change p-value to an APA format for table
 #'
 #' @export
@@ -49,8 +65,8 @@ apa_p2 <- function(x, comma = T, digits = 3) {
   # Add a smaller sign when necessary
   x <- dplyr::if_else(
     x < 0.001,
-    paste0("\U01D631 < 0", decimal ,"001"),
-    paste0("\U01D631 = ", format_dec(round(x, digits), digits = digits, comma = comma))
+    paste0("*p* < 0", decimal ,"001"),
+    paste0("*p* = ", format_dec(round(x, digits), digits = digits, comma = comma))
     )
 
   return(x)
@@ -62,7 +78,7 @@ apa_p2 <- function(x, comma = T, digits = 3) {
 #' @export
 apa_regression <- function(df1, df2, f, p, comma = T) {
 
-  result <- stringr::str_c("\U01D60D(", df1, "; ", df2, ") = ", round(f, 2), "; \U01D631 ", apa_p2(p, comma = comma))
+  result <- stringr::str_c("*F*(", df1, "; ", df2, ") = ", round(f, 2), "; ", apa_p2(p, comma = comma))
 
   if (comma) {result <- stringr::str_replace_all(result, "[.]", ",")}
 
