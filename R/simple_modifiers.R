@@ -73,6 +73,19 @@ apa_p2 <- function(x, comma = T, digits = 3) {
 }
 
 
+#' Create an APA formated t-test result
+#'
+#' @export
+apa_ttest <- function(df, t, p, cohen, comma = T) {
+
+  result <- stringr::str_c("*t*(", round(df, 1), ") = ", round(t, 2), "; ", apa_p2(p, comma = comma), "; *d* = ", round(cohen, 2))
+
+  if (comma) {result <- stringr::str_replace_all(result, "[.]", ",")}
+
+  return(result)
+
+}
+
 #' Create an APA formated regression result
 #'
 #' @export

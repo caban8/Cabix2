@@ -21,6 +21,10 @@ library(Bazy)
 Bazy::szczescie$stancyw %>%
   spss_drop(values = c(3:7))
 
+t_niezalezne %>% var_labels(Grupa)
+t_niezalezne %>%
+  plot_bar(COPE_skala1, COPE_skala2, COPE_skala3, IV = Grupa)
+
 
 
 # spss labelled -----------------------------------------------------------
