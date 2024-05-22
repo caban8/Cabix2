@@ -25,7 +25,16 @@ iris %>%
 
 iris %>%
   tibble::as.tibble() %>%
-  emm_mixed(bg = Species, Sepal.Length, Sepal.Width)
+  emm_mixed(bg = Species, Sepal.Width, Sepal.Length)
+
+Bazy::szczescie %>%
+  emm_mixed(bg = alkohol, godz_zakł, godz_fak)
+
+Bazy::szczescie %>%
+  emm_mixed(bg = alkohol,  godz_fak, godz_zakł)
+
+Bazy::szczescie %>%
+  plot_mixed(bg = alkohol,  godz_fak, godz_zakł)
 
 iris %>%
   tibble::as.tibble() %>%
