@@ -14,6 +14,25 @@ library(devtools)
 
 
 
+# plot mixed design -------------------------------------------------------
+
+
+library(Bazy)
+
+iris %>%
+  tibble::as.tibble() %>%
+  make_within(bg = Species, Sepal.Length, Sepal.Width)
+
+iris %>%
+  tibble::as.tibble() %>%
+  emm_mixed(bg = Species, Sepal.Length, Sepal.Width)
+
+iris %>%
+  tibble::as.tibble() %>%
+  plot_mixed(bg = Species, Sepal.Length, Sepal.Width)
+
+
+
 # spss drop ---------------------------------------------------------------
 
 library(Bazy)
@@ -22,8 +41,6 @@ Bazy::szczescie$stancyw %>%
   spss_drop(values = c(3:7))
 
 t_niezalezne %>% var_labels(Grupa)
-t_niezalezne %>%
-  plot_bar(COPE_skala1, COPE_skala2, COPE_skala3, IV = Grupa)
 
 
 
