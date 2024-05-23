@@ -10,10 +10,10 @@ make_within <- function(data, bg, ...) {
     dplyr::select({{bg}}, ...)
 
   # Prepate the dataframe
-  baza <- baza%>%
+  baza <- baza %>%
     dplyr::mutate(
       ID = dplyr::row_number(),
-      bg = haven::as_factor({{bg}})
+      bg = haven::as_factor(baza[[1]]) # This way string argument will also work
     )  %>%
     tidyr::pivot_longer(
       cols = c(...),
@@ -50,13 +50,14 @@ emm_mixed <- function(data, bg, ...) {
 #' Produce a plot for a mixed design ANOVA
 #'
 #' @export
-plot_mixed <- function(data, bg, ...) {
+plot_mixed <- function(data, bg, ..., width = 20) {
 
   # Obtain iv var
   iv_lab <- var_labels(data, {{bg}})
 
   # Obtain emmeans
-  emms <- emm_mixed(data, {{bg}}, ...)
+  emms <- emm_mixed(data, {{bg}}, ...) %>%
+    dplyr::mutate(within = stringr::str_wrap(within, width = width))
 
   # Obtain polot
   p <- emms %>%

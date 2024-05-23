@@ -14,6 +14,29 @@ library(devtools)
 
 
 
+
+# Multiple answers question -----------------------------------------------
+
+
+set.seed(1)
+letters2 <- letters[1:5]
+
+multiple_vec <- replicate(n = 10, expr = sample(letters2, size = 3, replace = F), simplify = F) %>%
+  purrr::map_chr(paste, collapse = ",")
+
+
+df_multiple <- tibble::tibble(
+  question1 = multiple_vec
+)
+
+df_multiple %>%
+  multiple_question(
+    question1,
+    possible_answers = c("a", "b", "c", "d", "e"),
+    index_names = "question1"
+    )
+
+
 # plot mixed design -------------------------------------------------------
 
 
@@ -21,7 +44,7 @@ library(Bazy)
 
 iris %>%
   tibble::as.tibble() %>%
-  make_within(bg = Species, Sepal.Length, Sepal.Width)
+  make_within(bg = "Species", Sepal.Length, Sepal.Width)
 
 iris %>%
   tibble::as.tibble() %>%
@@ -34,7 +57,7 @@ Bazy::szczescie %>%
   emm_mixed(bg = alkohol,  godz_fak, godz_zakł)
 
 Bazy::szczescie %>%
-  plot_mixed(bg = alkohol,  godz_fak, godz_zakł)
+  plot_mixed(bg = alkohol,  godz_fak, godz_zakł, width = 40)
 
 iris %>%
   tibble::as.tibble() %>%
