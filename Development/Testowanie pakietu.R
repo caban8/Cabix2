@@ -13,6 +13,17 @@ library(devtools)
 # !!!!
 
 
+# Plot bar many
+
+library(Bazy)
+
+t_niezalezne %>%
+  plot_bar(
+    COPE_skala1, COPE_skala2, COPE_skala5,
+    IV = Grupa
+  )
+
+
 
 
 # Multiple answers question -----------------------------------------------
@@ -51,13 +62,23 @@ iris %>%
   emm_mixed(bg = Species, Sepal.Width, Sepal.Length)
 
 Bazy::szczescie %>%
-  emm_mixed(bg = alkohol, godz_zakł, godz_fak)
+  emm_mixed(bg = alkohol, godz_zakł, godz_fak) %>%
+  dplyr::pull(within)
 
 Bazy::szczescie %>%
-  emm_mixed(bg = alkohol,  godz_fak, godz_zakł)
+  emm_mixed(bg = alkohol,  godz_fak, godz_zakł) %>%
+  dplyr::pull(within)
 
 Bazy::szczescie %>%
-  plot_mixed(bg = alkohol,  godz_fak, godz_zakł, width = 40)
+  plot_mixed(bg = alkohol,   godz_zakł, godz_fak)
+
+Bazy::szczescie %>%
+  plot_mixed(bg = alkohol,   godz_fak, godz_zakł)
+
+Bazy::szczescie %>%
+  plot_mixed(bg = alkohol,  godz_fak, godz_zakł, width = 40,
+             spss.lab = F, labels. = c("Alkohol", "1", "2")
+             )
 
 iris %>%
   tibble::as.tibble() %>%

@@ -29,10 +29,10 @@ make_within <- function(data, bg, ...) {
 #' Obtain emmeans for a mixed-design ANOVA
 #'
 #' @export
-emm_mixed <- function(data, bg, ...) {
+emm_mixed <- function(data, bg, ..., spss.lab = T, labels. = NULL) {
 
   # Extract vars
-  labs <- var_labels(data, {{bg}}, ...)
+  labs <- var_labels(data, {{bg}}, ..., spss.lab = spss.lab, labels. = labels.)
 
   # Prepate the dataframe
   baza <- make_within(data, {{bg}}, ...)
@@ -50,14 +50,17 @@ emm_mixed <- function(data, bg, ...) {
 #' Produce a plot for a mixed design ANOVA
 #'
 #' @export
-plot_mixed <- function(data, bg, ..., width = 20) {
+plot_mixed <- function(data, bg, ..., width = 20, spss.lab = T, labels. = NULL) {
 
   # Obtain iv var
   iv_lab <- var_labels(data, {{bg}})
 
   # Obtain emmeans
-  emms <- emm_mixed(data, {{bg}}, ...) %>%
-    dplyr::mutate(within = stringr::str_wrap(within, width = width))
+  emms <- emm_mixed(data, {{bg}}, ..., spss.lab = spss.lab, labels. = labels.) %>%
+    dplyr::mutate(
+      within_wrapped = stringr::str_wrap(within, width = width),
+      within_wrapped = forcats::fct_reorder(within_wrapped, as.double(within)) # Set the order comptabile with the order of the input
+      )
 
   # Obtain polot
   p <- emms %>%

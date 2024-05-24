@@ -5,7 +5,7 @@
 #' Create a bar plot for many dependent variables
 #'
 #' @export
-plot_bar <- function(data, ..., IV, spss.lab = TRUE, labels. = NULL) {
+plot_bar <- function(data, ..., IV, spss.lab = TRUE, labels. = NULL, width_wrap = 20) {
 
   # Obtain labels
   dv_labs <- var_labels(df = data, ... = ..., spss.lab = spss.lab, labels. = labels.)
@@ -13,16 +13,20 @@ plot_bar <- function(data, ..., IV, spss.lab = TRUE, labels. = NULL) {
 
 
 
-  # Create plot
-  plot <- data %>%
+  # Obtain means and ci
+  stats <- data %>%
     dplyr::mutate(IV = haven::as_factor({{IV}})) %>%
     dplyr::group_by(IV) %>%
     rstatix::get_summary_stats(...) %>%
     dplyr::mutate(
-      variable = plyr::mapvalues(variable, levels(variable), dv_labs),
-      variable = stringr::str_wrap(variable, width = 20)
-      ) %>%
-    ggplot2::ggplot(ggplot2::aes(variable, mean, fill = IV)) +
+      variable_wrap = plyr::mapvalues(variable, levels(variable), dv_labs),
+      variable_wrap = stringr::str_wrap(variable_wrap, width = width_wrap),
+      variable_wrap = forcats::fct_reorder(variable_wrap, as.double(variable)) # Set the order as in input
+    )
+
+  # Produce plot
+  plot <- stats %>%
+    ggplot2::ggplot(ggplot2::aes(variable_wrap, mean, fill = IV)) +
     ggplot2::geom_bar(
       stat = "identity",
       position = ggplot2::position_dodge(width = 0.9),
