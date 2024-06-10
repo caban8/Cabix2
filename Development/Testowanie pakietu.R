@@ -26,6 +26,18 @@ t_niezalezne %>%
 
 
 
+# apa functions -----------------------------------------------------------
+
+
+apa_msd(50.49535, 45.5543, comma = T)
+apa_msd(50.49535, 45.5543, comma = F)
+
+apa_anova(3, 75, 4.80342, 0.00004, 0.23)
+apa_anova(3, 75, 4.80342, 0.445, 0.23)
+
+
+
+
 # Multiple answers question -----------------------------------------------
 
 
@@ -73,7 +85,7 @@ Bazy::szczescie %>%
   plot_mixed(bg = alkohol,   godz_zakł, godz_fak)
 
 Bazy::szczescie %>%
-  plot_mixed(bg = alkohol,   godz_fak, godz_zakł)
+  plot_mixed(bg = alkohol,   godz_fak, godz_zakł, width = 29)
 
 Bazy::szczescie %>%
   plot_mixed(bg = alkohol,  godz_fak, godz_zakł, width = 40,

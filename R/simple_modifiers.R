@@ -1,4 +1,21 @@
 
+
+# Helper functions --------------------------------------------------------
+
+comma_if <- function(x, comma = T) {
+  if (comma) x <- stringr::str_replace_all(x, "[.]", ",") else x
+  }
+
+
+format_dec <-  function(x, digits = 2, comma = T) {
+
+  decimal <- if (comma)  "," else "."
+  round(x, digits = digits) %>%
+    formatC(digits = digits, format = "f", decimal.mark = decimal)
+}
+
+
+
 #' paste asteriks to significant results
 #'
 #' @export
@@ -27,10 +44,9 @@ apa_msd <- function(mean, sd, comma = T) {
 
 
   # Format both statistics
-  x <- paste0("(*M* = ", round(mean, 2), "; *SD* = ", round(sd, 2), ")")
+  x <- paste0("(*M* = ", round(mean, 2), "; *SD* = ", round(sd, 2), ")") %>%
+    comma_if(comma = comma)
 
-  #
-  if (comma)  {x <- stringr::str_replace_all(x, "[.]", ",")}
 
   return(x)
 
@@ -73,39 +89,47 @@ apa_p2 <- function(x, comma = T, digits = 3) {
 }
 
 
-#' Create an APA formated t-test result
+#' Create an APA formatted t-test result
 #'
 #' @export
 apa_ttest <- function(df, t, p, cohen, comma = T) {
 
-  result <- stringr::str_c("*t*(", round(df, 1), ") = ", round(t, 2), "; ", apa_p2(p, comma = comma), "; *d* = ", round(cohen, 2))
-
-  if (comma) {result <- stringr::str_replace_all(result, "[.]", ",")}
+  result <- stringr::str_c(
+    "*t*(", round(df, 1), ") = ", round(t, 2), "; ", apa_p2(p, comma = comma), "; *d* = ", round(cohen, 2)
+    ) %>%
+    comma_if(comma = comma)
 
   return(result)
 
 }
 
-#' Create an APA formated regression result
+#' Create an APA formatted regression result
 #'
 #' @export
 apa_regression <- function(df1, df2, f, p, comma = T) {
 
-  result <- stringr::str_c("*F*(", df1, "; ", df2, ") = ", round(f, 2), "; ", apa_p2(p, comma = comma))
+  result <- stringr::str_c("*F*(", df1, "; ", df2, ") = ", round(f, 2), "; ", apa_p2(p, comma = comma))  %>%
+    comma_if(comma = comma)
 
-  if (comma) {result <- stringr::str_replace_all(result, "[.]", ",")}
+  return(result)
+
+}
+
+#' Create an APA formatted anova result
+#'
+#' @export
+apa_anova <- function(df1, df2, f, p, eta, comma = T) {
+
+  result <- stringr::str_c(
+    "*F*(", df1, "; ", df2, ") = ", round(f, 2), "; ", apa_p2(p, comma = comma), "; \U03B7\U00B2 = ", round(eta, 2)
+    )  %>%
+    comma_if(comma = comma)
 
   return(result)
 
 }
 
 
-format_dec <-  function(x, digits = 2, comma = T) {
-
-  decimal <- if (comma)  "," else "."
-  round(x, digits = digits) %>%
-    formatC(digits = digits, format = "f", decimal.mark = decimal)
-}
 
 
 #' Create an APA formatted chi-square result
@@ -113,9 +137,8 @@ format_dec <-  function(x, digits = 2, comma = T) {
 #' @export
 apa_chi <- function(df, chi, p, comma = T) {
 
-  result <- stringr::str_c("\U{03C7}\U{00B2}(", df, ") = ", round(chi, 2), "; ", apa_p2(p, comma = comma))
-
-  if (comma) {result <- stringr::str_replace_all(result, "[.]", ",")}
+  result <- stringr::str_c("\U{03C7}\U{00B2}(", df, ") = ", round(chi, 2), "; ", apa_p2(p, comma = comma))  %>%
+    comma_if(comma = comma)
 
   return(result)
 

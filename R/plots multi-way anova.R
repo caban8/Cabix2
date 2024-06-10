@@ -64,7 +64,7 @@ plot_mixed <- function(data, bg, ..., width = 20, spss.lab = T, labels. = NULL) 
 
   # Obtain polot
   p <- emms %>%
-    ggplot2::ggplot(ggplot2::aes(within, emmean, fill = bg)) +
+    ggplot2::ggplot(ggplot2::aes(within_wrapped, emmean, fill = bg)) +
     ggplot2::geom_bar(
       stat = "identity",
       position = ggplot2::position_dodge(width = 0.9),
