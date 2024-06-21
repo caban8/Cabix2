@@ -1,4 +1,34 @@
 
+
+#' Obtain Cronbach's Alpha for selected items
+#'
+#' @export
+fa_reliability <- function(df, ..., skala = "Zmienna") {
+
+  # Select items
+  df <- df %>%
+    dplyr::select(...)
+
+  # Obtain alpha values
+  cronbach <- df %>%
+    psych::alpha() %>%
+    {.[[1]]}
+
+  # cronbach
+  result <- cronbach %>%
+    dplyr::mutate(
+      Skala = skala,
+      Liczba_pozycji = ncol(df),
+      raw_alpha = round(raw_alpha, 2),
+      .before = 1
+    ) %>%
+    dplyr::select(Skala, Liczba_pozycji, raw_alpha)
+
+  return(result)
+
+}
+
+
 #' Extract and sort factor loadings
 #'
 #' It takes a psych "fa" object and extract factor loadings in a nicely formatted way.

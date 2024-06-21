@@ -9,6 +9,22 @@
 
 library(devtools)
 
+
+
+# Missing Data functions --------------------------------------------------
+
+
+
+use_r("missing_data")
+use_test("missing_data")
+
+# Chi square one sample analysis ------------------------------------------
+
+use_r("chi_one")
+use_test("chi_one")
+
+
+
 # Chi square analysis -----------------------------------------------------
 
 use_r("chi_test")

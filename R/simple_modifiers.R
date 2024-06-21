@@ -52,6 +52,21 @@ apa_msd <- function(mean, sd, comma = T) {
 
 }
 
+#' Format median and iqr in an APA format
+#'
+#' @export
+apa_meIqr <- function(median, iqr, comma = T) {
+
+
+  # Format both statistics
+  x <- paste0("(*Me* = ", round(median, 2), "; *IQR* = ", round(iqr, 2), ")") %>%
+    comma_if(comma = comma)
+
+
+  return(x)
+
+}
+
 #' Change p-value to an APA format for table
 #'
 #' @export

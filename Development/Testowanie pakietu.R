@@ -13,9 +13,51 @@ library(devtools)
 # !!!!
 
 
-# Plot bar many
-
 library(Bazy)
+
+
+# Obtain NA ---------------------------------------------------------------
+
+Bazy::szczescie %>%
+  obtain_na()
+
+airquality %>%
+  obtain_na()
+
+
+
+# Chi single --------------------------------------------------------------
+
+set.seed(123)
+test_df <- data.frame(
+  A = sample(1:2, size = 100, replace = T),
+  B = sample(1:2, size = 100, replace = T),
+  C = sample(1:2, size = 100, replace = T),
+  X = sample(1:5, size = 100, replace = T)
+)
+
+
+test_df %>%
+  chi_single(A, B, C)
+
+test_df %>%
+  chi_single(A, B, X)
+
+test_df %>%
+  levels_equal()
+
+test_df[1:3] %>%
+  levels_equal()
+
+
+
+
+
+# Plot bar many -----------------------------------------------------------
+
+
+
+
 
 t_niezalezne %>%
   plot_bar(
@@ -31,6 +73,8 @@ t_niezalezne %>%
 
 apa_msd(50.49535, 45.5543, comma = T)
 apa_msd(50.49535, 45.5543, comma = F)
+apa_meIqr(50.49535, 45.5543, comma = F)
+apa_meIqr(50.49535, 45.5543, comma = T)
 
 apa_anova(3, 75, 4.80342, 0.00004, 0.23)
 apa_anova(3, 75, 4.80342, 0.445, 0.23)
