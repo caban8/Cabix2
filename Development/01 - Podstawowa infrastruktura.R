@@ -4,6 +4,8 @@
 use_testthat() #To na początku, dzięki temu dodaję strukturę i folder związanę z testowaniem funkcji
 use_testthat(edition = 3) # Poprawiam na wersję 3, ze względu na jej jakieś specjalne własciwości
 
+
+
 library(devtools)
 
 
