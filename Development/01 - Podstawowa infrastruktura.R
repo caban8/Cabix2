@@ -20,7 +20,8 @@ pakiety <- c("rstatix",
   "broom",
   "lm.beta",
   "plyr",
-  "purrr"
+  "purrr",
+  "rcompanion"
 )
 
 purrr::walk(pakiety, use_package)

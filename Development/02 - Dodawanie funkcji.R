@@ -131,6 +131,13 @@ use_test("descriptives")
 
 use_r("regressions")
 
+
+# Bootstrap correlations --------------------------------------------------
+
+
+use_r("bca_correlations")
+
+
 # Correlations ------------------------------------------------------------
 
 use_r("correlations")

@@ -1,8 +1,18 @@
 
 # Cykl developerski -------------------------------------------------------
 
+# Remove problematic packages
+remove.packages("pkgload")
+remove.packages("devtools")
+
+.libPaths()
+
 
 library(devtools)
+install.packages("pkgload")
+install.packages("usethis")
+install.packages("devtools", dependencies = T)
+
 
 # Ogólny test -------------------------------------------------------------
 

@@ -16,6 +16,52 @@ library(devtools)
 library(Bazy)
 
 
+# Bca correlation rank biserial -------------------------------------------
+
+
+wektor <- c(NA, 2, 4, 6, NA, 3, 4, 5, 2, 1, 5, 6, 7, 4, 3, 4, 1, 4, 5, 3)
+length(wektor)
+
+grupa <- c(
+  rep(0, length(wektor) / 2),
+  rep(1, length(wektor) / 2)
+)
+
+
+cor_bca(wektor, grupa, na.rm = T)
+cor_bca(wektor, grupa, na.rm = F)
+
+na.omit(wektor)
+wektor_clean <- na.omit(wektor)
+wektor_clean
+
+
+
+
+
+
+
+airquality
+
+
+
+mtcars %>%
+  rbcor_tab(
+    X = c(carb, gear),
+    G = c(vs, am)
+  )
+
+
+szczescie %>%
+  purrr::map_df(as.double)
+
+szczescie %>%
+  rbcor_tab(
+    X = c(zadowolenie_praca, zadowolenie_rodzina),
+    G = c(palenie, alkohol)
+    )
+
+
 # Obtain NA ---------------------------------------------------------------
 
 Bazy::szczescie %>%
