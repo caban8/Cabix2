@@ -11,6 +11,11 @@ library(devtools)
 
 
 
+# R project template 1 ----------------------------------------------------
+
+use_r("project_template_general")
+
+
 # Missing Data functions --------------------------------------------------
 
 

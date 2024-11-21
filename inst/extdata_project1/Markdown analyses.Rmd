@@ -1,0 +1,47 @@
+---
+title: "Untitled"
+author: Caban
+date: '`r Sys.Date()`'
+output:
+  html_document:
+    code_folding: hide
+    number_sections: yes
+    theme: lumen
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+
+# Set knitr options
+knitr::opts_chunk$set(
+  echo = T, 
+  fig.width=8, 
+  # fig.height=4, 
+  warning = F, 
+  dpi = 300,
+  message = F,
+  comment = NA, 
+  fig.showtext = TRUE
+  )
+
+
+
+
+
+if(!require('pacman')) {install.packages('pacman')}
+
+# Load all libraries
+pacman::p_load(showtext, ggcorrplot, pdp, modelr, xgboost, DT, readxl,leaps,furrr, rstatix, broom, bestglm, glmnet, leaps, car,  pROC, caret, tree, rpart, randomForest, rpart.plot, doParallel, tidyverse)
+
+
+# Set up parallel backend
+num_cores <- detectCores() - 1
+
+
+
+```

@@ -1,0 +1,4 @@
+Binding: make_project_spss
+Title: Create an SPSS-data based project
+Subtitle: Create a new project template in RStudio that has a structure useful for SPSS-data based analysis
+OpenFiles: SPSS analysis template.Rmd

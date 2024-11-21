@@ -35,5 +35,6 @@ check()
 
 # Może zrobić dependency na starszych wersjach tidyverse, ze względu na to, że zaczynają się pojawiać jakieś errory?
 
+library(devtools)
 document()
 install()
