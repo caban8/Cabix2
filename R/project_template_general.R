@@ -1,5 +1,10 @@
 
 
+# ideas -------------------------------------------------------------------
+
+# Dodać od razu odpalanie określonych bibliotek
+
+
 # Project templates -------------------------------------------------------
 
 
@@ -96,12 +101,20 @@ make_project_spss <- function(path) {
 
   }
 
+
+  file.rename(
+    file.path(path, "SPSS analysis template.Rmd"),
+    file.path(path, paste0(stringr::str_remove(path, ".*(?=\\/)\\/"), " - Markdown.Rmd"))
+  )
+
   # Handle gitignore
   unzip(file.path(path, "gitignore.zip"), overwrite = T, exdir = path)
   file.remove(file.path(path, "gitignore.zip"))
 
   # Setup Git
-  git_setup(path, files, folders = c("data", "R", "tests", "notebooks", "spss syntax"))
+  git_files <- add_folder_slash(path) %>%
+    stringr::str_subset(pattern = "materials/|results/", negate = T)
+  git_setup(path, files = git_files)
 }
 
 
@@ -122,7 +135,7 @@ make_project_spss <- function(path) {
 #' @export
 #' @examples
 #' git_setup(path = "~/myproject", files = c("script.R", "data.csv"), folders = "docs")
-git_setup <- function(path, files, folders) {
+git_setup <- function(path, files) {
 
 
   oldwd <- getwd()
@@ -133,22 +146,19 @@ git_setup <- function(path, files, folders) {
   files_to_add <- paste(
     c(
       ".gitignore",
-      "\"*.Rproj\"",
-      shQuote(files[files != "gitignore.zip"]),
-      shQuote(paste0(folders, "/"))
+      shQuote(files)
       ),
     collapse = " ")
 
-
   # Setup the git user name and email
-  shell('git config --global user.name "Caban"', intern = TRUE)
-  shell('git config --global user.email "caban8@gmail.com"', intern = TRUE)
+  system('git config --global user.name "Caban"', intern = TRUE)
+  system('git config --global user.email "caban8@gmail.com"', intern = TRUE)
 
 
 
   # Initialize Git Repository
   message("Initializing Git repository...")
-  shell("git init")
+  system("git init")
   message("Git repository initialized.")
 
 
@@ -156,13 +166,13 @@ git_setup <- function(path, files, folders) {
 
   # Step 4: Add files to Git
   message("Adding files to Git...")
-  shell(paste("git add", files_to_add))
+  system(paste("git add", files_to_add))
   message("Files added to Git.")
 
   # Step 5: Commit the changes
   message("Committing changes to Git...")
   commit_message <- "Initial commit with .gitignore"
-  shell(paste("git commit -m", shQuote(commit_message)))
+  system(paste("git commit -m", shQuote(commit_message)))
 
   message("Git repository setup complete!")
 
@@ -179,3 +189,11 @@ list_files <- function(folder) {
 
 
 
+
+add_folder_slash <- function(path) {
+
+  files <- list.files(path)
+
+  files <- dplyr::if_else(stringr::str_detect(files, "[.].*$"), files, paste0(files, "/"))
+
+}

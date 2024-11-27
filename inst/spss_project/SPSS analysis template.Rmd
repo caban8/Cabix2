@@ -138,8 +138,8 @@ hipotezy <- c(
 ```{r start}
 
 
-df <- haven::read_sav(Baza_nazwa)
-attach(df)
+baza <- haven::read_sav(Baza_nazwa)
+attach(baza)
 
 
 
