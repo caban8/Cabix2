@@ -11,6 +11,12 @@ library(devtools)
 
 
 
+# Mediation analysis ------------------------------------------------------
+
+use_r("mediation_analysis")
+use_test("mediation_analysis")
+
+
 # R project template 1 ----------------------------------------------------
 
 use_r("project_template_general")

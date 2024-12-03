@@ -16,6 +16,15 @@ library(devtools)
 library(Bazy)
 
 
+
+# mediacje ----------------------------------------------------------------
+
+
+mtcars %>%
+  mediate_own("mpg", "disp", "cyl", data = .) %>%
+  clean_mediation_results()
+
+
 # Bca correlation rank biserial -------------------------------------------
 
 

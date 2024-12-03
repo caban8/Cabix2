@@ -23,6 +23,9 @@ params:
 
 # Infrastruktura
 
+
+## Markdown Setup
+
 ```{r setup, include=FALSE}
 
 # Set figures and tables centralized options
@@ -100,7 +103,7 @@ vars_labs <- read_csv("results/codebooks/vars_labels.csv")
 
 ```
 
-### Tytuły tabelek
+## Tytuły tabelek
 
 
 ```{r captions, include=FALSE}
@@ -116,10 +119,10 @@ tabs <- map(tabs, function(x) {paste0(nline, x)})
 ```
 
 
-### Wektory referencyjne
+## Wektory referencyjne
 
 
-#### Hipotezy
+### Hipotezy
 
 
 
@@ -128,6 +131,36 @@ tabs <- map(tabs, function(x) {paste0(nline, x)})
 hipotezy <- c(
   "Hipoteza1"
 )
+
+```
+
+# Metoda
+
+Podstawowe informacje o metodzie badania
+
+## Plan działania 
+
+# Eksploracja
+
+NAJPIERW ZROBIĆ ANALIZĘ EKSPLORACJI
+
+-   Analiza częstości
+    -   Czy nie ma dziwnych względem wskaźnika wartości (np. odpowiedź "23" dla itema w skali 1 - 4)
+-   Box-plots
+-   Inne?
+
+
+
+```{r include=FALSE}
+
+# ANALIZA EKSPLORACYJNA
+
+# Sprawdzić, czy
+# Nie ma osób w wieku poniżej 18 lat
+# Nie ma ogólnie dziwnych wartości
+# Nie ma wartości ekstremalnych
+
+
 
 ```
 
@@ -151,20 +184,6 @@ tabelki <- opis_tabela(liczba = 10)
 ```
 
 
-```{r include=FALSE}
-
-# ANALIZA EKSPLORACYJNA
-
-# Sprawdzić, czy
-# Nie ma osób w wieku poniżej 18 lat
-# Nie ma ogólnie dziwnych wartości
-# Nie ma wartości ekstremalnych
-
-
-
-```
-
-
 
 
 ```{r include=include_opis}
@@ -180,15 +199,6 @@ Za próg istotności przyjęto *α* = 0,05.<br>
 
 <br>
 
-
-## Eksploracja
-
-NAJPIERW ZROBIĆ ANALIZĘ EKSPLORACJI
-
--   Analiza częstości
-    -   Czy nie ma dziwnych względem wskaźnika wartości (np. odpowiedź "23" dla itema w skali 1 - 4)
--   Box-plots
--   Inne?
 
 ## Statystyki opisowe
 
