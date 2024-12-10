@@ -1,3 +1,67 @@
+#' Extract a codebook from a data frame
+#'
+#' This function generates a codebook from a data frame, where the variable names are matched with their corresponding labels.
+#'
+#' @param data A data frame containing variables with labels.
+#' @return A tibble containing two columns: variable name (Nazwa) and corresponding label (Etykieta).
+#' @export
+#'
+#' @examples
+#' data <- data.frame(A = c(1, 2, 3),
+#'                    B = c('A', 'B', 'C'))
+#' attr(data$A, "label") <- "Numeric variable"
+#' attr(data$B, "label") <- "Character variable"
+#' extract_codebook(data)
+#'
+#' @import purrr
+#' @import tibble
+#' @import dplyr
+#'
+extract_codebook <- function(data) {
+
+  if (!is.data.frame(data)) stop("The input must be a data frame.")
+  if (any_Nlabelled(data)) warning("Not all variables are labelled. The codebook will contain NULLs.")
+
+
+
+  data %>%
+    names() %>%
+    purrr::set_names(purrr::map(data, attr, "label")) %>%
+    tibble::enframe(name = "Etykieta", value = "Nazwa") %>%
+    dplyr::select(Nazwa, Etykieta)
+}
+
+
+#' Assign variable labels to a data frame
+#'
+#' This function assigns variable labels to the columns of a data frame.
+#' The labels are stored as the "label" attribute of the variables.
+#'
+#' @param data A data frame where the variable labels will be assigned
+#' @param labs A named character vector where the names correspond to column names in the data frame and the values are the variable labels to be assigned
+#'
+#' @return The data frame with variable labels assigned
+#'
+#' @examples
+#' data(mtcars)
+#' labs <- list(mpg = "Miles per gallon", wt = "Weight")
+#' assigned_data <- assign_labs(mtcars, labs)
+#'
+#' @export
+assign_labs <- function(data, labs) {
+
+  if (!is.data.frame(data)) stop("The input must be a data frame.")
+  if (length(setdiff(names(labs), names(data))) > 0) stop("Some labels' names do not match the variable names in the data frame.")
+
+  for (var in names(labs)) {
+    attr(data[[var]], "label") <- labs[[var]]
+  }
+
+  return(data)
+
+
+}
+
 
 
 #' Add indices' labels as separate rows
@@ -24,7 +88,24 @@ row_labs <- function(df, labs, nrow) {
 
 
 
-# -------------------------------------------------------------------------
+
+
+
+
+# Label functions' helpers ------------------------------------------------
+
+
+any_Nlabelled <- function(data) {
+
+  data %>%
+    purrr::map(~attr(., which = "label", exact = T))  %>%
+    purrr::map_lgl(is.null) %>%
+    any()
+
+}
+
+
+
 
 
 # Extract spss labels or assign user-defined labels

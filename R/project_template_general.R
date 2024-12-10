@@ -135,7 +135,7 @@ make_project_spss <- function(path) {
 #' @export
 #' @examples
 #' git_setup(path = "~/myproject", files = c("script.R", "data.csv"), folders = "docs")
-git_setup <- function(path, files) {
+git_setup <- function(path, files = NULL) {
 
 
   oldwd <- getwd()
@@ -184,7 +184,17 @@ git_setup <- function(path, files) {
 # Helper functions --------------------------------------------------------
 
 list_files <- function(folder) {
-  list.files(system.file(folder, package = "Cabix2"), recursive = TRUE)
+
+  if (!is.character(folder)) {
+    stop("folder has to be a character vector that represents a subfolder in the Cabix package.")
+    }
+
+  files <- list.files(system.file(folder, package = "Cabix2"), recursive = TRUE)
+
+  if (length(files) == 0) {
+    warning("Either there are no files in the specified folder or the folder does not exist.")
+    }
+  return(files)
 }
 
 

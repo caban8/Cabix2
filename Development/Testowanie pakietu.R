@@ -17,6 +17,48 @@ library(Bazy)
 
 
 
+# Testowanie assign labels ------------------------------------------------
+
+
+
+assign_labs(mtcars, c(mpg = "Miles per gallon", disp = "Displacement", cyl = "Cylinders",  dfga = "gfsdg"))
+
+
+# # Testowanie extract codebook -------------------------------------------
+
+
+length(setdiff(names(Bazy::szczescie), names(Bazy::szczescie)[1:10])) %>% as.logical()
+
+Bazy::szczescie %>%
+  purrr::map(attr, which = "label", exact = T)
+
+mtcars %>%
+  purrr::map(attr, which = "label", exact = T)
+
+mtcars %>%
+  purrr::map(~attr(., which = "label", exact = T))  %>%
+  purrr::map_lgl(is.null) %>%
+  any()
+
+
+mtcars %>%
+  extract_codebook()
+
+Bazy::szczescie %>%
+  extract_codebook()
+
+mtcars %>%
+  any_Nlabelled()
+
+Bazy::szczescie %>%
+  any_Nlabelled()
+
+
+
+
+
+
+
 # mediacje ----------------------------------------------------------------
 
 
