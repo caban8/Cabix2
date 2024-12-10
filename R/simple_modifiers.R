@@ -182,6 +182,30 @@ head_more <- function(x, n = 25) {
 
 
 
+# Processing functions ----------------------------------------------------
+
+
+
+#' Recode a numeric vector to a factor with custom labels
+#'
+#' This function recodes a numeric vector to a factor with custom labels provided by the user.
+#' Numbers are automatically derived from the length of the labels vector assuming an order as in the labels vector.
+#'
+#' @param x A vector to be recoded to a factor.
+#' @param labels A character vector of labels to assign to the levels of the factor.
+#' The order of labels should correspond to the order of numeric levels in the vector x.
+#' @return A factor with the vector x recoded with the labels provided.
+#' @export
+#'
+#' @examples
+#' recode_to_factor(c(1, 2, 3), c("Low", "Medium", "High"))
+recode_to_factor <- function(x, labels) {
+  x %>%
+    plyr::mapvalues(from = seq_along(labels), to = labels) %>%
+    factor(levels = labels)
+}
+
+
 #' reverse the values of a numeric vector
 #'
 #' reverse() takes a numeric vector and returns
