@@ -11,6 +11,31 @@ library(devtools)
 
 
 
+# Custom signals ----------------------------------------------------------
+
+use_r("custom_signals")
+
+
+# functionals -------------------------------------------------------------
+
+use_r("modify")
+
+
+# Questionnaire processing ------------------------------------------------
+
+
+use_r("questionnaire_processing")
+use_test("questionnaire_processing")
+
+
+
+# Google Forms Extractions ------------------------------------------------
+
+
+use_r("google_forms")
+
+
+
 # Mediation analysis ------------------------------------------------------
 
 use_r("mediation_analysis")

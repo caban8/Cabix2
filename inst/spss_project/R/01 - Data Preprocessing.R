@@ -17,6 +17,9 @@ library(tidyverse)
 
 # Zliczanie skal kwestionariuszy ------------------------------------------
 
+# Sprawdzić, czy zakresy skal zgadzają się z zakresami teoretcznymi
+# oraz braki danych
+
 
 # Dodanie labels ----------------------------------------------------------
 

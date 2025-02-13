@@ -144,6 +144,8 @@ Podstawowe informacje o metodzie badania
 
 NAJPIERW ZROBIĆ ANALIZĘ EKSPLORACJI
 
+SPRAWDZAĆ, CZY ZAKRESY SKAL SIĘ ZGADZAJĄ Z TEORETYCZNYMI
+
 -   Analiza częstości
     -   Czy nie ma dziwnych względem wskaźnika wartości (np. odpowiedź "23" dla itema w skali 1 - 4)
 -   Box-plots

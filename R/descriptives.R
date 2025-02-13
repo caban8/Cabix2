@@ -116,4 +116,42 @@ descriptives <- function(df, ..., IV1, IV2, digits = 2) {
 
 
 
+#' Obtain counts of unique values in each column of a data frame
+#'
+#' This function calculates the frequency count of unique values in each column of a data frame.
+#'
+#' @param df A data frame.
+#' @param .fun A function to select columns. Default is is.atomic.
+#'
+#' @return A data frame with variables, counts, percentage, and labels.
+#'
+#' @examples
+#' df <- data.frame(
+#'   x = c('a', 'b', 'a', 'c', 'a'),
+#'   y = c(1, 2, 1, 3, 1),
+#'   z = c('x', 'x', 'y', 'y', 'x')
+#' )
+#' obtain_counts(df)
+#'
+#' @import tidyverse
+#' @importFrom tibble enframe
+#' @importFrom tidyr unnest
+#' @importFrom purrr map
+#'
+#' @export
+obtain_counts <- function(df, .fun = is.atomic) {
+
+  df %>%
+    select(where(.fun)) %>%
+    map(table) %>%
+    enframe(name = "variable", value = "n") %>%
+    mutate(
+      pct = map(n, ~round(prop.table(.x) * 100, 1)),
+      label = map(n, names),
+      across(c(n, pct), ~map(.x, as.double))
+    ) %>%
+    tidyr::unnest()
+
+}
+
 

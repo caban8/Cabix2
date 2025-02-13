@@ -13,7 +13,77 @@ library(devtools)
 # !!!!
 
 
+mtcars_factors <- list(
+  am = c("Automatic", "Manual"),
+  vs = c("V-shaped", "Straight")
+)
+
+imodify2(mtcars, mtcars_factors, function(x, y) {factor(x, labels = y)})
+imodify2(mtcars, mtcars_factors$am, function(x, y) {factor(x, labels = y)})
+
+
+abort_noNames(mtcars, iris$Sepal.Length)
+
+abort_noNames(mtcars, iris) %>%
+  map_lgl(is.null) %>%
+  which() %>%
+  length()
+
+l <- list(
+  a = 1,
+  b = 2,
+  3
+
+)
+
+names(l)
+
+abort_noNames(mtcars, iris, l)
+
+
+
+
+
+
+x <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10) %>%
+  set_names(letters[1:10])
+
+
+abort_noNames(mtcars, x)
+
+
+
+
+
 library(Bazy)
+
+iris %>%
+  obtain_counts(is.numeric)
+
+iris %>%
+  obtain_counts(is.factor)
+
+
+# Testowanie questionnaire functions --------------------------------------
+
+
+
+library(Bazy)
+
+dftest <- map(1:10, ~sample(1:5, 10, T)) %>%
+  as.data.frame() %>%
+  set_names(paste0("Question", 1:10))
+
+dftest %>%
+  question_labels()
+
+iris %>%
+  question_labels()
+
+iris %>%
+  question_labels(suffix = "[.].*$")
+
+
 
 
 
