@@ -48,8 +48,11 @@ make_project_template <- function(path) {
   }
 
   # Handle gitignore
-  unzip(file.path(path, "gitignore.zip"), overwrite = T, exdir = path)
-  file.remove(file.path(path, "gitignore.zip"))
+  handle_gitignore(path)
+
+  # Setup Git
+  git_files <- add_folder_slash(path)
+  git_setup(path, files = git_files)
 
 }
 
@@ -93,12 +96,6 @@ make_project_spss <- function(path) {
     file_source <- system.file("spss_project", file, package = "Cabix2")
     file_dest <- file.path(path, file)
     file.copy(file_source, file_dest, overwrite = TRUE)
-
-    # dplyr::case_when(
-    #   stringr::str_detect(file, "[.]R$") ~ file.copy(file_source, file.path(file_dest, "R"), overwrite = TRUE),
-    #   .default = file.copy(file_source, file_dest, overwrite = TRUE)
-    # )
-
   }
 
 
@@ -108,12 +105,10 @@ make_project_spss <- function(path) {
   )
 
   # Handle gitignore
-  unzip(file.path(path, "gitignore.zip"), overwrite = T, exdir = path)
-  file.remove(file.path(path, "gitignore.zip"))
+  handle_gitignore(path)
 
   # Setup Git
-  git_files <- add_folder_slash(path) %>%
-    stringr::str_subset(pattern = "materials/|results/", negate = T)
+  git_files <- add_folder_slash(path)
   git_setup(path, files = git_files)
 }
 
@@ -199,11 +194,17 @@ list_files <- function(folder) {
 
 
 
+# Handle gitignore
+handle_gitignore <- function(path)  {
+  unzip(file.path(path, "gitignore.zip"), overwrite = T, exdir = path)
+  file.remove(file.path(path, "gitignore.zip"))
+}
 
 add_folder_slash <- function(path) {
 
   files <- list.files(path)
 
-  files <- dplyr::if_else(stringr::str_detect(files, "[.].*$"), files, paste0(files, "/"))
+  files <- dplyr::if_else(stringr::str_detect(files, "[.].*$"), files, paste0(files, "/")) %>%
+    stringr::str_subset(pattern = "materials/|results/", negate = T)
 
 }

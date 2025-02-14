@@ -13,6 +13,21 @@ library(devtools)
 # !!!!
 
 
+
+
+
+
+make_project_spss("d:/R/Testowanie rozne/jajo3")
+make_project_template("d:/R/Testowanie rozne/jajo4")
+
+
+
+
+# imodify -----------------------------------------------------------------
+
+
+
+
 mtcars_factors <- list(
   am = c("Automatic", "Manual"),
   vs = c("V-shaped", "Straight")
