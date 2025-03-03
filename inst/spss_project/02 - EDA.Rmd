@@ -1,0 +1,46 @@
+---
+title: "Eksploracja danych"
+author: ".."
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+
+
+# Eksploracja
+
+NAJPIERW ZROBIĆ ANALIZĘ EKSPLORACJI
+
+SPRAWDZAĆ, CZY ZAKRESY SKAL SIĘ ZGADZAJĄ Z TEORETYCZNYMI
+
+-   Analiza częstości
+    -   Czy nie ma dziwnych względem wskaźnika wartości (np. odpowiedź "23" dla itema w skali 1 - 4)
+-   Box-plots
+-   Inne?
+
+
+
+```{r include=FALSE}
+
+# ANALIZA EKSPLORACYJNA
+
+
+
+
+
+```
+
+
+
+
+
+Sprawdzić, czy
+- Nie ma osób w wieku poniżej 18 lat
+- Nie ma ogólnie dziwnych wartości
+- Nie ma wartości ekstremalnych

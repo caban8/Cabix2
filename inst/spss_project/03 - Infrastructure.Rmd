@@ -1,0 +1,103 @@
+---
+title: "Untitled"
+author: ".."
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+source("R/setup.R")
+
+```
+
+
+# Przygotowanie bazy danych
+
+
+
+
+```{r include=FALSE}
+# Provide dataset path
+Baza_nazwa <- ""
+
+# Import labels codebook
+vars_labs <- read_csv("results/codebooks/vars_labels.csv")
+
+
+baza <- haven::read_sav(Baza_nazwa)
+attach(baza)
+```
+
+
+
+
+# Wektory odniesienia
+
+## Tabelki
+
+
+```{r captions, include=FALSE}
+
+nline <- "\n\n" # To na początek tytułów, zgodnie z APA style 7
+
+tabs <- list(
+  desc = "Szczegółowe statystyki opisowe oraz sprawdzenie normalności rozkładu dla badanych zmiennych ilościowych"
+)
+
+tabs <- map(tabs, function(x) {paste0(nline, x)})
+
+```
+
+
+
+## Wykresy
+
+
+```{r}
+figures <- list(
+  fig1 = ""
+)
+
+```
+
+
+
+
+## Hipotezy
+
+
+
+```{r labels, include=FALSE}
+
+hipotezy <- c(
+  "Hipoteza1"
+)
+
+```
+
+
+# Eksport
+
+## Wykresy
+
+
+```{r}
+
+# To będę chciał dodatkowo eksportować funkcją do oddzielnych plików
+
+
+```
+
+
+
+
+# Metoda
+
+Podstawowe informacje o metodzie badania
+
+**Może też pobierać z google drive**
+
+## Plan działania 
+
+

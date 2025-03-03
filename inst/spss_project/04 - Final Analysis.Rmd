@@ -1,0 +1,108 @@
+---
+title: "Wyniki"
+output: 
+  officedown::rdocx_document:
+    tables:
+      layout: autofit
+      caption:
+        pre: 'Tabela '
+        sep: ''
+    reference_docx: "d:/R/Szablon/R/wzor4.docx"
+    plots:
+      caption:
+        pre: 'Rycina '
+        sep: '. '
+params:
+  include_opis: true
+---
+
+# Uwagi dla klienta
+
+
+
+```{r setup, include=FALSE}
+# Extract parameter for including chunks with interpreation
+include_opis <-  params$include_opis
+
+knitr::purl("03 - Infrastructure", output = "R/Infrastructure.R")
+source("R/Infrastructure.R")
+
+```
+
+
+
+```{r }
+zmienne <- list( )
+
+wstep <- wstepy()
+tabelki <- opis_tabela(liczba = 10)
+```
+
+
+
+
+```{r include=include_opis}
+opis_poczatek()
+
+```
+
+
+
+IBM SPSS 29. 
+Wykresy uzyskano w programie Jamovi 2.5.4.
+Za próg istotności przyjęto *α* = 0,05.<br>
+
+<br>
+
+
+## Statystyki opisowe
+
+```{r include=include_opis}
+
+opis_opisowe(zmienne)
+tabelki[1] %>% cat()
+
+```
+
+
+<br>
+``` {r }
+rows_labs <- c()
+rows_nr <- c()
+
+
+dane_opisowe <- des.tab( )
+
+dane_opisowe %>% 
+  flex_destab() %>% 
+  flextable::set_caption(caption = tabs$desc)
+
+
+```
+<br>
+
+```{r include=include_opis}
+dane_opisowe %>% opis_normalnosc() %>% cat()
+```
+
+
+<br>
+
+## Weryfikacja hipotez
+```{r include=include_opis}
+opis_weryfikacja()
+
+```
+<br>
+
+
+
+"*`r hipotezy[1]`*"
+
+
+\newpage
+
+
+## Bibliografia
+
+Tabachnick, B.G. i Fidell, L.S. (2013) Using Multivariate Statistics. Pearson, Boston. 

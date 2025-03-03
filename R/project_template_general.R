@@ -99,10 +99,6 @@ make_project_spss <- function(path) {
   }
 
 
-  file.rename(
-    file.path(path, "SPSS analysis template.Rmd"),
-    file.path(path, paste0(stringr::str_remove(path, ".*(?=\\/)\\/"), " - Markdown.Rmd"))
-  )
 
   # Handle gitignore
   handle_gitignore(path)
