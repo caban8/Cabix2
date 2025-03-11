@@ -1,0 +1,268 @@
+---
+title: "Wyniki"
+output: 
+  officedown::rdocx_document:
+    tables:
+      layout: autofit
+      caption:
+        pre: 'Tabela '
+        sep: ''
+    reference_docx: "d:/R/Szablon/R/wzor4.docx"
+    plots:
+      caption:
+        pre: 'Rycina '
+        sep: '. '
+params:
+  include_opis: true
+---
+
+# Uwagi dla klienta
+
+...
+
+
+# Infrastruktura
+
+
+## Markdown Setup
+
+```{r setup, include=FALSE}
+
+# Set figures and tables centralized options
+knitr::opts_chunk$set(echo = FALSE, comment = NA, message = F, warning = F, 
+                      fig.width = 6, out.width = "70%", fig.align = "left", ft.align = "left", 
+                      tab.cap.fp_text = officer::fp_text_lite(italic = FALSE, bold = TRUE, 
+                                                         font.size = 12, font.family = "Times New Roman"),
+                      fig.cap.fp_text = officer::fp_text_lite(italic = FALSE, bold = TRUE, 
+                                                         font.size = 12, font.family = "Times New Roman"),
+                      fig.topcaption = FALSE, dpi = 300
+                      )
+
+
+# Load libraries
+pacman::p_load(
+  car,
+  onewaytests,
+  rstatix,
+  tidyverse,
+  readxl,
+  lm.beta,
+  haven
+)
+
+# Load libraries I don't want to update
+library(flextable)
+library(officer)
+
+# Load my own libraries
+library(Cabix)
+library(Cabix2)
+library(Cabflex)
+library(Cabflex2)
+library(CabStrings)
+
+
+# Set Polish characters
+Sys.setlocale("LC_ALL", "Polish") # Z jakiegoś powodu to jednak nie działa z pakietami stringr itp
+Sys.setlocale("LC_CTYPE", "en_US.UTF-8")
+
+
+
+# Set comma as the decimal mark
+options(OutDec = ",")
+set_flextable_defaults(
+  font.family = "Times New Roman",  decimal.mark = ","
+)
+
+# Set centralized plot styling
+qual_cols <- c(
+  "#4793AF",
+  "#FFC470",
+  "#DD5746",
+  "#8B322C"
+)
+
+if (requireNamespace("thematic")) 
+  thematic::thematic_rmd(
+    # bg = "#4793AF", 
+    # fg = "#FFC470", 
+    # sequential = , 
+    # font = , 
+    qualitative = qual_cols
+    # accent = "#DD5746"
+    )
+
+# Extract parameter for including chunks with interpreation
+include_opis <-  params$include_opis
+
+# Provide dataset path
+Baza_nazwa <- ""
+
+# Import labels codebook
+vars_labs <- read_csv("results/codebooks/vars_labels.csv")
+
+```
+
+## Tytuły tabelek
+
+
+```{r captions, include=FALSE}
+
+nline <- "\n\n" # To na początek tytułów, zgodnie z APA style 7
+
+tabs <- list(
+  desc = "Szczegółowe statystyki opisowe oraz sprawdzenie normalności rozkładu dla badanych zmiennych ilościowych"
+)
+
+tabs <- map(tabs, function(x) {paste0(nline, x)})
+
+```
+
+
+## Wektory referencyjne
+
+
+### Hipotezy
+
+
+
+```{r labels, include=FALSE}
+
+hipotezy <- c(
+  "Hipoteza1"
+)
+
+```
+
+# Metoda
+
+Podstawowe informacje o metodzie badania
+
+## Plan działania 
+
+# Eksploracja
+
+NAJPIERW ZROBIĆ ANALIZĘ EKSPLORACJI
+
+SPRAWDZAĆ, CZY ZAKRESY SKAL SIĘ ZGADZAJĄ Z TEORETYCZNYMI
+
+-   Analiza częstości
+    -   Czy nie ma dziwnych względem wskaźnika wartości (np. odpowiedź "23" dla itema w skali 1 - 4)
+-   Box-plots
+-   Inne?
+
+
+
+```{r include=FALSE}
+
+# ANALIZA EKSPLORACYJNA
+
+# Sprawdzić, czy
+# Nie ma osób w wieku poniżej 18 lat
+# Nie ma ogólnie dziwnych wartości
+# Nie ma wartości ekstremalnych
+
+
+
+```
+
+
+
+# Analiza
+
+```{r start}
+
+
+baza <- haven::read_sav(Baza_nazwa)
+attach(baza)
+
+
+
+
+zmienne <- list( )
+
+wstep <- wstepy()
+tabelki <- opis_tabela(liczba = 10)
+```
+
+
+
+
+```{r include=include_opis}
+opis_poczatek()
+
+```
+
+Czy są osoby poniżej 18 roku życia?
+
+IBM SPSS 29. 
+Wykresy uzyskano w programie Jamovi 2.5.4.
+Za próg istotności przyjęto *α* = 0,05.<br>
+
+<br>
+
+
+## Statystyki opisowe
+
+```{r include=include_opis}
+
+opis_opisowe(zmienne)
+tabelki[1] %>% cat()
+
+```
+
+
+<br>
+``` {r }
+rows_labs <- c()
+rows_nr <- c()
+
+
+dane_opisowe <- des.tab( )
+
+dane_opisowe %>% 
+  flex_destab() %>% 
+  flextable::set_caption(caption = tabs$desc)
+
+
+```
+<br>
+
+```{r include=include_opis}
+dane_opisowe %>% opis_normalnosc() %>% cat()
+```
+
+
+<br>
+
+## Weryfikacja hipotez
+```{r include=include_opis}
+opis_weryfikacja()
+
+```
+<br>
+
+
+
+"*`r hipotezy[1]`*"
+
+
+\newpage
+
+## Opis próby
+
+
+``` {r sample, include=TRUE}
+
+
+opis_proby() %>% 
+  cat()
+
+
+```
+
+\newpage
+
+## Bibliografia
+
+Tabachnick, B.G. i Fidell, L.S. (2013) Using Multivariate Statistics. Pearson, Boston. 
