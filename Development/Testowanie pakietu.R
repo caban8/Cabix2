@@ -16,9 +16,9 @@ library(devtools)
 
 
 
+summarise_freqs(mtcars, mpg, disp, cyl, vs, am, gear)
 
-make_project_spss("d:/R/Testowanie rozne/jajo3")
-make_project_template("d:/R/Testowanie rozne/jajo4")
+
 
 
 

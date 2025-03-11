@@ -11,6 +11,17 @@ library(devtools)
 
 
 
+
+# Funkcje prostych stats summaries ----------------------------------------
+
+use_r("simple_summaries")
+
+
+# Eksport datas excel -----------------------------------------------------
+
+use_r("export_data")
+
+
 # Custom signals ----------------------------------------------------------
 
 use_r("custom_signals")

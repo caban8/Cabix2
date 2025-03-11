@@ -5,16 +5,18 @@ date: "`r Sys.Date()`"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
+```{r include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 source("R/setup.R")
+
+eksport <- TRUE
 
 ```
 
 
 # Przygotowanie bazy danych
 
-
+## Import danych
 
 
 ```{r include=FALSE}
@@ -30,6 +32,11 @@ attach(baza)
 ```
 
 
+
+## Analizy
+
+
+## Interpretacje
 
 
 # Wektory odniesienia
@@ -79,15 +86,34 @@ hipotezy <- c(
 
 # Eksport
 
+## Flex tabele
+
+
+```{r eval=eksport}
+
+```
+
+
 ## Wykresy
 
 
-```{r}
+```{r eval=eksport}
 
 # To będę chciał dodatkowo eksportować funkcją do oddzielnych plików
 
 
 ```
+
+
+## Excel Statystyki opisowe
+
+
+
+```{r eval=eksport}
+
+```
+
+
 
 
 
@@ -99,5 +125,7 @@ Podstawowe informacje o metodzie badania
 **Może też pobierać z google drive**
 
 ## Plan działania 
+
+
 
 

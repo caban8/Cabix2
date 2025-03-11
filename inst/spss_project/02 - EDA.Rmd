@@ -25,6 +25,13 @@ SPRAWDZAĆ, CZY ZAKRESY SKAL SIĘ ZGADZAJĄ Z TEORETYCZNYMI
 -   Inne?
 
 
+Sprawdzić, czy
+- Nie ma osób w wieku poniżej 18 lat
+- Nie ma ogólnie dziwnych wartości
+- Nie ma wartości ekstremalnych
+
+
+
 
 ```{r include=FALSE}
 
@@ -40,7 +47,20 @@ SPRAWDZAĆ, CZY ZAKRESY SKAL SIĘ ZGADZAJĄ Z TEORETYCZNYMI
 
 
 
-Sprawdzić, czy
-- Nie ma osób w wieku poniżej 18 lat
-- Nie ma ogólnie dziwnych wartości
-- Nie ma wartości ekstremalnych
+
+# Features Engineering
+
+
+# Eksport danych oczyszczonych
+
+
+```{r}
+dane_eda %>% 
+  write_csv("data/dane_ostateczne.csv")
+
+dane_eda %>% 
+  Cabix2::spss_write("data/Baza danych - ")
+
+
+```
+

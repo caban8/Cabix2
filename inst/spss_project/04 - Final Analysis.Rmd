@@ -24,11 +24,16 @@ params:
 # Extract parameter for including chunks with interpreation
 include_opis <-  params$include_opis
 
-knitr::purl("03 - Infrastructure", output = "R/Infrastructure.R")
-source("R/Infrastructure.R")
 
 ```
 
+
+
+```{r}
+# Nie może być w pierwszym chunku
+knitr::purl("03 - Infrastructure.Rmd", output = "R/Infrastructure.R")
+source("R/Infrastructure.R")
+```
 
 
 ```{r }
@@ -49,7 +54,7 @@ opis_poczatek()
 
 
 IBM SPSS 29. 
-Wykresy uzyskano w programie Jamovi 2.5.4.
+**Wykresy uzyskano w programie Jamovi 2.5.4.**
 Za próg istotności przyjęto *α* = 0,05.<br>
 
 <br>

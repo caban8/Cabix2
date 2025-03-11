@@ -3,6 +3,38 @@
 
 
 
+# Libraries ---------------------------------------------------------------
+
+
+
+pacman::p_load(
+  car,
+  onewaytests,
+  rstatix,
+  tidyverse,
+  readxl,
+  lm.beta,
+  haven
+)
+
+# Load libraries I don't want to update
+library(flextable)
+library(officer)
+
+# Load my own libraries
+library(Cabix)
+library(Cabix2)
+library(Cabflex)
+library(Cabflex2)
+library(CabStrings)
+
+
+
+# Global options ----------------------------------------------------------
+
+
+
+
 # Set figures and tables centralized options
 knitr::opts_chunk$set(
   echo = FALSE,
@@ -43,32 +75,6 @@ set_flextable_defaults(
 )
 
 
-
-
-# Libraries ---------------------------------------------------------------
-
-
-
-pacman::p_load(
-  car,
-  onewaytests,
-  rstatix,
-  tidyverse,
-  readxl,
-  lm.beta,
-  haven
-)
-
-# Load libraries I don't want to update
-library(flextable)
-library(officer)
-
-# Load my own libraries
-library(Cabix)
-library(Cabix2)
-library(Cabflex)
-library(Cabflex2)
-library(CabStrings)
 
 
 

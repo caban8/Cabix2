@@ -23,7 +23,8 @@ pakiety <- c("rstatix",
   "lm.beta",
   "plyr",
   "purrr",
-  "rcompanion"
+  "rcompanion",
+  "xlsx"
 )
 
 purrr::walk(pakiety, use_package)
