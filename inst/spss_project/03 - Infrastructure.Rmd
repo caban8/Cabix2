@@ -108,6 +108,26 @@ hipotezy <- c(
 ## Excel Statystyki opisowe
 
 
+### Statystyki częstości
+
+
+
+```{r eval=eksport}
+
+```
+
+
+
+### Statystyki ilościowe
+
+
+```{r eval=eksport}
+
+```
+
+
+### Alpha Cronbacha
+
 
 ```{r eval=eksport}
 

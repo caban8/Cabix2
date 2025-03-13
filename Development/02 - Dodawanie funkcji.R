@@ -11,6 +11,13 @@ library(devtools)
 
 
 
+# Reference vectors for makrdown ------------------------------------------
+
+use_r("reference_vectors")
+use_test("reference_vectors")
+
+
+
 
 # Funkcje prostych stats summaries ----------------------------------------
 

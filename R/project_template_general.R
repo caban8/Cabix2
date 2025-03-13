@@ -78,8 +78,8 @@ make_project_spss <- function(path) {
 
   # create the necessary folders' names
   folders <- c(
-    "data", "R", "tests/testthat", "materials",
-    paste0("results/", c( "figures","tables", "spss_output", "codebooks")),
+    "dane/codebooks", "R", "tests/testthat", "materials",
+    paste0("raporty/", c( "wykresy","tabele", "inne")),
     "spss syntax",
     "notebooks"
     )
