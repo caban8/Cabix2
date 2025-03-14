@@ -17,10 +17,10 @@
 #' summarise_freqs(mtcars, cyl, gear)
 #'
 #' @export
-summarise_freqs <- function(data, ...) {
+summarise_freqs <- function(data, ..., .nest = TRUE) {
 
 
-  data %>%
+  freqs <- data %>%
     dplyr::select(...) %>%
     purrr::map(table) %>%
     tibble::enframe(name = "zmienna", value = "częstość") %>%
@@ -29,7 +29,9 @@ summarise_freqs <- function(data, ...) {
     tidyr::unnest(cols = c(poziom, częstość)) %>%
     dplyr::group_by(zmienna) %>%
     dplyr::mutate(procent = round(częstość / sum(częstość) * 100, 1)) %>%
-    dplyr::ungroup() %>%
-    tidyr::nest(.by = zmienna)
+    dplyr::ungroup()
 
+  if (.nest) freqs <- tidyr::nest(.data = freqs, .by = zmienna)
+
+  return(freqs)
 }

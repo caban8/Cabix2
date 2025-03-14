@@ -2,22 +2,39 @@
 % Please edit documentation in R/google_forms.R
 \name{grouped_to_list}
 \alias{grouped_to_list}
-\title{Convert Dataframe with aggregated answers to a ;ist}
+\title{Convert Dataframe with answers aggregated per question to a list}
 \usage{
-grouped_to_list(df, codebook, by = c(question = "Etykieta"))
+grouped_to_list(
+  df,
+  codebook,
+  raw_name = "Nazwa",
+  answers = "answers",
+  by = c(question = "Etykieta")
+)
 }
 \arguments{
 \item{df}{The input dataframe containing the data to be summarized.}
 
 \item{codebook}{The reference dataframe containing the codebook information.}
 
+\item{raw_name}{The name of the column containing the raw names of the questions.}
+
+\item{answers}{The name of the column containing the aggregated answers.}
+
 \item{by}{variables by which the join will be performed.}
 }
 \value{
-A named list with question as names and aggregated answers as values.
+A named list with raw question names as names and aggregated answers as values.
 }
 \description{
-This function takes a dataframe, codebook, and group variable, and summarizes the data by grouping based on the specified variable.
+This function takes a dataframe with two columns - a character vector containing questions' labels
+and a list with corresponding answers - and converts it to a named list with the raw names of the variables that
+are used in the main dataset.
+}
+\details{
+The function is to be used in tandem with the 'group_questions' and 'pdf_forms_extract_questions' functions.
+Its main purpose is to extract factors and levels from a survey data to a simple reference vector that can be used to
+easily add levels in the proper order to the main dataset.
 }
 \examples{
 df <- data.frame(Nazwa = c('A', 'A', 'B', 'B'),

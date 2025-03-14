@@ -2,12 +2,16 @@
 % Please edit documentation in R/google_forms.R
 \name{group_questions}
 \alias{group_questions}
-\title{Group questions in a data frame}
+\title{Group questions in a data frame by aggregating their corresponding answers together}
 \usage{
-group_questions(df, clean_pattern = "\\\\s\\\\*$")
+group_questions(df, question, answers, clean_pattern = "\\\\s\\\\*$")
 }
 \arguments{
-\item{df}{A data frame containing a character 'question' and list 'answers' columns.}
+\item{df}{A data frame containing columns with questions and answers.}
+
+\item{question}{The name of the column containing the questions.}
+
+\item{answers}{The name of the column containing the answers.}
 
 \item{clean_pattern}{A pattern to clean the 'question' column using stringr::str_remove().}
 }
@@ -16,6 +20,10 @@ A tibble with unique questions and their aggregated list of answers.
 }
 \description{
 This function groups questions in a data frame by aggregating their corresponding answers together.
+}
+\details{
+Its purpose is to prepare levels for each question assuming as the order the way the answers were displayed in the survey.
+The returned data frame can be further used by the 'grouped_to_list' function to create a named list with questions and answers.
 }
 \examples{
 df <- data.frame(question = c(rep("Q1", 3), rep("Q2", 2)), answers = c("A", "B", "C", "male", "female"))
