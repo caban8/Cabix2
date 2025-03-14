@@ -1,13 +1,24 @@
 
 
-#' Convert Dataframe with aggregated answers to a ;ist
+#' Convert Dataframe with answers aggregated per question to a list
 #'
-#' This function takes a dataframe, codebook, and group variable, and summarizes the data by grouping based on the specified variable.
+#' This function takes a dataframe with two columns - a character vector containing questions' labels
+#' and a list with corresponding answers - and converts it to a named list with the raw names of the variables that
+#' are used in the main dataset.
+#'
+#' The function is to be used in tandem with the 'group_questions' and 'pdf_forms_extract_questions' functions.
+#' Its main purpose is to extract factors and levels from a survey data to a simple reference vector that can be used to
+#' easily add levels in the proper order to the main dataset.
+#'
+#'
+#'
 #'
 #' @param df The input dataframe containing the data to be summarized.
 #' @param codebook The reference dataframe containing the codebook information.
+#' @param raw_name The name of the column containing the raw names of the questions.
+#' @param answers The name of the column containing the aggregated answers.
 #' @param by variables by which the join will be performed.
-#' @return A named list with question as names and aggregated answers as values.
+#' @return A named list with raw question names as names and aggregated answers as values.
 #' @export
 #'
 #' @examples
@@ -16,12 +27,16 @@
 #' codebook <- data.frame(Etykieta = c('A', 'B'),
 #'                        Nazwa = c('Question A', 'Question B'))
 #' grouped_to_list(df, codebook)
-grouped_to_list <- function(df, codebook, by = c("question" = "Etykieta")) {
+grouped_to_list <- function(df, codebook, raw_name = "Nazwa", answers = "answers", by = c("question" = "Etykieta")) {
+
+  raw_name <- sym(raw_name)
+  answers <- sym(answers)
 
   df %>%
-    tidyr::unnest() %>%
+    tidyr::unnest(!!answers) %>%
     dplyr::left_join(codebook, by = by) %>%
-    dplyr::select(Nazwa, answers) %>%
+    dplyr::select(!!raw_name, !!answers) %>%
+    purrr::set_names(c("Nazwa", "answers")) %>%
     dplyr::group_by(Nazwa) %>%
     dplyr::summarise(answers = list(answers)) %>%
     tidyr::drop_na() %>%
@@ -29,11 +44,16 @@ grouped_to_list <- function(df, codebook, by = c("question" = "Etykieta")) {
 
 }
 
-#' Group questions in a data frame
+#' Group questions in a data frame by aggregating their corresponding answers together
 #'
 #' This function groups questions in a data frame by aggregating their corresponding answers together.
 #'
-#' @param df A data frame containing a character 'question' and list 'answers' columns.
+#' Its purpose is to prepare levels for each question assuming as the order the way the answers were displayed in the survey.
+#' The returned data frame can be further used by the 'grouped_to_list' function to create a named list with questions and answers.
+#'
+#' @param df A data frame containing columns with questions and answers.
+#' @param question The name of the column containing the questions.
+#' @param answers The name of the column containing the answers.
 #' @param clean_pattern A pattern to clean the 'question' column using stringr::str_remove().
 #'
 #' @return A tibble with unique questions and their aggregated list of answers.
@@ -46,11 +66,15 @@ grouped_to_list <- function(df, codebook, by = c("question" = "Etykieta")) {
 #' grouped_df <- group_questions(df)
 #' print(grouped_df)
 #'
-group_questions <- function(df, clean_pattern = "\\s\\*$") {
+group_questions <- function(df, question, answers, clean_pattern = "\\s\\*$") {
+
+  question <- ensym(question)
+  answers <- ensym(answers)
 
 
   df %>%
-    dplyr::select(question, answers) %>%
+    dplyr::select(!!question, !!answers) %>%
+    purrr::set_names(c("question", "answers")) %>%
     dplyr::group_by(question) %>%
     dplyr::summarise(answers = list(answers)) %>%
     dplyr::mutate(

@@ -51,6 +51,8 @@ use_test("questionnaire_processing")
 
 
 use_r("google_forms")
+use_test("google_forms")
+
 
 
 
