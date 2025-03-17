@@ -213,22 +213,29 @@ comparison_bg1 <- function(.data, ..., IV,
                            iv.lab = NULL,
                            type = c("mean_sd", "median_iqr", "mrank_median")) {
 
-  df <- dplyr::select(.data, {{IV}}, ... )
+  iv_arg <- substitute(IV)
+
+  if (is.symbol(iv_arg)) {
+    IV <- ensym(IV)
+  } else {IV <- sym(IV)}
+
+
+  df <- dplyr::select(.data, !!IV, ... )
 
 
   if (is.null(val.labs)) {
-    factor_labs <- value_labels2(df, {{IV}})
+    factor_labs <- value_labels2(df, !!IV)
   } else {
     factor_labs <- val.labs
   }
 
   IV2 <- names(df)[1]
   DVs <- names(df)[-1]
-  IV_lab <- var_labels(df, {{IV}}, spss.lab = spss.lab, labels. = iv.lab)
+  IV_lab <- var_labels(df, !!IV, spss.lab = spss.lab, labels. = iv.lab)
 
 
   #Statystyki opisowe
-  descriptives <- conditions_stats(df = df, ..., IV = {{IV}}, spss.lab = spss.lab,
+  descriptives <- conditions_stats(df = df, ..., IV = !!IV, spss.lab = spss.lab,
                                    labels. = labels., type = type[1])
 
 

@@ -22,6 +22,17 @@ comparison_bg1(
 )
 
 
+test_function <- function(x) {
+  x_arg <- substitute(x)
+
+  is.symbol(x_arg)
+}
+
+test_function("fsdf")
+test_function(fsdf)
+
+
+
 
 
 
