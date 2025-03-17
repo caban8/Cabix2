@@ -15,8 +15,14 @@ library(devtools)
 
 
 
+comparison_bg1(
+  mtcars,
+  "mpg",
+  IV = am
+)
 
-summarise_freqs(mtcars, mpg, disp, cyl, vs, am, gear)
+
+
 
 
 

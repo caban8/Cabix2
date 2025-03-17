@@ -4,7 +4,7 @@
 \alias{summarise_freqs}
 \title{Summarise frequency counts for multiple variables}
 \usage{
-summarise_freqs(data, ...)
+summarise_freqs(data, ..., .nest = TRUE)
 }
 \arguments{
 \item{data}{A data frame containing the variables of interest.}
