@@ -223,7 +223,8 @@ comparison_bg1 <- function(.data, DVs, IV,
 
 
 
-  df <- dplyr::select(.data, {{IV}}, {{DVs}} )
+  df <- dplyr::select(.data, {{IV}}, {{DVs}} ) %>%
+    tidyr::drop_na()
 
 
   if (is.null(val.labs)) {

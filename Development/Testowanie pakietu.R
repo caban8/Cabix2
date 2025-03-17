@@ -14,12 +14,16 @@ library(devtools)
 
 
 
+mtcars$am[2] <- NA
 
 comparison_bg1(
   mtcars,
   c(mpg, hp),
   IV = "am"
 )
+
+
+
 
 nested <- tibble::tibble(
   dvs = c("mpg", "hp", "disp"),
