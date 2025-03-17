@@ -205,7 +205,7 @@ comparison_helper1 <- function(df, formula, test = c("t_test", "u_mann", "anova"
 #' comparison_bg1(iris, Sepal.Length, Sepal.Width, Petal.Length, Petal.Width, IV = Species, test = "anova")
 #'
 #' @export
-comparison_bg1 <- function(.data, ..., IV,
+comparison_bg1 <- function(.data, DVs, IV,
                            test = c("t_test", "u_mann", "anova", "kruskal"),
                            spss.lab = TRUE,
                            labels. = NULL,
@@ -213,6 +213,8 @@ comparison_bg1 <- function(.data, ..., IV,
                            iv.lab = NULL,
                            type = c("mean_sd", "median_iqr", "mrank_median")) {
 
+  # Poniższe zastosowałem pod kątem funkcji map()
+  # działa, ale tylko, gdy argumenty przekazuje do map, a nie w ramach ~anonymous function
   iv_arg <- substitute(IV)
 
   if (is.symbol(iv_arg)) {
@@ -220,7 +222,8 @@ comparison_bg1 <- function(.data, ..., IV,
   } else {IV <- sym(IV)}
 
 
-  df <- dplyr::select(.data, !!IV, ... )
+
+  df <- dplyr::select(.data, {{IV}}, {{DVs}} )
 
 
   if (is.null(val.labs)) {
@@ -235,7 +238,7 @@ comparison_bg1 <- function(.data, ..., IV,
 
 
   #Statystyki opisowe
-  descriptives <- conditions_stats(df = df, ..., IV = !!IV, spss.lab = spss.lab,
+  descriptives <- conditions_stats(df = df, DVs, IV = !!IV, spss.lab = spss.lab,
                                    labels. = labels., type = type[1])
 
 

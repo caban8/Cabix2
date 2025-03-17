@@ -6,7 +6,7 @@
 \usage{
 comparison_bg1(
   .data,
-  ...,
+  DVs,
   IV,
   test = c("t_test", "u_mann", "anova", "kruskal"),
   spss.lab = TRUE,
@@ -19,8 +19,6 @@ comparison_bg1(
 \arguments{
 \item{.data}{a data.frame or tibble vector}
 
-\item{...}{A set of dependent variables in numeric form}
-
 \item{IV}{The independent variable that serves as the grouping variable}
 
 \item{test}{Statistical test used for the comparisons: \code{"t_test"} (the default), \code{"u_mann"}, \code{"anova"}, or \code{"kruskal"}}
@@ -29,6 +27,8 @@ comparison_bg1(
 defined variable labels.}
 
 \item{labels.}{A character vector with labels to supplant the basic object names of the vectors. The default is set to NULL.}
+
+\item{...}{A set of dependent variables in numeric form}
 
 \item{comma}{Chooses comma (the default) as the decimal mark}
 }

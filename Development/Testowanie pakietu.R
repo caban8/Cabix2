@@ -17,9 +17,17 @@ library(devtools)
 
 comparison_bg1(
   mtcars,
-  "mpg",
-  IV = am
+  c(mpg, hp),
+  IV = "am"
 )
+
+nested <- tibble::tibble(
+  dvs = c("mpg", "hp", "disp"),
+  iv = c("am", "vs", "am")
+)
+
+
+purrr::map2(nested$dvs, nested$iv, comparison_bg1, .data = mtcars, test = "anova")
 
 
 test_function <- function(x) {
