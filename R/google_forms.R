@@ -89,7 +89,97 @@ group_questions <- function(df, question, answers, clean_pattern = "\\s\\*$") {
 
 
 
-#' Extract questions and answers from a pdf exported string
+#' Extract questions and answers from a string extracted from a Google Forms PDF.
+#'
+#' #'
+#' This function parses a string extracted from a Google Forms PDF and separates it into questions and corresponding answers.
+#' #' It is supposed to be used with pdf versions of a google forms survey imported as text.
+#' The pattern "[*]" works well only, if all questions have forced response option enabled.
+#'
+#' @param string The string extracted from the Google Forms PDF.
+#' @param split_pattern The regular expression pattern used for splitting the text into separate elements (questions, answers, descriptions) of the google forms survey. Defaults to '\n\n'.
+#' @param clean_pattern A vector of regular expression patterns used for cleaning unwanted text elements from the extracted string. Defaults to c('http', '^\\d{1,2}\\.\\d{1,2}\\.\\d{1,4}', 'Google', 'Forms$').
+#' @param question_pattern The regular expression pattern used for identifying questions. Defaults to '[*]'.
+#' @return A tibble with columns indicating the question and corresponding answers.
+#' @export
+pdf_gforms_extract_q <- function(
+    string,
+    split_pattern = "\n\n",
+    clean_pattern = c("http", "^\\d{1,2}\\.\\d{1,2}\\.\\d{1,4}", "Google", "Forms$"),
+    question_pattern = "[*]"
+    ) {
+
+
+  string %>%
+    pdf_gforms_clean(
+      split_pattern = split_pattern,
+      clean_pattern = clean_pattern
+      ) %>%
+    tibble::enframe() %>%
+    dplyr::mutate(
+      is_question = stringr::str_detect(value, question_pattern),
+      question_group = cumsum(is_question)
+    ) %>%
+    dplyr::group_by(question_group) %>%
+    dplyr::summarise(
+      question = first(value),
+      answers = list(value[-1]),
+      .groups = "drop"
+    ) %>%
+    tidyr::unnest(answers)
+}
+
+
+
+
+#' Clean the PDF text from Google Forms elements
+#'
+#' This function takes a string of text extracted from a PDF document and cleans it by removing specific patterns associated with Google Forms elements.
+#'
+#'
+#' @param string A character vector containing the text to be cleaned.
+#' @param split_pattern A regular expression defining the pattern used to split the text into segments. Default is "\n\n".
+#' @param clean_pattern A character vector specifying the patterns to be removed from the text. Default includes "http", dates in the format "dd.mm.yyyy", "Google", and "Forms".
+#'
+#' @return A character vector with the cleaned text segments.
+#'
+#' @examples
+#' pdf_text <- "This is an example text extracted from a PDF document. It contains some Google Forms elements that need to be removed."
+#' cleaned_text <- pdf_gforms_clean(pdf_text)
+#'
+#' @export
+pdf_gforms_clean <- function(
+    string,
+    split_pattern = "\n\n",
+    clean_pattern = c("http", "^\\d{1,2}\\.\\d{1,2}\\.\\d{1,4}", "Google", "Forms$")
+    ) {
+
+  clean_pat <- paste0(clean_pattern, collapse = "|")
+
+
+  string <- string %>%
+    stringr::str_split(split_pattern) %>%
+    unlist() %>%
+    stringr::str_trim() %>%
+    .[. != ""] %>%
+    stringr::str_subset(clean_pat, negate = T)
+
+  return(string)
+
+}
+
+
+
+
+# Deprecated --------------------------------------------------------------
+
+
+
+
+
+#' Extract questions and answers from a pdf exported string (deprecated)
+#'
+#' This function has been deprecated in favor of the 'pdf_gforms_extract_q' function.
 #'
 #' This function takes a string input and extracts questions and corresponding answers.
 #' It is supposed to be used with pdf versions of a google survey imported as text.
@@ -108,7 +198,7 @@ group_questions <- function(df, question, answers, clean_pattern = "\\s\\*$") {
 #' @export
 pdf_forms_extract_questions <- function(string, split_pattern = "\n\n", question_pattern = "[*]") {
 
-  string %>%
+  string <- string %>%
     stringr::str_split(split_pattern) %>%
     unlist() %>%
     stringr::str_trim() %>%
@@ -116,7 +206,11 @@ pdf_forms_extract_questions <- function(string, split_pattern = "\n\n", question
     stringr::str_subset("http", negate = T) %>% # Delete rows with urls
     stringr::str_subset("^\\d{1,2}\\.\\d{1,2}\\.\\d{1,4}", negate = T) %>% # Delete rows with dates
     stringr::str_subset("Google", negate = T) %>% # Delete all google comments
-    tibble::enframe() %>%
+    tibble::enframe()
+
+
+
+  string <- string %>%
     dplyr::mutate(
       is_question = stringr::str_detect(value, question_pattern),
       question_group = cumsum(is_question)
@@ -128,5 +222,7 @@ pdf_forms_extract_questions <- function(string, split_pattern = "\n\n", question
       .groups = "drop"
     ) %>%
     tidyr::unnest(answers)
+
+  return(string)
 
 }
