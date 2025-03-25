@@ -11,6 +11,11 @@ library(devtools)
 
 
 
+# reporting ---------------------------------------------------------------
+
+use_r("reporting")
+
+
 # Reference vectors for makrdown ------------------------------------------
 
 use_r("reference_vectors")

@@ -14,6 +14,29 @@ eksport <- TRUE
 ```
 
 
+IDEA JEST TAKA
+WSZYSTKIE ANALIZY OSTATECZNIE ŁĄCZĘ DO JEDNEGO TIBBLE
+W RAMACH TIBBLE MAM NASTĘPUJĄCE KOLUMNY
+- nr tabeli
+- zmienna zależna
+- zmienne niezależne
+- nr hipotezy
+- tytuł tabeli
+- flextabela
+- p
+- interpretacja wyników
+- typ analizy
+- ewentualnie wykresy (w ramach wybranych wierszy - pytanie jak wpleść pomiędzy tekst interpretacji)
+
+
+
+```{r}
+
+```
+
+
+
+
 # Przygotowanie bazy danych
 
 ## Import danych
@@ -28,7 +51,7 @@ codebook <- read_csv("dane/codebooks/codebook.csv")
 
 
 baza <- haven::read_sav(Baza_nazwa)
-attach(baza)
+baza_fac <- baza %>% mutate(across(where(haven::is.labelled), haven::as_factor))
 ```
 
 
@@ -40,6 +63,8 @@ attach(baza)
 
 
 # Wektory odniesienia
+
+
 
 ## Tabelki
 
@@ -58,38 +83,32 @@ tabs <- map(tabs, function(x) {paste0(nline, x)})
 
 
 
-## Wykresy
+# Eksport
 
+
+
+## Interpretacje
+
+To chcę eksportować do innego foldera, w ramach którego będe mógł robić control version
 
 ```{r}
-figures <- list(
-  fig1 = ""
-)
+# combined_report %>% 
+#   select(tab_nr, Hipotezy, typ, title, interpretacja) %>% 
+#   xlsx::write.xlsx("dane/interpretacje/opis_analiz.xlsx")
+
 
 ```
 
 
-
-
-## Hipotezy
-
-
-
-```{r labels, include=FALSE}
-
-hipotezy <- c(
-  "Hipoteza1"
-)
-
-```
-
-
-# Eksport
 
 ## Flex tabele
 
 
-```{r eval=eksport}
+```{r }
+
+
+
+
 
 ```
 
@@ -99,7 +118,7 @@ hipotezy <- c(
 
 ```{r eval=eksport}
 
-# To będę chciał dodatkowo eksportować funkcją do oddzielnych plików
+
 
 
 ```
@@ -135,7 +154,24 @@ hipotezy <- c(
 
 
 
+## Rdata
 
+
+```{r}
+
+save(list = c("flex_tables", "tabs", "hipotezy"), file = "dane/analyses_for_report.Rdata")
+
+```
+
+
+
+
+
+# Metoda
+
+Podstawowe informacje o metodzie badania
+
+**Może też pobierać z google drive**
 
 
 # Metoda

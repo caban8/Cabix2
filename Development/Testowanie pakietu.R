@@ -16,6 +16,9 @@ library(devtools)
 
 
 
+.
+
+
 pdf <- pdftools::pdf_text("test_data/Przykładowa ankieta.pdf")
 
 pdf %>%
