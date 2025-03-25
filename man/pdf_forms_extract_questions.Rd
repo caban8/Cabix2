@@ -2,7 +2,7 @@
 % Please edit documentation in R/google_forms.R
 \name{pdf_forms_extract_questions}
 \alias{pdf_forms_extract_questions}
-\title{Extract questions and answers from a pdf exported string}
+\title{Extract questions and answers from a pdf exported string (deprecated)}
 \usage{
 pdf_forms_extract_questions(
   string,
@@ -21,6 +21,9 @@ pdf_forms_extract_questions(
 A data frame with columns: \code{question} (string) and \code{answers} (list of strings).
 }
 \description{
+This function has been deprecated in favor of the 'pdf_gforms_extract_q' function.
+}
+\details{
 This function takes a string input and extracts questions and corresponding answers.
 It is supposed to be used with pdf versions of a google survey imported as text.
 The pattern "\link{*}" works well only, if all questions have forced response option enabled.
