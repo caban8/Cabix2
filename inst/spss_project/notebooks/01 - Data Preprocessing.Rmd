@@ -16,18 +16,27 @@ library(googlesheets4)
 ```
 
 
-# Import
+# Setup
 
 ```{r}
 # Nie może być w setup chunk, bo ten defaultuje do path samego .Rmd
 
-local_path <- c("dane/surowe/dane surowe.csv", "dane/metoda.xlsx")
+project_name <- basename(getwd())
+local_path <- paste0(
+  c("dane/surowe/dane surowe ", "dane/metoda/metoda "),
+  project_name, ".csv"
+  )
 
 gs4_auth(Sys.getenv("gmail"))
 drive_auth(Sys.getenv("gmail"))
 
 ```
 
+# Import
+
+```{r}
+dane <- read_csv(local_path[1])
+```
 
 
 # Przygotowanie labels
