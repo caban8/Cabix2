@@ -21,6 +21,11 @@ library(googlesheets4)
 ```{r}
 # Nie może być w setup chunk, bo ten defaultuje do path samego .Rmd
 
+local_path <- c("dane/surowe/dane surowe.csv", "dane/metoda.xlsx")
+
+gs4_auth(Sys.getenv("gmail"))
+drive_auth(Sys.getenv("gmail"))
+
 ```
 
 
@@ -62,7 +67,7 @@ dane %>%
 
 ```{r}
 df5 %>% 
-  saveRDS("dane/R data - preprocessed.rds")
+  saveRDS("dane/przetworzone/R data - preprocessed.rds")
 
 ```
 
