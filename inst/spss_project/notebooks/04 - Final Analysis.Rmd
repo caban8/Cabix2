@@ -23,17 +23,11 @@ params:
 ```{r setup, include=FALSE}
 # Extract parameter for including chunks with interpreation
 include_opis <-  params$include_opis
-
+source("R/general/setup.R")
 
 ```
 
 
-
-```{r}
-# Nie może być w pierwszym chunku
-knitr::purl("notebooks/03 - Infrastructure.Rmd", output = "R/Infrastructure.R")
-source("R/Infrastructure.R")
-```
 
 
 ```{r }

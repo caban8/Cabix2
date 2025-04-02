@@ -91,7 +91,7 @@ group_questions <- function(df, question, answers, clean_pattern = "\\s\\*$") {
 
 #' Extract questions and answers from a string extracted from a Google Forms PDF.
 #'
-#' #'
+#'
 #' This function parses a string extracted from a Google Forms PDF and separates it into questions and corresponding answers.
 #' #' It is supposed to be used with pdf versions of a google forms survey imported as text.
 #' The pattern "[*]" works well only, if all questions have forced response option enabled.

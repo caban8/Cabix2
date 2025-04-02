@@ -16,11 +16,6 @@
 #'
 #' @details The function filters the data using any additional parameters passed using `dplyr::filter()` function.
 #'
-#' @examples
-#' # Example usage of report_print function
-#' report_print(data = my_data, flextable = 'flex', caption = 'caption',
-#'              interpretation = 'interpretacja', filter_column = 'x > 0')
-#'
 #' @import dplyr
 report_print <- function(
     data,
@@ -55,8 +50,6 @@ report_print <- function(
 #' @param captions A character vector of captions for each table
 #' @param interpretation A character vector of interpretations for each table
 #' @return NULL
-#' @examples
-#' report_i(list(table1, table2), c("Caption 1", "Caption 2"), c("Interpretation 1", "Interpretation 2"))
 #'
 #' @import flextable
 #' @importFrom magrittr %>%

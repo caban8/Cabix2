@@ -1,13 +1,12 @@
 ---
-title: "Untitled"
-author: ".."
-date: "`r Sys.Date()`"
-output: html_document
+title: "Infrastructure"
+# output: html_notebook
 ---
+
 
 ```{r include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-source("R/setup.R")
+source("R/general/setup.R")
 
 eksport <- TRUE
 
