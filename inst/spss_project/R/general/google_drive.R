@@ -1,6 +1,9 @@
 
 # google sheets setup -----------------------------------------------------
 
+library(googlesheets4)
+library(googledrive)
+
 project_name <- basename(getwd())
 local_path <- paste0(
   c("dane/surowe/dane_surowe", "dane/metoda/metoda"), ".xlsx"

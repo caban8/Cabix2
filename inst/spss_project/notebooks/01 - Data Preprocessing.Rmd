@@ -12,27 +12,9 @@ knitr::opts_chunk$set(echo = TRUE)
 library(readxl)
 library(itemized)
 library(tidyverse)
-library(googlesheets4)
-library(googledrive)
 
 ```
 
-
-# Setup
-
-```{r}
-# Nie może być w setup chunk, bo ten defaultuje do path samego .Rmd
-
-project_name <- basename(getwd())
-local_path <- paste0(
-  c("dane/surowe/dane surowe ", "dane/metoda/metoda "),
-  project_name, ".csv"
-  )
-
-gs4_auth(Sys.getenv("gmail"))
-drive_auth(Sys.getenv("gmail"))
-
-```
 
 # Import
 
