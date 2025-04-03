@@ -8,7 +8,7 @@
 #' used mostly to filter through specific hypotheses.
 #'
 #' @param data a data.frame to be used for generating the report.
-#' @param flextable The name of the column in the data that contains the flextables.
+#' @param flex The name of the column in the data that contains the flextables.
 #' @param caption The name of the column in the data that contains the captions.
 #' @param interpretation The name of the column in the data that contains the interpretations.
 #' @param ... Additional parameters for filtering the data using `dplyr::filter()`.
@@ -19,7 +19,7 @@
 #' @import dplyr
 report_print <- function(
     data,
-    flextable = "flex",
+    flex = "flex",
     caption = "caption",
     interpretation = "interpretacja",
     ...,
@@ -32,7 +32,7 @@ report_print <- function(
 
   data[[caption]] <- paste0(caption_indent, data[[caption]])
 
-  report_i(data[[flextable]], data[[caption]], data[[interpretation]])
+  report_i(data[[flex]], data[[caption]], data[[interpretation]])
 
 
 }
@@ -51,7 +51,7 @@ report_print <- function(
 #' @param interpretation A character vector of interpretations for each table
 #' @return NULL
 #'
-#' @import flextable
+#' @importFrom flextable set_caption flextable_to_rmd
 #' @importFrom magrittr %>%
 report_i <- function(tables, captions, interpretation) {
 
