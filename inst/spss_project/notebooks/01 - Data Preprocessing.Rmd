@@ -19,7 +19,7 @@ library(tidyverse)
 # Import
 
 ```{r}
-dane <- read_csv(local_path[1])
+dane <- read_csv("dane/surowe/dane_surowe")
 ```
 
 
