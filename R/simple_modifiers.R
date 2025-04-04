@@ -1,4 +1,17 @@
 
+#' Defuses an object to a symbol based on whether its a symbol express or a character expression
+#'
+#' @param defuse An object to defuse
+#' @return A symbol object
+defuse_auto <- function(defuse) {
+
+  if (is.symbol(substitute(defuse))) ensym(defuse)
+   else sym(defuse)
+}
+
+
+
+
 
 # Helper functions --------------------------------------------------------
 
@@ -13,6 +26,8 @@ format_dec <-  function(x, digits = 2, comma = T) {
   round(x, digits = digits) %>%
     formatC(digits = digits, format = "f", decimal.mark = decimal)
 }
+
+
 
 
 

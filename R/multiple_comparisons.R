@@ -215,12 +215,7 @@ comparison_bg1 <- function(.data, DVs, IV,
 
   # Poniższe zastosowałem pod kątem funkcji map()
   # działa, ale tylko, gdy argumenty przekazuje do map, a nie w ramach ~anonymous function
-  iv_arg <- substitute(IV)
-
-  if (is.symbol(iv_arg)) {
-    IV <- ensym(IV)
-  } else {IV <- sym(IV)}
-
+  IV <- defuse_auto(substitute(IV))
 
 
   df <- dplyr::select(.data, {{IV}}, {{DVs}} ) %>%

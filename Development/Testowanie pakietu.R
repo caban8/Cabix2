@@ -16,6 +16,25 @@ library(devtools)
 
 
 
+comparison_bg1(
+  mtcars,
+  DVs = c("mpg", "disp"),
+  IV = "am"
+)
+
+plot_bar(
+  mtcars,
+  DVs = c("mpg", "disp"),
+  IV = am
+)
+
+
+
+
+# -------------------------------------------------------------------------
+
+
+
 .
 
 

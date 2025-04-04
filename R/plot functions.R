@@ -7,6 +7,8 @@
 #' @export
 plot_bar <- function(data, ..., IV, spss.lab = TRUE, labels. = NULL, width_wrap = 20) {
 
+  IV <- defuse_auto(substitute(IV))
+
   # Obtain labels
   dv_labs <- var_labels(df = data, ... = ..., spss.lab = spss.lab, labels. = labels.)
   iv_lab <- var_labels(df = data, {{IV}}, spss.lab = spss.lab, labels. = labels.)
