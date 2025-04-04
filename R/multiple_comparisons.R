@@ -184,7 +184,7 @@ comparison_helper1 <- function(df, formula, test = c("t_test", "u_mann", "anova"
 #' Welch's correction.
 #'
 #' @param .data a data.frame or tibble vector
-#' @param ... A set of dependent variables in numeric form
+#' @param DVs A set of dependent variables in numeric form
 #' @param IV The independent variable that serves as the grouping variable
 #' @param test Statistical test used for the comparisons: `"t_test"` (the default), `"u_mann"`, `"anova"`, or `"kruskal"`
 #' @param spss.lab Imports SPSS labels (the default). Works only, if the data were imported from a SPSS sav file with

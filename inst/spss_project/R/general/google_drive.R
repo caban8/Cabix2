@@ -3,6 +3,7 @@
 
 library(googlesheets4)
 library(googledrive)
+library(tidyverse)
 
 project_name <- basename(getwd())
 local_path <- paste0(

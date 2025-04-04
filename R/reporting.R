@@ -15,6 +15,7 @@
 #' @param caption_indent The string used for caption indentation.
 #'
 #' @details The function filters the data using any additional parameters passed using `dplyr::filter()` function.
+#' @export
 #'
 #' @import dplyr
 report_print <- function(
@@ -50,6 +51,7 @@ report_print <- function(
 #' @param captions A character vector of captions for each table
 #' @param interpretation A character vector of interpretations for each table
 #' @return NULL
+#' @export
 #'
 #' @importFrom flextable set_caption flextable_to_rmd
 #' @importFrom magrittr %>%

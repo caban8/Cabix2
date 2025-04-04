@@ -23,14 +23,15 @@ params:
 ```{r setup, include=FALSE}
 # Extract parameter for including chunks with interpreation
 include_opis <-  params$include_opis
-source("R/general/setup.R")
+
 
 ```
 
 
 
 
-```{r }
+```{r include=FALSE}
+source("R/general/setup.R")
 zmienne <- list( )
 
 wstep <- wstepy()

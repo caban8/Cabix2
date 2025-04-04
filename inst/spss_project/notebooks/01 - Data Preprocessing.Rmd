@@ -4,6 +4,12 @@ title: "Data Preprocessing"
 ---
 
 
+# Pomysły na updadte
+
+Wyekstrahować wszystkie informacje o path itd. do dokumentu yaml?
+a przynajmniej o samym path
+
+
 
 
 ```{r }
@@ -23,15 +29,34 @@ dane <- read_csv("dane/surowe/dane_surowe")
 ```
 
 
-# Przygotowanie labels
+# Data Cleaning
+
+## Przygotowanie labels
 
 
-# Rekodowanie factors
+## Missing data
+
+
+## Poprawność kodowanie
+
+
+```{r}
+#Cabix2::question_labels()
+```
+
+
+## Rekodowanie factors
+
+
 
 # Zliczanie skal kwestionariusz
 
 
-# Dodanie spss labels 
+
+# Eksport
+
+
+## Dodanie spss labels 
 
 
 ```{r}
@@ -40,8 +65,6 @@ dane <- dane %>%
 ```
 
 
-
-# Eksport
 
 
 ## Labels
