@@ -5,10 +5,10 @@
 #' @return A symbol object
 defuse_auto <- function(defuse) {
 
-  if (is.symbol(substitute(defuse))) ensym(defuse)
+  if (is.symbol(defuse)) ensym(defuse)
    else sym(defuse)
 }
-
+# NA RAZIE NIE DZIAŁA POWYŻSZE
 
 
 

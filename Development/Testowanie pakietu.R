@@ -13,6 +13,21 @@ library(devtools)
 # !!!!
 
 
+wektor <- "sdafga"
+
+
+defuse_auto(substituted = substitute("am"), defuse = "am")
+defuse_auto(substituted = substitute(wektor), defuse = wektor)
+
+defuse_auto(defuse = "am")
+defuse_auto(defuse = substitute(am))
+defuse_auto(defuse = substitute("am"))
+defuse_auto(defuse = substitute(wektor))
+defuse_auto(defuse = wektor)
+
+
+is.symbol("sdfgs")
+is.symbol(wektor)
 
 
 
@@ -25,7 +40,7 @@ comparison_bg1(
 plot_bar(
   mtcars,
   DVs = c("mpg", "disp"),
-  IV = am
+  IV = "am"
 )
 
 

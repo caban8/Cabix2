@@ -7,7 +7,11 @@
 #' @export
 plot_bar <- function(data, ..., IV, spss.lab = TRUE, labels. = NULL, width_wrap = 20) {
 
-  IV <- defuse_auto(substitute(IV))
+  iv_arg <- substitute(IV)
+
+  if (is.symbol(iv_arg)) {
+    IV <- ensym(IV)
+  } else {IV <- sym(IV)}
 
   # Obtain labels
   dv_labs <- var_labels(df = data, ... = ..., spss.lab = spss.lab, labels. = labels.)
