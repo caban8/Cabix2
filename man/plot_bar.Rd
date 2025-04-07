@@ -4,7 +4,7 @@
 \alias{plot_bar}
 \title{Create a bar plot for many dependent variables}
 \usage{
-plot_bar(data, ..., IV, spss.lab = TRUE, labels. = NULL, width_wrap = 20)
+plot_bar(data, IV, ..., spss.lab = TRUE, labels. = NULL, width_wrap = 20)
 }
 \description{
 Create a bar plot for many dependent variables

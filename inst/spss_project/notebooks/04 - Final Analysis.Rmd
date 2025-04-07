@@ -16,7 +16,7 @@ params:
   include_opis: true
 ---
 
-# Uwagi dla klienta
+
 
 
 

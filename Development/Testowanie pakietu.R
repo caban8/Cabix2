@@ -40,7 +40,7 @@ comparison_bg1(
 plot_bar(
   mtcars,
   DVs = c("mpg", "disp"),
-  IV = "am"
+  IV = am
 )
 
 

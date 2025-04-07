@@ -5,7 +5,7 @@
 #' Create a bar plot for many dependent variables
 #'
 #' @export
-plot_bar <- function(data, ..., IV, spss.lab = TRUE, labels. = NULL, width_wrap = 20) {
+plot_bar <- function(data, IV, ...,  spss.lab = TRUE, labels. = NULL, width_wrap = 20) {
 
   iv_arg <- substitute(IV)
 
@@ -15,13 +15,13 @@ plot_bar <- function(data, ..., IV, spss.lab = TRUE, labels. = NULL, width_wrap 
 
   # Obtain labels
   dv_labs <- var_labels(df = data, ... = ..., spss.lab = spss.lab, labels. = labels.)
-  iv_lab <- var_labels(df = data, {{IV}}, spss.lab = spss.lab, labels. = labels.)
+  iv_lab <- var_labels(df = data, !!IV, spss.lab = spss.lab, labels. = labels.)
 
 
 
   # Obtain means and ci
   stats <- data %>%
-    dplyr::mutate(IV = haven::as_factor({{IV}})) %>%
+    dplyr::mutate(IV = haven::as_factor(!!IV)) %>%
     dplyr::group_by(IV) %>%
     rstatix::get_summary_stats(...) %>%
     dplyr::mutate(
