@@ -5,7 +5,7 @@ library(tidyverse)
 
 # Import labels codebook
 codebook <- read_csv("dane/codebooks/codebook.csv")
-view(codebook)
+
 
 # Import metoda
 metoda_path <- "dane/metoda/metoda.xlsx"
@@ -16,7 +16,7 @@ hipotezy <- metoda$Hipotezy %>%
   Cabix2::extract_hypotheses(hipoteza, przeformułowanie)
 
 # Import the main data
-Baza_nazwa <- ""
+Baza_nazwa <- "dane/dane_ostateczne/"
 baza <- haven::read_sav(Baza_nazwa)
 baza_fac <- baza %>% mutate(across(where(haven::is.labelled), haven::as_factor))
 

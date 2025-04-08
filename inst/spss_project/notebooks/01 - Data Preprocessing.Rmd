@@ -14,10 +14,9 @@ UWAGA
     - bo, gdy np. zmieniam nazwy tabelek, nie chcę za każdym razem przenosić tego do skorygowanej wersji interpretacji
   - Izolacja!!
   
-
-- Przenieść robienie statystyk opisowych również do infrastructure, celem centralizacji eksportu
-- usunąć dodawanie daty do bazy spsss, bo to zaburza cały dalszy progres analiz, gdy coś zmieniam innego dnia
 - Sporządzić gotową notkę do maila dla klienta o wyjaśnieniu, co jest czym
+
+- zliczanie skal wrzucić do EDA?
 
 
 ```{r }
@@ -57,7 +56,7 @@ dane <- read_csv("dane/surowe/dane_surowe")
 
 
 
-# Zliczanie skal kwestionariusz
+
 
 
 

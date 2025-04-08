@@ -35,6 +35,7 @@ SPRAWDZAĆ, CZY ZAKRESY SKAL SIĘ ZGADZAJĄ Z TEORETYCZNYMI
     -   Czy nie ma dziwnych względem wskaźnika wartości (np. odpowiedź "23" dla itema w skali 1 - 4)
 -   Box-plots
 -   Inne?
+- zliczanie skal
 
 
 Sprawdzić, czy
@@ -57,15 +58,20 @@ Sprawdzić, czy
 # Features Engineering
 
 
+## Zliczanie skal kwestionariusz
+
+
+### Alpha Cronbacha
+
 # Eksport danych oczyszczonych
 
 
 ```{r}
 dane_eda %>% 
-  write_csv("dane/dane_ostateczne.csv")
+  write_csv("dane/dane_ostateczne/dane_ostateczne.csv")
 
 dane_eda %>% 
-  Cabix2::spss_write("dane/Baza danych - ")
+  haven::write_sav(str_c("dane/dane_ostateczne/Baza danych ", basename(getwd()), ".sav"))
 
 
 ```

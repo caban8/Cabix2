@@ -7,6 +7,7 @@ title: "Infrastructure"
 ```{r include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 source("R/general/setup.R")
+source("R/general/import_final.R")
 
 eksport <- TRUE
 
@@ -29,33 +30,40 @@ W RAMACH TIBBLE MAM NASTĘPUJĄCE KOLUMNY
 
 
 
-```{r}
+
+# Analizy
+
+## Statystyki opisowe
+
+
+
+``` {r }
+rows_labs <- c()
+rows_nr <- c()
+
+
+dane_opisowe <- des.tab()
+
+opisowe_flex <- dane_opisowe %>% 
+  flex_destab() %>% 
+  flextable::set_caption(caption = tabs$desc)
+
+
+report_opisowe <- tibble(
+  tab_nr = 1,
+  caption = "Szczegółowe statystyki opisowe oraz sprawdzenie normalności rozkładu dla badanych zmiennych ilościowych",
+  analiza = list(dane_opisowe),
+  flextable = list(opisowe_flex),
+  interpretacja = opis_normalnosc(dane_opisowe),
+  type = "opisowe"
+)
 
 ```
 
 
 
 
-# Przygotowanie bazy danych
-
-## Import danych
-
-
-```{r include=FALSE}
-# Provide dataset path
-Baza_nazwa <- ""
-
-# Import labels codebook
-codebook <- read_csv("dane/codebooks/codebook.csv")
-
-
-baza <- haven::read_sav(Baza_nazwa)
-baza_fac <- baza %>% mutate(across(where(haven::is.labelled), haven::as_factor))
-```
-
-
-
-## Analizy
+## Weryfikacja hipotez
 
 
 ## Interpretacje
@@ -63,22 +71,6 @@ baza_fac <- baza %>% mutate(across(where(haven::is.labelled), haven::as_factor))
 
 # Wektory odniesienia
 
-
-
-## Tabelki
-
-
-```{r captions, include=FALSE}
-
-nline <- "\n\n" # To na początek tytułów, zgodnie z APA style 7
-
-tabs <- list(
-  desc = "Szczegółowe statystyki opisowe oraz sprawdzenie normalności rozkładu dla badanych zmiennych ilościowych"
-)
-
-tabs <- map(tabs, function(x) {paste0(nline, x)})
-
-```
 
 
 
@@ -92,8 +84,8 @@ To chcę eksportować do innego foldera, w ramach którego będe mógł robić c
 
 ```{r}
 # combined_report %>% 
-#   select(tab_nr, Hipotezy, typ, title, interpretacja) %>% 
-#   xlsx::write.xlsx("dane/interpretacje/opis_analiz.xlsx")
+#   select(tab_nr, caption, interpretacja) %>% 
+#   yaml::write_yaml("dane/interpretacje/opis_analiz.yaml")
 
 
 ```
@@ -101,6 +93,11 @@ To chcę eksportować do innego foldera, w ramach którego będe mógł robić c
 
 
 ## Flex tabele
+
+Tutaj chcę eksporotować w jednym pliku wpierw wszystkie tabele, wykresy
+
+a captions jeszcze oddzielnie,
+a key wszędzie to tab_nr
 
 
 ```{r }
@@ -163,14 +160,6 @@ save(list = c("flex_tables", "tabs", "hipotezy"), file = "dane/analyses_for_repo
 ```
 
 
-
-
-
-# Metoda
-
-Podstawowe informacje o metodzie badania
-
-**Może też pobierać z google drive**
 
 
 # Metoda

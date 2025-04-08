@@ -16,7 +16,7 @@ params:
   include_opis: true
 ---
 
-
+  
 
 
 
@@ -32,13 +32,12 @@ include_opis <-  params$include_opis
 
 ```{r include=FALSE}
 source("R/general/setup.R")
-zmienne <- list( )
+source("R/general/import_final.R")
 
+zmienne <- list( )
 wstep <- wstepy()
 tabelki <- opis_tabela(liczba = 10)
 ```
-
-
 
 
 ```{r include=include_opis}
@@ -64,26 +63,6 @@ tabelki[1] %>% cat()
 
 ```
 
-
-<br>
-``` {r }
-rows_labs <- c()
-rows_nr <- c()
-
-
-dane_opisowe <- des.tab( )
-
-dane_opisowe %>% 
-  flex_destab() %>% 
-  flextable::set_caption(caption = tabs$desc)
-
-
-```
-<br>
-
-```{r include=include_opis}
-dane_opisowe %>% opis_normalnosc() %>% cat()
-```
 
 
 <br>
