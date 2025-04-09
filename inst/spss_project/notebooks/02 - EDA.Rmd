@@ -20,7 +20,7 @@ library(DT)
 
 
 ```{r}
-dane_eda <- read_rds("dane/R data - preprocessed.rds")
+dane_eda <- read_rds("dane/przetworzone/R data - preprocessed.rds")
 
 ```
 
