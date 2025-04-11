@@ -13,6 +13,18 @@ library(devtools)
 # !!!!
 
 
+data2 <- tibble::tibble(
+   original = c('H1', 'H2', 'H3'),
+   reformulated = c('H1_ref', 'b.z.', 'H3_ref')
+ )
+
+data2 %>%
+  extract_hypotheses(original = original)
+
+data2 %>%
+  extract_hypotheses(original = original, reformulated = reformulated,  condition = "b.z.")
+
+
 wektor <- "sdafga"
 
 

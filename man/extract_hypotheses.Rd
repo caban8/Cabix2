@@ -4,10 +4,10 @@
 \alias{extract_hypotheses}
 \title{Extracts hypotheses from data based on original and reformulated variables}
 \usage{
-extract_hypotheses(data, original, reformulated, condition = "b.z.")
+extract_hypotheses(.data, original, reformulated = NULL, condition = "b.z.")
 }
 \arguments{
-\item{data}{The dataset containing the hypotheses variables}
+\item{.data}{The dataset containing the hypotheses variables}
 
 \item{original}{The name of the original hypothesis}
 
@@ -26,7 +26,7 @@ it replaces the original version of a hypothesis with the reformulated one.
 \examples{
 data <- tibble::tibble(
   original = c('H1', 'H2', 'H3'),
-  reformulated = c('H1', 'b.z.', 'H3')
+  reformulated = c('H1_ref', 'b.z.', 'H3_ref')
 )
 extract_hypotheses(data, original, reformulated, condition = 'b.z.')
 

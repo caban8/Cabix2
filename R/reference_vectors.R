@@ -6,7 +6,7 @@
 #' The function checks for a condition in the reformulated variable and if it is met,
 #' it replaces the original version of a hypothesis with the reformulated one.
 #'
-#' @param data The dataset containing the hypotheses variables
+#' @param .data The dataset containing the hypotheses variables
 #' @param original The name of the original hypothesis
 #' @param reformulated The name of the reformulated hypothesis
 #' @param condition The condition to check for in the reformulated variable (default: 'b.z.')
@@ -19,22 +19,30 @@
 #' @examples
 #' data <- tibble::tibble(
 #'   original = c('H1', 'H2', 'H3'),
-#'   reformulated = c('H1', 'b.z.', 'H3')
+#'   reformulated = c('H1_ref', 'b.z.', 'H3_ref')
 #' )
 #' extract_hypotheses(data, original, reformulated, condition = 'b.z.')
 #'
 #' @export
-extract_hypotheses <- function(data, original, reformulated, condition = "b.z.") {
+extract_hypotheses <- function(.data, original, reformulated = NULL, condition = "b.z.") {
 
-  if (!is.data.frame(data)) stop("The input must be a data frame.")
+  if (!is.data.frame(.data)) stop("The input must be a data frame.")
 
   original <- ensym(original)
-  reformulated <- ensym(reformulated)
+  reformulated <- if (is.symbol(substitute(reformulated))) ensym(reformulated)
 
 
-  data %>%
+
+  if (!is.null(reformulated) ) {
+
+    .data <- .data %>%
+      dplyr::mutate(
+        !!original := dplyr::if_else(!!reformulated == condition, !!original, !!reformulated)
+      )
+  }
+
+  .data %>%
     dplyr::mutate(
-      !!original := dplyr::if_else(!!reformulated == condition, !!original, !!reformulated),
       Nr = stringr::str_c("H", row_number())
     ) %>%
     dplyr::select(Nr, !!original) %>%
