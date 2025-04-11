@@ -71,7 +71,7 @@ Sys.setlocale("LC_CTYPE", "en_US.UTF-8")
 # Set comma as the decimal mark
 options(OutDec = ",")
 set_flextable_defaults(
-  font.family = "Times New Roman",  decimal.mark = ","
+  font.family = "Times New Roman",  decimal.mark = ",", big.mark = ""
 )
 
 
