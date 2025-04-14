@@ -216,6 +216,10 @@ comparison_bg1 <- function(.data, DVs, IV,
   # Poniższe zastosowałem pod kątem funkcji map()
   # działa, ale tylko, gdy argumenty przekazuje do map, a nie w ramach ~anonymous function
   iv_arg <- substitute(IV)
+  type <- match.arg(type)
+  test <- match.arg(test)
+
+
 
   if (is.symbol(iv_arg)) {
     IV <- ensym(IV)
@@ -223,30 +227,26 @@ comparison_bg1 <- function(.data, DVs, IV,
 
 
 
-  df <- dplyr::select(.data, {{IV}}, {{DVs}} ) %>%
-    tidyr::drop_na()
+  df <- dplyr::select(.data, {{IV}}, {{DVs}} ) %>% tidyr::drop_na()
 
 
-  if (is.null(val.labs)) {
-    factor_labs <- value_labels2(df, !!IV)
-  } else {
-    factor_labs <- val.labs
-  }
+  if (is.null(val.labs)) factor_labs <- value_labels2(df, !!IV)
+  else factor_labs <- val.labs
 
-  IV2 <- names(df)[1]
+
   DVs <- names(df)[-1]
   IV_lab <- var_labels(df, !!IV, spss.lab = spss.lab, labels. = iv.lab)
 
 
   #Statystyki opisowe
   descriptives <- conditions_stats(df = df, DVs, IV = !!IV, spss.lab = spss.lab,
-                                   labels. = labels., type = type[1])
+                                   labels. = labels., type = type)
 
 
   #Analiza zależności
   models <- tibble::tibble(
-    formula = stringr::str_c(DVs, " ~ ", IV2) %>% purrr::map(as.formula),
-    analysis = purrr::map(formula, comparison_helper1, df = df, test = test[1])
+    formula = stringr::str_c(DVs, " ~ ", iv_arg) %>% purrr::map(as.formula),
+    analysis = purrr::map(formula, comparison_helper1, df = df, test = test)
   ) %>%
     tidyr::unnest(analysis) %>%
     dplyr::select(-formula) %>%
@@ -255,11 +255,15 @@ comparison_bg1 <- function(.data, DVs, IV,
   result <- tibble::add_column(descriptives, models)
 
   #Wynik
-  attr(result, which = "test") <- test[1]
-  attr(result, which = "type") <- type[1]
+  result <- structure(
+    result,
+    test = test,
+    type = type,
+    iv_lab = var_labels(df, !!IV, spss.lab = spss.lab, labels. = iv.lab),
+    iv_vals = factor_labs
+  )
 
-  all <- list(IV_lab, factor_labs, result)
-  names(all) <- c("iv_lab", "iv_vals", "result")
-  all
+
+  return(result)
 
 }
