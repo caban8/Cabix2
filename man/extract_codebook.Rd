@@ -4,7 +4,7 @@
 \alias{extract_codebook}
 \title{Extract a codebook from a data frame}
 \usage{
-extract_codebook(data)
+extract_codebook(.data, group = TRUE, editable = TRUE)
 }
 \arguments{
 \item{data}{A data frame containing variables with labels.}

@@ -17,18 +17,19 @@
 #' @import tibble
 #' @import dplyr
 #'
-extract_codebook <- function(data) {
+extract_codebook <- function(.data, group = TRUE, editable = TRUE) {
 
-  if (!is.data.frame(data)) stop("The input must be a data frame.")
-  if (any_Nlabelled(data)) warning("Not all variables are labelled. The codebook will contain NULLs.")
-
+  if (!is.data.frame(.data)) stop("The input must be a data frame.")
 
 
-  data %>%
-    names() %>%
-    purrr::set_names(purrr::map(data, attr, "label")) %>%
-    tibble::enframe(name = "Etykieta", value = "Nazwa") %>%
-    dplyr::select(Nazwa, Etykieta)
+  .data <- extract_labels(.data)
+
+  if (group) .data <- dplyr::mutate(.data, group_idx = group_index(Nazwa))
+  if (editable) .data <- dplyr::mutate(.data, Etykieta2 = "")
+
+  return(.data)
+
+
 }
 
 
@@ -91,8 +92,33 @@ row_labs <- function(df, labs, nrow) {
 
 
 
-
 # Label functions' helpers ------------------------------------------------
+
+
+
+#' Extract class attribute labels to a mapped data.frame
+extract_labels <- function(.data) {
+
+  if (any_Nlabelled(.data)) warning("Not all variables are labelled. The codebook will contain NULLs.")
+
+  .data %>%
+    names() %>%
+    purrr::set_names(purrr::map(.data, attr, "label")) %>%
+    tibble::enframe(name = "Etykieta", value = "Nazwa") %>%
+    dplyr::select(Nazwa, Etykieta)
+}
+
+
+#' Extract the first part of a string before a separator.
+#' Used to extract grouping category of a variable in a dataset.
+group_index <- function(x, sep = "_") {
+
+  pattern <- paste0("^[^", sep, "]+")
+
+  stringr::str_extract(x, pattern = pattern)
+
+}
+
 
 
 any_Nlabelled <- function(data) {

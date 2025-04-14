@@ -66,7 +66,14 @@ Sprawdzić, czy
 # Eksport danych oczyszczonych
 
 
+
+
 ```{r}
+
+dane_eda %>% 
+  Cabix2::extract_codebook() %>% 
+  writexl::write_xlsx("dane/codebooks/codebook.xlsx")
+
 dane_eda %>% 
   write_csv("dane/dane_ostateczne/dane_ostateczne.csv")
 
