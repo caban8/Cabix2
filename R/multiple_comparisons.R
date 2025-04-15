@@ -221,6 +221,7 @@ comparison_bg1 <- function(.data, DVs, IV,
 
 
 
+
   if (is.symbol(iv_arg)) {
     IV <- ensym(IV)
   } else {IV <- sym(IV)}
@@ -235,6 +236,7 @@ comparison_bg1 <- function(.data, DVs, IV,
 
 
   DVs <- names(df)[-1]
+  IV_form <- names(df)[1]
   IV_lab <- var_labels(df, !!IV, spss.lab = spss.lab, labels. = iv.lab)
 
 
@@ -245,7 +247,7 @@ comparison_bg1 <- function(.data, DVs, IV,
 
   #Analiza zależności
   models <- tibble::tibble(
-    formula = stringr::str_c(DVs, " ~ ", iv_arg) %>% purrr::map(as.formula),
+    formula = stringr::str_c(DVs, " ~ ", IV_form) %>% purrr::map(as.formula),
     analysis = purrr::map(formula, comparison_helper1, df = df, test = test)
   ) %>%
     tidyr::unnest(analysis) %>%
@@ -260,7 +262,8 @@ comparison_bg1 <- function(.data, DVs, IV,
     test = test,
     type = type,
     iv_lab = var_labels(df, !!IV, spss.lab = spss.lab, labels. = iv.lab),
-    iv_vals = factor_labs
+    iv_vals = factor_labs,
+    iv = IV_form
   )
 
 

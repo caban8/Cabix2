@@ -11,6 +11,8 @@ library(devtools)
 
 
 
+
+
 # reporting ---------------------------------------------------------------
 
 use_r("reporting")
@@ -126,6 +128,8 @@ use_r("multiple_comparisons")
 use_test("multiple_comparisons")
 testthat::test_file("tests/testthat/test-multiple_comparisons.R")
 
+
+use_r("posthoc_anova")
 
 
 

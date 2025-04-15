@@ -35,6 +35,7 @@ select_grouped <- function(df, ..., IV1, IV2) {
 
 
 mean_sd <- function(df, ..., IV, digits = 2) {
+
   df %>%
     select_grouped(..., IV1 = {{IV}}) %>%
     dplyr::summarise(dplyr::across(tidyselect::everything(),
@@ -126,6 +127,6 @@ conditions_stats <- function(df, ..., IV, spss.lab = T, labels. = NULL, type = c
     dplyr::mutate(stats = stringr::str_c(stat1, " (", stat2, ")")) %>%
     dplyr::select(-c(stat1, stat2)) %>%
     tidyr::pivot_wider(values_from = stats, names_from = IV_lab) %>%
-    dplyr::mutate(variable = etykiety)
+    dplyr::mutate(labels = etykiety, .after = variable)
 
 }

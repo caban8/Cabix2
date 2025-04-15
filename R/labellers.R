@@ -154,7 +154,8 @@ var_labels <- function(df, ..., spss.lab = T, labels. = NULL) {
     etykiety <- labels.
   }
 
-  return(as.character(etykiety))
+  # return(as.character(etykiety))
+  return(unlist(etykiety))
 
 }
 
