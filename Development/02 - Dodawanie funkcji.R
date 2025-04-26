@@ -13,6 +13,15 @@ library(devtools)
 
 
 
+
+
+# yaml --------------------------------------------------------------------
+
+
+use_r("create_yaml_reference")
+use_test("create_yaml_reference")
+
+
 # reporting ---------------------------------------------------------------
 
 use_r("reporting")

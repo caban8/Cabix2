@@ -6,6 +6,20 @@ title: "Data Preprocessing"
 
 # Pomysły na updadte
 
+Funkcje:
+- funkcja do raportowania wielu hipotez (nie pamiętam o co chodzi)
+  - synchronizacja z funkcją do raportowania
+- funkcja do automatycznej numeracji tabeli
+- Może zrobić jeszcze jedną, wyżej poziomową funkcję, która będzie czytała pojedynczy wiersz nested tibble
+  - zawierający informacje o hipotezach, numeracji tabeli, itd.
+  
+A.I.
+- Zaktualizować poprawki korelacji chatgpt o podawanie grupy?
+  - bądź w samym moim pakiecie
+  
+Google drive
+- Ustalić jakiś system ochronny, żeby osoby nie ingerowały w nawigację ze strony tibble analiz
+
 Wyekstrahować wszystkie informacje o path itd. do dokumentu yaml?
 a przynajmniej o samym path
 

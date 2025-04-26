@@ -28,9 +28,7 @@ report_print <- function(
 ) {
 
 
-  data <- data %>%
-    dplyr::filter(...)
-
+  data <- dplyr::filter(data, ...)
   data[[caption]] <- paste0(caption_indent, data[[caption]])
 
   report_i(data[[flex]], data[[caption]], data[[interpretation]])
@@ -60,6 +58,34 @@ report_i <- function(tables, captions, interpretation) {
   for (i in seq_along(tables)) {
 
     tables[[i]] %>% flextable::set_caption(captions[[i]]) %>%  flextable::flextable_to_rmd()
+    cat("\u00A0\n\n") # Spacja na końcu, żeby dodało akapit
+    cat(interpretation[[i]])
+    cat("\n\n\u00A0") # Spacja na początku, żeby dodało akapit
+
+  }
+
+}
+
+report_i2 <- function(tables, captions, interpretation, plots, plots_captions, path = "raporty/wykresy") {
+
+  tables <- purrr::map2(
+    tables,
+    captions,
+    ~ flextable::set_caption(.x, .y) %>% flextable::flextable_to_rmd()
+  )
+  output <- c(tables, plots)
+
+  for (i in seq_along(output)) {
+
+    if (ggplot2::is.ggplot(output[[i]])) {
+
+      path <- paste0(path, "/Rycina", plots_captions[[i]] - length(tables), ".png")
+      ggplot2::ggsave(path, plot = output[[i]], width = 10, height = 7)
+      cat("![", captions[[i]], "](", path, ")", sep = "")
+    }
+
+
+    output[[i]] %>% flextable::set_caption(captions[[i]]) %>%  flextable::flextable_to_rmd()
     cat("\u00A0\n\n") # Spacja na końcu, żeby dodało akapit
     cat(interpretation[[i]])
     cat("\n\n\u00A0") # Spacja na początku, żeby dodało akapit

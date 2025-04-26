@@ -1,4 +1,8 @@
 # reference_vectors.yaml
 
 patterns:
-  items: "BISBAS|SOC29|GAD7"
+  items: ""
+
+paths:
+  dane_eda: ""
+  dane_raw: ""

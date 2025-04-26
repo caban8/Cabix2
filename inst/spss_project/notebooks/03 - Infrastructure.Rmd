@@ -85,7 +85,7 @@ To chcę eksportować do innego foldera, w ramach którego będe mógł robić c
 ```{r}
 # combined_report %>% 
 #   select(tab_nr, caption, interpretacja) %>% 
-#   yaml::write_yaml("dane/interpretacje/opis_analiz.yaml")
+#   yaml::write_yaml("dane/interpretacje/opis_analiz.yml")
 
 
 ```
