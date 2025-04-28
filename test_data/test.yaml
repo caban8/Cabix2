@@ -1,0 +1,16 @@
+yaml_name:
+- codebooks
+- interpretacje
+- przetworzone
+- surowe
+- metoda
+- dane_ostateczne
+- yaml
+path:
+- dane/codebooks
+- dane/interpretacje
+- dane/przetworzone
+- dane/surowe
+- dane/metoda
+- dane/dane_ostateczne
+- dane/yaml

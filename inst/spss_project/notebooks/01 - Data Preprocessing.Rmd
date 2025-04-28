@@ -4,7 +4,11 @@ title: "Data Preprocessing"
 ---
 
 
-# Pomysły na updadte
+# Pomysły na update
+
+
+Przechowywanie metody itp.
+- Baserow albo Airtable, do tworzenia prostych baz danych z możliwością inline edytowania
 
 Funkcje:
 - funkcja do raportowania wielu hipotez (nie pamiętam o co chodzi)

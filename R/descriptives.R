@@ -77,6 +77,7 @@ kurtosis <- function(z) {
 descriptives <- function(df, ..., IV1, IV2, digits = 2) {
 
   etykiety <- var_labels(df, ...)
+
   IVs <- stringr::str_detect(c(deparse(substitute(IV1)), deparse(substitute(IV2))), pattern = "")
   index <- sum(IVs) + 1
 
