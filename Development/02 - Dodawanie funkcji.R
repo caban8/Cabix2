@@ -8,6 +8,7 @@
 
 
 library(devtools)
+library(testthat)
 
 
 
