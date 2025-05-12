@@ -157,7 +157,7 @@ a key wszędzie to tab_nr
 
 ```{r}
 
-save(list = c("flex_tables", "tabs", "hipotezy"), file = "dane/analyses_for_report.Rdata")
+save(list = c("combined_report"), file = "dane/analyses_for_report.Rdata")
 
 ```
 
