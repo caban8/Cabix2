@@ -4,7 +4,7 @@
 library(tidyverse)
 
 # Import labels codebook
-codebook <- read_csv("dane/codebooks/codebook.csv")
+codebook <- readxl::read_excel("dane/codebooks/codebook.xlsx")
 
 
 # Import metoda

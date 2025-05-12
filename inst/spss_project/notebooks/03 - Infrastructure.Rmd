@@ -42,11 +42,13 @@ rows_labs <- c()
 rows_nr <- c()
 
 
-dane_opisowe <- des.tab()
+dane_opisowe <- with(
+  baza, # nazwa bazy danych
+  des.tab()
+  )
 
 opisowe_flex <- dane_opisowe %>% 
-  flex_destab() %>% 
-  flextable::set_caption(caption = tabs$desc)
+  flex_destab() 
 
 
 report_opisowe <- tibble(
