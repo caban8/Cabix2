@@ -1,0 +1,4 @@
+Name: Load .Rprofile
+  Description: Quickly loads again .Rprofile
+Binding: runRprofileAddin
+Interactive: false

@@ -66,6 +66,13 @@ report_i <- function(tables, captions, interpretation) {
 
 }
 
+
+
+#' Generates a report composed of flextables with captions, associated interpretations, and plots
+#' @export
+#'
+#' @importFrom flextable set_caption flextable_to_rmd
+#' @importFrom magrittr %>%
 report_i2 <- function(tables, captions, interpretation, plots, plots_captions, path = "raporty/wykresy") {
 
   tables <- purrr::map2(
