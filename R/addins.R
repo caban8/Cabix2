@@ -1,0 +1,3 @@
+runRprofileAddin <- function() source(".Rprofile")
+
+
