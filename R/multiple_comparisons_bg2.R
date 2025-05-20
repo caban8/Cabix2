@@ -114,7 +114,7 @@ aov2_posthoc <- function(df, DV, IV1, IV2 = NULL, p.adj = "bonferroni") {
 #'   * Two tables with post-hoc analyses for the simple effects
 #'
 #' @export
-aov2_bg <- function(df, DV, IV1, IV2, p.adj = "bonferroni",
+  aov2_bg <- function(df, DV, IV1, IV2, p.adj = "bonferroni",
                     spss.lab = TRUE, labels. = NULL) {
 
   df <- dplyr::select(df, {{DV}}, {{IV1}}, {{IV2}}) %>%
