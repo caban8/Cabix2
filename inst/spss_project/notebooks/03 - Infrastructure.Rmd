@@ -57,7 +57,7 @@ report_opisowe <- tibble(
   analiza = list(dane_opisowe),
   flextable = list(opisowe_flex),
   interpretacja = opis_normalnosc(dane_opisowe),
-  type = "opisowe"
+  typ_analizy = "opisowe"
 )
 
 ```
