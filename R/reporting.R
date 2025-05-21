@@ -82,6 +82,10 @@ report_i2 <- function(tables, captions, interpretation, plots, plots_captions, p
   )
   output <- c(tables, plots)
 
+  if (length(output) != length(interpretation)) {
+    stop("The combined number of tables and plots must be equal to the number of interpretations.")
+  }
+
   for (i in seq_along(output)) {
 
     if (ggplot2::is.ggplot(output[[i]])) {
