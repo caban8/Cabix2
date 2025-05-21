@@ -58,7 +58,7 @@ library(tidyverse)
 # Import
 
 ```{r}
-dane <- read_csv("dane/surowe/dane_surowe")
+dane <- read_excel("dane/surowe/dane_surowe.xlsx")
 ```
 
 
