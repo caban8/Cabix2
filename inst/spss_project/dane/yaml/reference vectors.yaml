@@ -6,3 +6,6 @@ patterns:
 paths:
   dane_eda: ""
   dane_raw: ""
+
+final_vars: # tutaj wrzucam wszystkie zmienne do wykorzystania w ostatecznej analizie 03 - Infrastructure
+  - ""

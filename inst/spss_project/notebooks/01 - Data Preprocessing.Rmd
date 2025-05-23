@@ -10,6 +10,8 @@ title: "Data Preprocessing"
 Przechowywanie metody itp.
 - Baserow albo Airtable, do tworzenia prostych baz danych z możliwością inline edytowania
 
+Baza da
+
 Funkcje:
 - funkcja do raportowania wielu hipotez (nie pamiętam o co chodzi)
   - synchronizacja z funkcją do raportowania
