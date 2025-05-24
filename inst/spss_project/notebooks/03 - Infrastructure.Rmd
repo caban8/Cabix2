@@ -68,6 +68,16 @@ report_opisowe <- tibble(
 ## Weryfikacja hipotez
 
 
+```{r}
+
+# split_vars_1(c("zmienne_zalezne", "zmienne_niezalezne"))
+
+
+
+```
+
+
+
 ## Interpretacje
 
 
