@@ -25,6 +25,14 @@ dane_eda <- read_rds("dane/przetworzone/R data - preprocessed.rds")
 ```
 
 
+
+
+# Zliczanie skal kwestionariusz
+
+
+
+
+
 # Eksploracja
 
 NAJPIERW ZROBIĆ ANALIZĘ EKSPLORACJI
@@ -56,12 +64,6 @@ Sprawdzić, czy
 
 
 # Features Engineering
-
-
-## Zliczanie skal kwestionariusz
-
-
-### Alpha Cronbacha
 
 # Eksport danych oczyszczonych
 
