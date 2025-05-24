@@ -11,6 +11,12 @@ library(devtools)
 library(testthat)
 
 
+# Funkcje do pracy z metadata analizy w ramach projektu spss --------------
+
+use_r("report_analyses")
+use_test("report_analyses")
+
+
 
 # Addins ------------------------------------------------------------------
 
