@@ -35,7 +35,9 @@ source("R/general/setup.R")
 source("R/general/import_final.R")
 load("dane/analyses_for_report.Rdata")
 
-zmienne <- list( )
+zmienne <- list(
+  zmienne_wprowadzic
+)
 wstep <- wstepy()
 tabelki <- opis_tabela(liczba = 10)
 ```
