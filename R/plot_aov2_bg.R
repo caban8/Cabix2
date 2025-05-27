@@ -12,9 +12,6 @@
 #'
 #' @return A grouped bar graph with error bars
 #'
-#' @import ggplot2
-#' @import dplyr
-#' @import rlang
 #' @export
 plot_aov2_bg <- function(.l, iv1, iv2, y_label) {
 
