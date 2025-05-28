@@ -91,13 +91,4 @@ qual_cols <- c(
   "#8B322C"
 )
 
-if (requireNamespace("thematic"))
-  thematic::thematic_rmd(
-    # bg = "#4793AF",
-    # fg = "#FFC470",
-    # sequential = ,
-    # font = ,
-    qualitative = qual_cols
-    # accent = "#DD5746"
-  )
 
