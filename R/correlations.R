@@ -84,3 +84,47 @@ cor_tab <- function (df, X, Y, method = "auto", spss.lab = T,
   names(korelacje) <- c(" ", labs2)
   korelacje
 }
+
+
+
+#' Compute correlations separately by different groups
+#'
+#' This is a wrapper function for cor_tab() that allows to run multiple correlations
+#' for each group separately.
+#'
+#' @param df A data frame containing the data to be analyzed.
+#' @param X,Y A pair of variables' sets to be correlated against one another.
+#' @param method The correlation method to be used. Default is "auto", which chooses between Pearson and Spearman based on normality tests.
+#' @param spss.lab Logical indicating whether to use SPSS-style variable labels.
+#' @param labels. A character vector of length two for custom labels for the X and Y variables.
+#' @param grouping The name of the grouping variable in the data frame.
+#' This variable is used to split the data into groups for separate correlation analyses.
+#'
+#' @returns A list of data frames, each containing the correlation results for a specific group.
+#'
+#' @export
+cor_tab_groups <- function(
+    df, X, Y, method = "auto", spss.lab = T,
+    labels. = c(NULL, NULL), grouping
+) {
+
+  groups <- unique(df[[grouping]])
+  .l <- vector("list", length(groups))
+
+
+  for (i in seq_along(groups)) {
+    df_group <- df %>%
+      dplyr::filter(!!rlang::sym(grouping) == groups[[i]])
+
+    .l[[i]] <- cor_tab(
+      df_group, X = {{X}}, Y = {{Y}}, method = method,
+      spss.lab = spss.lab, labels. = labels.
+    )
+
+  }
+
+  names(.l) <- groups
+  return(.l)
+
+
+}
