@@ -1,3 +1,20 @@
+#' Extract and mark all significant posthoc pairs associaited wth a given anova result
+#'
+#'
+#'
+#' @export
+extract_posthoc_pairs <- function(.data, vars, iv = NULL, alpha = 0.05, adj = "bonferroni") {
+
+  posthoc <- apply_posthoc(.data, vars, iv, alpha, adj, map_labels = FALSE)
+
+  mark_significant_posthoc(posthoc)
+
+
+}
+
+
+
+
 
 
 #' Apply post-hoc tests to a dataset
@@ -19,14 +36,16 @@
 #' @examples
 #' data(mpg)
 #' apply_posthoc(mpg, c("manufacturer", "class"), iv = "drv")
-apply_posthoc <- function(.data, vars, iv = NULL, alpha = 0.05, adj = "bonferroni") {
+apply_posthoc <- function(.data, vars, iv = NULL, alpha = 0.05, adj = "bonferroni", map_labels = TRUE) {
 
   stop_no_iv(vars, iv)
 
   ref <- extract_vars_info(.data, vars, iv)
 
-  posthoc <- run_posthoc_helper(.data, ref$vars, ref$iv, alpha, adj) %>%
-    posthoc_map_groups(ref$iv_vals)
+
+  posthoc <- run_posthoc_helper(.data, ref$vars, ref$iv, alpha, adj)
+
+  if (map_labels) posthoc <- posthoc_map_groups(posthoc, ref$iv_vals)
 
   return(posthoc)
 
@@ -34,7 +53,10 @@ apply_posthoc <- function(.data, vars, iv = NULL, alpha = 0.05, adj = "bonferron
 
 
 
-# Helpers -----------------------------------------------------------------
+
+# apply posthoc helpers ---------------------------------------------------
+
+
 
 
 #' Map groups to their labels in the posthoc results
@@ -96,6 +118,31 @@ extract_significant_vars <- function(.data, variable, alpha = 0.05) {
 
 
 }
+
+
+
+# extract posthoc pairs helpers -------------------------------------------
+
+
+#' Mark all significant posthoc pairs also marking which of the two groups has a higher result
+mark_significant_posthoc <- function(.data) {
+
+  .data %>%
+    dplyr::mutate(
+      posthoc = dplyr::case_when(
+        p.adj <= 0.05 & statistic > 0 ~ paste0(group1, " > ", group2),
+        p.adj <= 0.05 & statistic < 0 ~ paste0(group2, " > ", group1),
+        TRUE ~ NA_character_
+      )
+    ) %>%
+    dplyr::group_by(.y.) %>%
+    dplyr::summarise(
+      posthoc = paste(na.omit(posthoc), collapse = "; ")
+    ) %>%
+    purrr::set_names(c("variable", "posthoc"))
+
+}
+
 
 
 

@@ -162,6 +162,21 @@ comparison_helper1 <- function(df, formula, test = c("t_test", "u_mann", "anova"
 
 
 
+
+add_posthoc <- function(.data, comparison_result, alpha, adj) {
+
+  posthoc_result <- extract_posthoc_pairs(
+    .data = .data,
+    vars  = comparison_result,
+    alpha = alpha,
+    adj   = adj
+  )
+
+  comparison_result %>%
+    dplyr::left_join(posthoc_result, by = "variable")
+}
+
+
 # Funkcja główna ----------------------------------------------------------
 
 
@@ -190,7 +205,10 @@ comparison_helper1 <- function(df, formula, test = c("t_test", "u_mann", "anova"
 #' @param spss.lab Imports SPSS labels (the default). Works only, if the data were imported from a SPSS sav file with
 #'  defined variable labels.
 #' @param labels. A character vector with labels to supplant the basic object names of the vectors. The default is set to NULL.
-#' @param comma Chooses comma (the default) as the decimal mark
+#' @param posthoc Optional post-hoc test to perform for pairwise comparisons. The results are added to the output as an additional column.
+#'  If NULL (default), no post-hoc test is performed.
+#' @param alpha The significance level for hypothesis testing for posthoc-analysis. Default is 0.05.
+#'
 #' @returns A data.frame in tibble format.
 #' The columns represent means and standard deviations for each group, test's statistic, and the corresponding p-value with
 #' effect size.
@@ -211,7 +229,10 @@ comparison_bg1 <- function(.data, DVs, IV,
                            labels. = NULL,
                            val.labs = NULL,
                            iv.lab = NULL,
-                           type = c("mean_sd", "median_iqr", "mrank_median")) {
+                           type = c("mean_sd", "median_iqr", "mrank_median"),
+                           posthoc = NULL,
+                           alpha = 0.05
+                           ) {
 
   # Poniższe zastosowałem pod kątem funkcji map()
   # działa, ale tylko, gdy argumenty przekazuje do map, a nie w ramach ~anonymous function
@@ -256,6 +277,8 @@ comparison_bg1 <- function(.data, DVs, IV,
 
   result <- tibble::add_column(descriptives, models)
 
+
+
   #Wynik
   result <- structure(
     result,
@@ -266,6 +289,12 @@ comparison_bg1 <- function(.data, DVs, IV,
     iv = IV_form
   )
 
+
+
+  if (!is.null(posthoc)) {
+
+    result <- add_posthoc(.data = .data, comparison_result = result, alpha = alpha, adj = posthoc)
+  }
 
   return(result)
 
