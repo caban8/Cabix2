@@ -108,7 +108,14 @@ cor_tab_groups <- function(
     labels. = c(NULL, NULL), grouping
 ) {
 
-  groups <- unique(df[[grouping]])
+
+  if (haven::is.labelled(df[[grouping]])) {
+    df[[grouping]] <- haven::as_factor(df[[grouping]])
+  } else {
+    df[[grouping]] <- as.factor(df[[grouping]])
+  }
+
+  groups <- levels(df[[grouping]])
   .l <- vector("list", length(groups))
 
 
