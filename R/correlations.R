@@ -123,8 +123,13 @@ cor_tab_groups <- function(
 
   }
 
-  names(.l) <- groups
-  return(.l)
+
+  result <- .l %>%
+    purrr::set_names(groups) %>%
+    purrr::imap(~row_labs(.x, .y, 1)) %>%
+    purrr::reduce(dplyr::add_row)
+
+  return(result)
 
 
 }
