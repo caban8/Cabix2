@@ -13,7 +13,9 @@ comparison_bg1(
   labels. = NULL,
   val.labs = NULL,
   iv.lab = NULL,
-  type = c("mean_sd", "median_iqr", "mrank_median")
+  type = c("mean_sd", "median_iqr", "mrank_median"),
+  posthoc = NULL,
+  alpha = 0.05
 )
 }
 \arguments{
@@ -30,7 +32,10 @@ defined variable labels.}
 
 \item{labels.}{A character vector with labels to supplant the basic object names of the vectors. The default is set to NULL.}
 
-\item{comma}{Chooses comma (the default) as the decimal mark}
+\item{posthoc}{Optional post-hoc test to perform for pairwise comparisons. The results are added to the output as an additional column.
+If NULL (default), no post-hoc test is performed.}
+
+\item{alpha}{The significance level for hypothesis testing for posthoc-analysis. Default is 0.05.}
 }
 \value{
 A data.frame in tibble format.

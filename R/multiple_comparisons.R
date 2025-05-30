@@ -291,9 +291,10 @@ comparison_bg1 <- function(.data, DVs, IV,
 
 
 
-  if (!is.null(posthoc)) {
+  if (!is.null(posthoc) && test == "anova") {
 
     result <- add_posthoc(.data = .data, comparison_result = result, alpha = alpha, adj = posthoc)
+    attr(result, which = "test") <- "anova_posthoc"
   }
 
   return(result)
