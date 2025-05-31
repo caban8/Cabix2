@@ -162,7 +162,26 @@ comparison_helper1 <- function(df, formula, test = c("t_test", "u_mann", "anova"
 
 
 
+#’ Apply post‐hoc adjustments (and set test attribute) if a condition is met
+maybe_add_posthoc <- function(.data, result, alpha, posthoc, posthoc_cond) {
 
+  if (posthoc_cond) {
+
+    result <- add_posthoc(
+      .data              = .data,
+      comparison_result  = result,
+      alpha              = alpha,
+      adj                = posthoc
+    )
+
+    attr(result, "test") <- "anova_posthoc"
+  }
+
+  return(result)
+}
+
+
+#' Add post-hoc test results to the comparison_bg1 result. Works only with anova test.
 add_posthoc <- function(.data, comparison_result, alpha, adj) {
 
   posthoc_result <- extract_posthoc_pairs(
@@ -289,13 +308,15 @@ comparison_bg1 <- function(.data, DVs, IV,
     iv = IV_form
   )
 
+  posthoc_cond <- !is.null(posthoc) && test == "anova" && any(result$p <= alpha, na.rm = T)
+  result <- maybe_add_posthoc(
+    .data = .data,
+    result = result,
+    alpha = alpha,
+    posthoc = posthoc,
+    posthoc_cond = posthoc_cond
+  )
 
-
-  if (!is.null(posthoc) && test == "anova") {
-
-    result <- add_posthoc(.data = .data, comparison_result = result, alpha = alpha, adj = posthoc)
-    attr(result, which = "test") <- "anova_posthoc"
-  }
 
   return(result)
 
