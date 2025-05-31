@@ -20,7 +20,7 @@ library(DT)
 
 
 ```{r}
-dane_eda <- read_rds("dane/przetworzone/R data - preprocessed.rds")
+dane_eda <- read_rds(paths$dane_przetworzone)
 
 ```
 
@@ -74,13 +74,15 @@ Sprawdzić, czy
 
 dane_eda %>% 
   Cabix2::extract_codebook() %>% 
-  writexl::write_xlsx("dane/codebooks/codebook.xlsx")
+  writexl::write_xlsx(paths$codebook)
 
 dane_eda %>% 
-  write_csv("dane/dane_ostateczne/dane_ostateczne.csv")
+  write_csv(paths$dane_ostateczne)
+
+
 
 dane_eda %>% 
-  haven::write_sav(str_c("dane/dane_ostateczne/Baza danych ", basename(getwd()), ".sav"))
+  haven::write_sav(paths$dane_spss)
 
 
 ```

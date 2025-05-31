@@ -106,8 +106,8 @@ dane <- dane %>%
 
 
 ```{r}
-df5 %>% 
-  saveRDS("dane/przetworzone/R data - preprocessed.rds")
+dane %>% 
+  saveRDS(paths$dane_przetworzone)
 
 ```
 
