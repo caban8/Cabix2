@@ -37,7 +37,8 @@ source("R/general/import_final.R")
 if (requireNamespace("thematic")) # musi być tutaj, żeby markdown::render poprawnie wypluwał wykresy
   thematic::thematic_rmd(qualitative = qual_cols)
 
-load("dane/analyses_for_report.Rdata")
+load(paths$rdata)
+interpretacje <- yaml::read_yaml(paths$interpretacje)
 
 zmienne <- list(
   zmienne_wprowadzic

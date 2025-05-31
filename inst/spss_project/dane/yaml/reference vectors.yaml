@@ -10,6 +10,8 @@ paths:
   dane_ostateczne: "dane/dane_ostateczne/dane_ostateczne.csv"
   dane_spss: "dane/dane_ostateczne/dane_spss.sav"
   codebook: "dane/codebooks/codebook.xlsx"
+  rdata: "dane/analyses_for_report.Rdata"
+  interpretacje:
 
 final_vars: # tutaj wrzucam wszystkie zmienne do wykorzystania w ostatecznej analizie 03 - Infrastructure
   - ""
