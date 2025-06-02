@@ -105,7 +105,7 @@ cor_tab <- function (df, X, Y, method = "auto", spss.lab = T,
 #' @export
 cor_tab_groups <- function(
     df, X, Y, method = "auto", spss.lab = T,
-    labels. = c(NULL, NULL), grouping
+    labels. = c(NULL, NULL), grouping, simplify = TRUE
 ) {
 
 
@@ -133,10 +133,33 @@ cor_tab_groups <- function(
 
   result <- .l %>%
     purrr::set_names(groups) %>%
-    purrr::imap(~row_labs(.x, .y, 1)) %>%
-    purrr::reduce(dplyr::add_row)
+    cor_simplify(simplify = simplify)
+
+
+
 
   return(result)
 
 
 }
+
+
+
+# helper cor_tab_groups ---------------------------------------------------
+
+
+
+cor_simplify <- function(result, simplify) {
+
+
+
+  if (simplify) {result <- result %>%
+    purrr::imap(~row_labs(.x, .y, 1)) %>%
+    purrr::reduce(dplyr::add_row)}
+
+  return(result)
+}
+
+
+
+
