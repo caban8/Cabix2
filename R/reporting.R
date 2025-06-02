@@ -24,13 +24,15 @@ report_print <- function(
     caption = "caption",
     interpretation = "interpretacja",
     ...,
-    caption_indent = "\n\n"
+    caption_indent = "\n\n",
+    tab_nr = "tab_nr"
 ) {
 
 
   data <- dplyr::filter(data, ...)
   data[[caption]] <- paste0(caption_indent, data[[caption]])
 
+  print_tables_ids(data[[tab_nr]])
   report_i(data[[flex]], data[[caption]], data[[interpretation]])
 
 
@@ -104,3 +106,27 @@ report_i2 <- function(tables, captions, interpretation, plots, plots_captions, p
   }
 
 }
+
+
+# report_print helpers ----------------------------------------------------
+
+#' Prints the IDs of the tables in a formatted way before the interpretation
+print_tables_ids <- function(x) {
+
+  if (length(x) == 0) stop("The vector of table IDs is empty.")
+
+  if (length(x) == 1) {
+    result <- paste0("Wyniki przedstawiono w tabeli ", x, ".")
+  } else {
+    result <- paste0("Wyniki przedstawiono w tabelach ", min(x), " - ", max(x), ".")
+  }
+
+  result <- paste0(result, "\n\n\u00A0")
+
+  cat(result)
+
+
+}
+
+
+
