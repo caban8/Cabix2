@@ -6,8 +6,9 @@ library(googledrive)
 library(tidyverse)
 
 project_name <- basename(getwd())
-local_path <- paste0(
-  c("dane/surowe/dane_surowe", "dane/metoda/metoda"), ".xlsx"
+local_path <- c(
+  paths$dane_raw,
+  paths$metoda
 ) %>%
   setNames(c("dane_surowe", "metoda"))
 

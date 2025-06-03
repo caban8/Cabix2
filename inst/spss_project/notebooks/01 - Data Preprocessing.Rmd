@@ -60,7 +60,7 @@ library(tidyverse)
 # Import
 
 ```{r}
-dane <- read_excel("dane/surowe/dane_surowe.xlsx")
+dane <- read_excel(paths$dane_raw)
 ```
 
 
