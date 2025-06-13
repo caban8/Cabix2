@@ -227,6 +227,7 @@ add_posthoc <- function(.data, comparison_result, alpha, adj) {
 #' @param posthoc Optional post-hoc test to perform for pairwise comparisons. The results are added to the output as an additional column.
 #'  If NULL (default), no post-hoc test is performed.
 #' @param alpha The significance level for hypothesis testing for posthoc-analysis. Default is 0.05.
+#' @param one.tailed Logical indicating whether to perform one-tailed tests. Default is FALSE.
 #'
 #' @returns A data.frame in tibble format.
 #' The columns represent means and standard deviations for each group, test's statistic, and the corresponding p-value with
@@ -250,7 +251,8 @@ comparison_bg1 <- function(.data, DVs, IV,
                            iv.lab = NULL,
                            type = c("mean_sd", "median_iqr", "mrank_median"),
                            posthoc = NULL,
-                           alpha = 0.05
+                           alpha = 0.05,
+                           one.tailed = FALSE
                            ) {
 
   # Poniższe zastosowałem pod kątem funkcji map()
@@ -295,6 +297,8 @@ comparison_bg1 <- function(.data, DVs, IV,
     dplyr::mutate(p = round(p, 3))
 
   result <- tibble::add_column(descriptives, models)
+
+  if (one.tailed) result <- dplyr::mutate(result, p = p / 2)
 
 
 

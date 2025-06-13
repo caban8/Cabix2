@@ -15,7 +15,8 @@ comparison_bg1(
   iv.lab = NULL,
   type = c("mean_sd", "median_iqr", "mrank_median"),
   posthoc = NULL,
-  alpha = 0.05
+  alpha = 0.05,
+  one.tailed = FALSE
 )
 }
 \arguments{
@@ -36,6 +37,8 @@ defined variable labels.}
 If NULL (default), no post-hoc test is performed.}
 
 \item{alpha}{The significance level for hypothesis testing for posthoc-analysis. Default is 0.05.}
+
+\item{one.tailed}{Logical indicating whether to perform one-tailed tests. Default is FALSE.}
 }
 \value{
 A data.frame in tibble format.

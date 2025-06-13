@@ -78,11 +78,6 @@ report_opisowe <- tibble(
 
 
 
-## Interpretacje
-
-
-# Wektory odniesienia
-
 
 
 
