@@ -11,6 +11,12 @@ library(devtools)
 library(testthat)
 
 
+
+# ggplot export -----------------------------------------------------------
+
+use_r("ggplot_export")
+
+
 # Funkcje do pracy z metadata analizy w ramach projektu spss --------------
 
 use_r("report_analyses")
