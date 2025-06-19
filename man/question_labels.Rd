@@ -4,10 +4,12 @@
 \alias{question_labels}
 \title{Extract question labels from a data frame with questionnaire data}
 \usage{
-question_labels(df, suffix = "\\\\d+")
+question_labels(df, pattern, suffix = "\\\\d+")
 }
 \arguments{
 \item{df}{A data frame}
+
+\item{pattern}{A regular expression indicating the prefix of the question labels to be extracted.}
 
 \item{suffix}{A regular expression indicating the suffix that needs to be removed from the question labels.
 The default value is '\\d+' which matches any digit.}
