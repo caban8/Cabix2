@@ -38,7 +38,7 @@ if (requireNamespace("thematic")) # musi być tutaj, żeby markdown::render popr
   thematic::thematic_rmd(qualitative = qual_cols)
 
 load(paths$rdata)
-interpretacje <- yaml::read_yaml(paths$interpretacje)
+interpretacje <- yaml::read_yaml(paths$interpretacje) %>% as.tibble()
 
 zmienne <- list(
   zmienne_wprowadzic
