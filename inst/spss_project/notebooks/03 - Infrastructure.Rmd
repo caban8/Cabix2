@@ -161,19 +161,7 @@ a key wszędzie to tab_nr
 
 
 ```{r}
-
-save_rdata <- function(x, path) {
-  
-  combined_report <- x %>% 
-    dplyr::select(tab_nr, wykresy, flextable) 
-  
-  save(list = c("combined_report"), file = path)
-  
-}
-
-save_rdata(combined_report, paths$rdata)
-
-
+save_rdata_final(combined_report, paths$rdata)
 ```
 
 

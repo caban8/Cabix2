@@ -2,22 +2,26 @@
 % Please edit documentation in R/mediation_analysis.R
 \name{mediate_own}
 \alias{mediate_own}
-\title{Perform simple mediation analysis}
+\title{Mediate Own}
 \usage{
-mediate_own(dv, treat, mediator, data)
+mediate_own(dv, treat, mediator, data, boot.ci.type = c("bca", "perc"), ...)
 }
 \arguments{
-\item{dv}{Dependent variable.}
+\item{dv}{The outcome variable.}
 
-\item{treat}{Treatment variable.}
+\item{treat}{The treatment variable.}
 
-\item{mediator}{Mediator variable.}
+\item{mediator}{The mediator variable.}
 
-\item{data}{Data frame containing the variables.}
+\item{data}{The dataset containing the variables.}
+
+\item{boot.ci.type}{Type of bootstrap confidence interval, should be one of 'bca' (default) or 'perc'.}
+
+\item{...}{Additional arguments to be passed to the mediation function}
 }
 \value{
-A data frame with the results of total, mediation, and outcome models, along with mediation model results.
+A tidy data frame containing mediation results.
 }
 \description{
-mediate_own calculates mediation analysis with bootstrapped confidence intervals and total, mediation, and outcome models.
+This function performs mediation analysis
 }

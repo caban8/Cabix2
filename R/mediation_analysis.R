@@ -1,60 +1,46 @@
 
 
 
-#' Perform simple mediation analysis
+#' Mediate Own
 #'
-#' mediate_own calculates mediation analysis with bootstrapped confidence intervals and total, mediation, and outcome models.
+#' This function performs mediation analysis
 #'
-#' @param dv Dependent variable.
-#' @param treat Treatment variable.
-#' @param mediator Mediator variable.
-#' @param data Data frame containing the variables.
-#'
-#' @return A data frame with the results of total, mediation, and outcome models, along with mediation model results.
-#'
-#' @importFrom dplyr add_row
-#' @importFrom dplyr slice
-#' @importFrom stringr str_c
-#' @importFrom magrittr "%>%"
-#' @importFrom mediation mediate
-#' @importFrom broom tidy
+#' @param dv The outcome variable.
+#' @param treat The treatment variable.
+#' @param mediator The mediator variable.
+#' @param data The dataset containing the variables.
+#' @param boot.ci.type Type of bootstrap confidence interval, should be one of 'bca' (default) or 'perc'.
+#' @param ... Additional arguments to be passed to the mediation function
+#' @return A tidy data frame containing mediation results.
 #' @export
-#'
-mediate_own <- function(dv, treat, mediator, data) {
+mediate_own <- function(dv, treat, mediator, data, boot.ci.type = c("bca", "perc"), ...) {
 
-  # Tworzę formulas
-  mod_m <- stringr::str_c(mediator," ~ ", treat)
-  mod_y <- stringr::str_c(dv, " ~ ", mediator, " + ", treat)
-  mod_total <- stringr::str_c(dv, " ~ ", treat)
+  labs <- var_labels(data, all_of(c(mediator, treat, dv)))
 
-  # Tworzę modele
-  # Do call jest w celu obejścia błędu 'eval(mf, parent.frame())':nie znaleziono obiektu 'f1' w mediate
-  mod_m <- do.call(what = 'lm', list(formula = mod_m, data = data))
-  mod_y <- do.call(what = 'lm', list(formula = mod_y, data = data))
-  mod_total <- do.call(what = 'lm', list(formula = mod_total, data = data))
+  boot.ci.type <- match.arg(boot.ci.type)
+  mod_m <- fit_lm(mediator, treat, data)
+  mod_y <- fit_lm(dv, c(mediator, treat), data)
+  mod_total <- fit_lm(dv, treat, data)
 
-
-  models <- list(
-    mediation_model = mod_m,
-    outcome_model = mod_y,
-    total_model = mod_total
-  ) %>%
-    calc_abc_effects()
+  models <- calc_abc_effects(mod_m, mod_y, mod_total)
 
 
   # Mediation model results
-  med_results <- mediation::mediate(
+  med_results <- mediate_and_tidy(
     mod_m,
     mod_y,
     treat = treat,
     mediator = mediator,
     boot = TRUE,
-    boot.ci.type = "bca"
-  ) %>%
-    broom::tidy() %>%
-    dplyr::slice(1, 3)
+    boot.ci.type = boot.ci.type,
+    ...
+  )
 
-  return(dplyr::add_row(models, med_results))
+  output <- dplyr::add_row(models, med_results) %>%
+    clean_mediation_results()
+  attr(output, which = "labels") <- labs
+
+  return(output)
 
 }
 
@@ -77,6 +63,8 @@ mediate_own <- function(dv, treat, mediator, data) {
 #' }
 #' @export
 clean_mediation_results <- function(df) {
+
+
 
   df <- df %>%
     dplyr::filter(term != "(Intercept)") %>%
@@ -102,9 +90,53 @@ clean_mediation_results <- function(df) {
 
 # Helper functions --------------------------------------------------------
 
+
+
+fit_lm <- function(response, predictors, data) {
+  formula_str <- stringr::str_c(response, " ~ ", stringr::str_c(predictors, collapse = " + "))
+
+  # Do call jest w celu obejścia błędu 'eval(mf, parent.frame())':nie znaleziono obiektu 'f1' w mediate
+  lm_obj <- do.call(
+    what = "lm",
+    args = list(formula = as.formula(formula_str), data = data)
+  )
+
+  return(lm_obj)
+}
+
+
+
+mediate_and_tidy <- function(mod_m,
+                             mod_y,
+                             treat,
+                             mediator,
+                             boot = TRUE,
+                             boot.ci.type = "bca",
+                             ...) {
+  mediation::mediate(
+    model.m = mod_m,
+    model.y = mod_y,
+    treat   = treat,
+    mediator = mediator,
+    boot    = boot,
+    boot.ci.type = boot.ci.type,
+    ...
+  ) %>%
+    broom::tidy() %>%
+    dplyr::slice(1, 3)
+}
+
+
+
+
 # Funkcja do obliczania efektów a, b i c
-calc_abc_effects <- function(l) {
-  l %>%
+calc_abc_effects <- function(mod_m, mod_y, mod_total) {
+
+  list(
+    mediation_model = mod_m,
+    outcome_model = mod_y,
+    total_model = mod_total
+  ) %>%
     purrr::map(lm.beta::lm.beta) %>%
     purrr::map(broom::tidy) %>%
     purrr::map(dplyr::slice, 2) %>%

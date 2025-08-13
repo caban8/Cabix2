@@ -17,6 +17,7 @@ Imports:
     rstatix (>= 0.7.0),
     haven,
     stringr,
+    diagram,
     rlang,
     dplyr (>= 1.0.8),
     tidyr,

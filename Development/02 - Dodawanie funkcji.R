@@ -12,6 +12,17 @@ library(testthat)
 
 
 
+
+
+
+
+
+# save rdata export -------------------------------------------------------
+
+
+
+use_r("save_rdata_final")
+
 # ggplot export -----------------------------------------------------------
 
 use_r("ggplot_export")
@@ -90,6 +101,8 @@ use_test("google_forms")
 
 
 # Mediation analysis ------------------------------------------------------
+
+use_r("diagram_mediation")
 
 use_r("mediation_analysis")
 use_test("mediation_analysis")

@@ -50,7 +50,6 @@ tabelki <- opis_tabela(liczba = 10)
 
 ```{r include=include_opis}
 opis_poczatek()
-
 ```
 
 
@@ -65,10 +64,7 @@ Za próg istotności przyjęto *α* = 0,05.<br>
 ## Statystyki opisowe
 
 ```{r include=include_opis}
-
 opis_opisowe(zmienne)
-tabelki[1] %>% cat()
-
 ```
 
 

@@ -12,6 +12,7 @@ paths:
   codebook: "dane/codebooks/codebook.xlsx"
   rdata: "dane/analyses_for_report.Rdata"
   interpretacje: "dane/interpretacje/opis_analiz.yml"
+  interpretacje_edited: "dane/interpretacje/opis_analiz_edited.yml"
 
 final_vars: # tutaj wrzucam wszystkie zmienne do wykorzystania w ostatecznej analizie 03 - Infrastructure
   - ""
