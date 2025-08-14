@@ -34,16 +34,30 @@ diagram_mediation <- function(model_tidy, labels = NULL) {
 }
 
 
-plot_to_image <- function(coefs, labels, name) {
 
-  path <- str_c("Results/Figures/", name, ".png")
+#' Convert a diagram to a cropped image
+#'
+#' This function takes a diagram created using \code{\link{diagram_mediation}} and converts it to an image file format (PNG) with specified dimensions and resolution.
+#'
+#' @param model_tidy A data frame containing the model information to be plotted
+#' @param labels A character vector specifying the labels to be displayed on the diagram
+#' @param name A character string giving the name of the output image file (without extension)
+#' @param path A character string specifying the directory path to save the output image file (default is 'Results/Figures/')
+#' @param res An integer specifying the resolution of the output image file (default is 300)
+#' @param ... Additional arguments to be passed to \code{\link{png}}
+#'
+#' @return A cropped image with dimensions 600x325 pixels
+#' @export
+diagram_to_image <- function(model_tidy, labels = NULL, name, path = "raporty/inne/", res = 72, ...) {
 
-  png(path, width = 600, height = 400)
-  plot_diagram(coefs, labels)
+  path <- str_c(path, name, ".png")
+
+  png(path, width = 600, height = 400, res = res, ...)
+  diagram_mediation(model_tidy, labels)
   dev.off()
 
   magick::image_read(path) %>%
-    image_crop(geometry = "600x325+10+25")
+    magick::image_crop(geometry = "600x325+10+25")
 
 }
 

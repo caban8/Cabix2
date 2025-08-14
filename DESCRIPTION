@@ -28,5 +28,6 @@ Imports:
     lm.beta,
     plyr,
     purrr,
+    magick,
     rcompanion,
     xlsx
