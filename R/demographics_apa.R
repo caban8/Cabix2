@@ -3,7 +3,7 @@
 #'
 #'
 #' @param df a data frame
-#' @param ... atomic vectors representing the demographic variables
+#' @param {{vars}} atomic vectors representing the demographic variables
 #' @param spss.lab imports variables' labels from SPSS-labelled objects
 #' @param labels. an optional character vector containing variables' names
 #'
@@ -18,14 +18,14 @@
 #' demographics_apa(mtcars, am, vs, labels. = "labs")
 #'
 #' @export
-demographics_apa <- function(df, ..., spss.lab = T, labels. = NULL) {
+demographics_apa <- function(df, vars, spss.lab = T, labels. = NULL) {
 
-  etykiety <- var_labels(df, ..., spss.lab = spss.lab, labels. = labels.)
+  etykiety <- var_labels(df, {{vars}}, spss.lab = spss.lab, labels. = labels.)
 
   if(spss.lab) {df <- dplyr::mutate(df, dplyr::across(where(haven::is.labelled), ~haven::as_factor(.)))}
 
   nested <- df %>%
-    dplyr::select(...) %>%
+    dplyr::select({{vars}}) %>%
     tidyr::pivot_longer(tidyselect::everything()) %>%
     dplyr::group_by(name) %>%
     tidyr::nest() %>%

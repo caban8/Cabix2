@@ -43,21 +43,33 @@ diagram_mediation <- function(model_tidy, labels = NULL) {
 #' @param labels A character vector specifying the labels to be displayed on the diagram
 #' @param name A character string giving the name of the output image file (without extension)
 #' @param path A character string specifying the directory path to save the output image file (default is 'Results/Figures/')
-#' @param res An integer specifying the resolution of the output image file (default is 300)
-#' @param ... Additional arguments to be passed to \code{\link{png}}
+#' @param res An integer specifying the resolution of the output image file (default is 72)
+#' @param size Numeric vector specifying the width and height of the image
+#' @param crop Geometry settings for cropping the image
+#' @param ... Additional arguments to be passed to \code{png}
 #'
-#' @return A cropped image with dimensions 600x325 pixels
+#' @return A cropped image of the diagram
 #' @export
-diagram_to_image <- function(model_tidy, labels = NULL, name, path = "raporty/inne/", res = 72, ...) {
+diagram_to_image <- function(
+    model_tidy,
+    labels =
+      NULL,
+    name,
+    path = "raporty/inne/",
+    res = 72,
+    size = c(600, 400),
+    crop = "600x325+10+25",
+    ...
+    ) {
 
   path <- str_c(path, name, ".png")
 
-  png(path, width = 600, height = 400, res = res, ...)
+  png(path, width = size[1], height = size[2], res = res, ...)
   diagram_mediation(model_tidy, labels)
   dev.off()
 
   magick::image_read(path) %>%
-    magick::image_crop(geometry = "600x325+10+25")
+    magick::image_crop(geometry = crop)
 
 }
 
