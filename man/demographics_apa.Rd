@@ -4,12 +4,12 @@
 \alias{demographics_apa}
 \title{Compute APA-like table for demographic variables}
 \usage{
-demographics_apa(df, ..., spss.lab = T, labels. = NULL)
+demographics_apa(df, vars, spss.lab = T, labels. = NULL)
 }
 \arguments{
 \item{df}{a data frame}
 
-\item{...}{atomic vectors representing the demographic variables}
+\item{vars}{a group vectors representing the demographic variables}
 
 \item{spss.lab}{imports variables' labels from SPSS-labelled objects}
 

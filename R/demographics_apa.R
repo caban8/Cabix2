@@ -3,7 +3,7 @@
 #'
 #'
 #' @param df a data frame
-#' @param {{vars}} atomic vectors representing the demographic variables
+#' @param vars a group vectors representing the demographic variables
 #' @param spss.lab imports variables' labels from SPSS-labelled objects
 #' @param labels. an optional character vector containing variables' names
 #'
