@@ -1,2 +1,9 @@
 default:
   dataset: path
+
+development:
+  dataset: dev_path
+
+
+production:
+  dataset: prod_path

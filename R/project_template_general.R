@@ -39,7 +39,7 @@ make_project_template <- function(path) {
 
 folders_standard_project <- function() {
   c(
-    "data", "R", "tests/testthat", "materials", "results/figures",
+    "data", "R/fun", "tests/testthat", "materials", "results/figures",
     "results/tables", "notebooks"
   )
 }

@@ -23,7 +23,9 @@ knitr::opts_chunk$set(
 if(!require('pacman')) {install.packages('pacman')}
 
 # Load all libraries
-pacman::p_load(showtext, ggcorrplot, pdp, modelr, xgboost, DT, readxl,leaps,furrr, rstatix, broom, bestglm, glmnet, leaps, car,  pROC, caret, tree, rpart, randomForest, rpart.plot, doParallel, tidyverse)
+pacman::p_load(
+   tidyverse
+  )
 
 
 
