@@ -19,6 +19,18 @@
 #' git_setup(path = "~/myproject", files = c("script.R", "data.csv"), folders = "docs")
 git_setup <- function(path, files = NULL) {
 
+  handle_zip(path)
+
+  git_files <- add_folder_slash(path)
+  git_setup_base(path, files = git_files)
+
+}
+
+
+
+
+git_setup_base <- function(path, files = NULL) {
+
 
   oldwd <- getwd()
   on.exit(setwd(oldwd), add = TRUE)
@@ -62,8 +74,14 @@ git_setup <- function(path, files = NULL) {
 
 
 
+# helper functions --------------------------------------------------------
 
-# Handle gitignore
+
+
+
+
+
+
 handle_zip <- function(path)  {
   unzip(file.path(path, "setup_files.zip"), overwrite = T, exdir = path)
   file.remove(file.path(path, "setup_files.zip"))

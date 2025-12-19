@@ -14,32 +14,14 @@
 #' @importFrom usethis create_project
 make_project_template <- function(path) {
 
-  # stop if no path is provided
-  if (path == "") {
-    stop("You must provide a path for the new project.")
-  }
+  stop_project_path(path)
 
-  usethis::create_project(path, open = FALSE)
-  dir.create(path, recursive = TRUE, showWarnings = FALSE)
+  create_project_base(path)
 
-  folders <- c(
-    "data", "R", "tests/testthat", "materials", "results/figures",
-    "results/tables", "notebooks"
-    )
 
-  # create the subdirectories
-  for (folder in folders) {
-    dir.create(file.path(path, folder), recursive = TRUE, showWarnings = FALSE)
-  }
+  create_subfolders(folders = folders_standard_project(), path)
 
-  # Copy necessary files
-  files <- list_files("extdata_project1")
-
-  for (file in files) {
-    file_source <- system.file("extdata_project1", file, package = "Cabix2")
-    file_dest <- file.path(path, file)
-    file.copy(file_source, file_dest, overwrite = TRUE)
-  }
+  copy_project_files(path, system_file = "extdata_project1")
 
   # Handle gitignore
   handle_zip(path)
@@ -53,19 +35,52 @@ make_project_template <- function(path) {
 
 # Helper functions --------------------------------------------------------
 
+
+
+folders_standard_project <- function() {
+  c(
+    "data", "R", "tests/testthat", "materials", "results/figures",
+    "results/tables", "notebooks"
+  )
+}
+
+
+create_project_base <- function(path) {
+  usethis::create_project(path, open = FALSE)
+  dir.create(path, recursive = TRUE, showWarnings = FALSE)
+}
+
+
+
+copy_project_files <- function(path, system_file) {
+
+  files <- list_files(system_file)
+
+  for (file in files) {
+    file_source <- system.file(system_file, file, package = "Cabix2")
+    file_dest <- file.path(path, file)
+    file.copy(file_source, file_dest, overwrite = TRUE)
+  }
+}
+
+
+
 list_files <- function(folder) {
 
-  if (!is.character(folder)) {
-    stop("folder has to be a character vector that represents a subfolder in the Cabix package.")
-    }
+  stop_not_character(folder)
 
   files <- list.files(system.file(folder, package = "Cabix2"), recursive = TRUE)
 
-  if (length(files) == 0) {
-    warning("Either there are no files in the specified folder or the folder does not exist.")
-    }
+  warning_if_empty(files)
+
   return(files)
 }
+
+
+create_subfolders <- function(folders, path) {
+  purrr::walk(folders, ~ dir.create(file.path(path, .x), recursive = TRUE, showWarnings = FALSE))
+}
+
 
 
 
@@ -80,3 +95,29 @@ add_folder_slash <- function(path) {
 
 
 
+# signals and conditions --------------------------------------------------
+
+
+stop_project_path <- function(path) {
+  if (path == "") {
+    stop("You must provide a path for the new project.")
+  }
+}
+
+
+stop_not_character <- function(folder) {
+
+  if (!is.character(folder)) {
+    stop("folder has to be a character vector")
+  }
+
+}
+
+
+warning_if_empty <- function(files) {
+
+  if (length(files) == 0) {
+    warning("Either there are no files in the specified folder or the folder does not exist.")
+  }
+
+}

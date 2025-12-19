@@ -9,38 +9,16 @@
 #' @importFrom usethis create_project
 make_project_spss <- function(path) {
 
-  # stop if no path is provided
-  if (path == "") {
-    stop("You must provide a path for the new project.")
-  }
-  # create the project
-  usethis::create_project(path, open = FALSE)
+  stop_project_path(path)
 
-  # create the necessary directories
+  usethis::create_project(path, open = FALSE)
   dir.create(path, recursive = TRUE, showWarnings = FALSE)
 
-  # create the necessary folders' names
-  folders <- c(
-    "R/general", "tests/testthat", "materials",
-    paste0("raporty/", c( "wykresy","tabele", "inne")),
-    paste0("dane/", c("codebooks", "interpretacje", "przetworzone", "surowe", "metoda", "dane_ostateczne", "yaml")),
-    "spss syntax",
-    "notebooks"
-  )
-
   # create the subdirectories
-  for (folder in folders) {
-    dir.create(file.path(path, folder), recursive = TRUE, showWarnings = FALSE)
-  }
+  create_subfolders(folders = folders_spss(), path)
 
   # Copy necessary files
-  files <- list_files("spss_project")
-
-  for (file in files) {
-    file_source <- system.file("spss_project", file, package = "Cabix2")
-    file_dest <- file.path(path, file)
-    file.copy(file_source, file_dest, overwrite = TRUE)
-  }
+  copy_project_files(path, system_file = "spss_project")
 
 
 
@@ -50,4 +28,17 @@ make_project_spss <- function(path) {
   # Setup Git
   git_files <- add_folder_slash(path)
   git_setup(path, files = git_files)
+}
+
+
+# Helper functions --------------------------------------------------------
+
+folders_spss <- function() {
+  c(
+    "R/general", "tests/testthat", "materials",
+    paste0("raporty/", c( "wykresy","tabele", "inne")),
+    paste0("dane/", c("codebooks", "interpretacje", "przetworzone", "surowe", "metoda", "dane_ostateczne", "yaml")),
+    "spss syntax",
+    "notebooks"
+  )
 }
