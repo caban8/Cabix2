@@ -1,12 +1,12 @@
 
-
-run_pipeline <- function(...) {
+run_pipeline <- function(..., config = "default") {
+  Sys.setenv(R_CONFIG_ACTIVE = config)
   targets::tar_make(...)
 
   timestamp <- format(Sys.time(), "%Y-%m-%d__%H-%M-%S")
 
-  save_run_snapshot()
-  save_conditions_snapshot()
+  save_run_snapshot(timestamp)
+  save_conditions_snapshot(timestamp)
 }
 
 

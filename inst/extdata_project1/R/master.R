@@ -1,8 +1,8 @@
 
 # targets -----------------------------------------------------------------
 
-Sys.setenv(R_CONFIG_ACTIVE = "default")
 
+run_pipeline(config = "default")
 
 
 
