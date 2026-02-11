@@ -1,9 +1,16 @@
 
 run_pipeline <- function(..., config = "default") {
   Sys.setenv(R_CONFIG_ACTIVE = config)
-  targets::tar_make(...)
+  try(targets::tar_make(...))
 
   timestamp <- format(Sys.time(), "%Y-%m-%d__%H-%M-%S")
+
+  check_create_dirs(
+    c(
+      "logging/targets_snapshots",
+      "logging/targets_conditions"
+    )
+  )
 
   save_run_snapshot(timestamp)
   save_conditions_snapshot(timestamp)
@@ -116,3 +123,26 @@ extract_targets_time <- function(
     select(name, time) %>%
     filter(name %in% targets)
 }
+
+
+
+
+
+# dir check create --------------------------------------------------------
+
+
+
+check_create_dirs <- function(dirs) {
+  purrr::walk(
+    dirs,
+    check_create_dir
+  )
+}
+
+check_create_dir <- function(dir) {
+  if (!dir.exists(dir)) {
+    dir.create(dir, recursive = TRUE)
+  }
+}
+
+
