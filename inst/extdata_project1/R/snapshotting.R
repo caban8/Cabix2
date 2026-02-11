@@ -1,3 +1,4 @@
+library(tidyverse)
 
 run_pipeline <- function(..., config = "default") {
   Sys.setenv(R_CONFIG_ACTIVE = config)
