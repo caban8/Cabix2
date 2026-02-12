@@ -1,5 +1,36 @@
 library(tidyverse)
 
+run_pipeline_background <- function(
+    ...,
+    config = "default",
+    job_name = "run_targets_pipeline",
+    script_path = "R/general/snapshoting.R"
+) {
+
+
+
+  tmp <- create_temp_r_file(job_name)
+  expr <- paste_run_pipeline_arguments(..., config = config)
+  writeLines(
+    paste0(
+      "source(\"", script_path, "\")\n",
+      expr, "\n"
+    ), tmp
+  )
+
+
+  rstudioapi::jobRunScript(
+    path = tmp,
+    name = job_name,
+    workingDir = getwd()
+  )
+
+
+
+}
+
+
+
 run_pipeline <- function(..., config = "default") {
   Sys.setenv(R_CONFIG_ACTIVE = config)
   try(targets::tar_make(...))
@@ -145,5 +176,46 @@ check_create_dir <- function(dir) {
     dir.create(dir, recursive = TRUE)
   }
 }
+
+
+
+
+# helpers -----------------------------------------------------------------
+
+paste_run_pipeline_arguments <- function(..., config = "default") {
+
+  args <- rlang::enexprs(...)
+
+  args_string <- enexprs_to_strings(args) %>%
+    args_and_values_string_together()
+
+  paste0("run_pipeline(", args_string, ", config = \"", config, "\")")
+}
+
+
+enexprs_to_strings <- function(args) {
+  map_chr(
+    args, rlang::expr_text
+  )
+}
+
+args_and_values_string_together <- function(args) {
+  imap_chr(
+    args,
+    ~ paste0(.y, " = ", .x)
+  ) %>%
+    paste(collapse = ", ")
+}
+
+
+create_temp_r_file <- function(job_name, base_dir = getwd()) {
+  tempfile(
+    pattern = job_name,
+    fileext = ".R",
+    tmpdir = file.path(getwd(), "R")
+  )
+}
+
+
 
 
