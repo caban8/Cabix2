@@ -4,27 +4,25 @@
 library(googlesheets4)
 library(googledrive)
 library(tidyverse)
-
-project_name <- basename(getwd())
-local_path <- c(
-  paths$dane_raw,
-  paths$metoda
-) %>%
-  setNames(c("dane_surowe", "metoda"))
-
-files <- tibble(
-  type = names(local_path),
-  local = local_path,
-  g_id = as_id(c(
-    "",
-    ""
-  ))
-)
-
 gs4_auth(Sys.getenv("gmail"))
 drive_auth(Sys.getenv("gmail"))
 
-drive_find(project_name, n_max = 10)
+
+local_paths <- get_paths_named(cfg)
+
+
+files <- create_files_tbl(
+  local_paths,
+  g_ids = c(
+    "",
+    ""
+    )
+  )
+
+
+
+
+drive_find(basename(getwd()), n_max = 10)
 
 
 files %>%
