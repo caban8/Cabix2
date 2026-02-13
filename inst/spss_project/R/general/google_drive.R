@@ -7,12 +7,10 @@ library(tidyverse)
 gs4_auth(Sys.getenv("gmail"))
 drive_auth(Sys.getenv("gmail"))
 
+drive_find(basename(getwd()), n_max = 10)
 
-local_paths <- get_paths_named(cfg)
-
-
-files <- create_files_tbl(
-  local_paths,
+download_data_sheets(
+  cfg = cfg,
   g_ids = c(
     "",
     ""
@@ -22,11 +20,5 @@ files <- create_files_tbl(
 
 
 
-drive_find(basename(getwd()), n_max = 10)
-
-
-files %>%
-  select(file = g_id, path = local) %>%
-  pwalk(drive_download, overwrite = T)
 
 
