@@ -8,7 +8,11 @@
 #' @param overwrite Logical indicating whether to overwrite existing files (default: TRUE).
 #' @return NULL
 #' @export
-download_data_sheets <- function(cfg, g_ids = c("", ""), overwrite = TRUE) {
+download_data_sheets <- function(
+    cfg,
+    g_ids = c("", ""),
+    overwrite = TRUE
+    ) {
 
   stop_improper_id(g_ids)
   stop_incomplete_cfg_paths(cfg)
