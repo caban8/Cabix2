@@ -1,6 +1,6 @@
 Package: Cabix2
 Title: A convenient way to create APA styles summaries of descriptives and most used test statistics
-Version: 0.1.4
+Version: 0.1.5
 Authors@R: 
     person("Maciej", "Cabanski", ,  "maciej@cabanski.pl", role = c("aut", "cre"))
 Description: The aim of this package is to provide complex, yet easy to use, functions, which come in handy in creating nicely 
