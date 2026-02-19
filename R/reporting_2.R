@@ -19,7 +19,7 @@ report_print2 <- function(
   data[[caption]] <- paste0(caption_indent, data[[caption]])
 
 
-  report_i(
+  report_i2(
     data[[intro]],
     data[[flextable]],
     data[[caption]],
