@@ -8,7 +8,7 @@
 #'
 report_print2 <- function(
     data,
-    intro = "intro_input",
+    intro = "wprowadzenie",
     flextable = "flex",
     caption = "caption",
     interpretation = "interpretacja",
