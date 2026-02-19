@@ -11,7 +11,7 @@ report_print2 <- function(
     flextable = "flex",
     caption = "caption",
     interpretation = "interpretacja",
-    caption_indent = "\n\n",
+    caption_indent = "\n\n"
 ) {
 
 
