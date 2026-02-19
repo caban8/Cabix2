@@ -8,6 +8,7 @@
 #'
 report_print2 <- function(
     data,
+    intro = "intro_input",
     flextable = "flex",
     caption = "caption",
     interpretation = "interpretacja",
@@ -18,7 +19,12 @@ report_print2 <- function(
   data[[caption]] <- paste0(caption_indent, data[[caption]])
 
 
-  report_i(data[[flex]], data[[caption]], data[[interpretation]])
+  report_i(
+    data[[intro]],
+    data[[flextable]],
+    data[[caption]],
+    data[[interpretation]]
+    )
 
 
 }
