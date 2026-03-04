@@ -1,16 +1,34 @@
 default:
   paths:
-    dane_raw: "dane/surowe/dane_surowe.xlsx"
+    dane_raw: "dane/surowe/dane_surowe.csv"
     metoda: "dane/metoda/metoda.xlsx"
-    dane_przetworzone: "dane/przetworzone/R data - preprocessed.rds"
     dane_ostateczne: "dane/dane_ostateczne/dane_ostateczne.csv"
     dane_spss: "dane/dane_ostateczne/dane_spss.sav"
     codebook: "dane/codebooks/codebook.xlsx"
-    rdata: "dane/analyses_for_report.Rdata"
     interpretacje: "dane/interpretacje/opis_analiz.yml"
     interpretacje_edited: "dane/interpretacje/opis_analiz_edited.yml"
+    reliability: "raporty/inne/reliability.docx"
+    cache: ".cache"
   patterns:
     items: ""
+  variables:
+    ignored: ""
+    scales: ""
+  labels:
+  report:
+    introduction:
+      program: "IBM SPSS 29"
+      threshold: 0.05
+  analyses:
+    h1:
+      dv:
+      iv:
+  hypotheses:
+    h1: ""
+    h2: ""
+
+
+
 
 
 development:

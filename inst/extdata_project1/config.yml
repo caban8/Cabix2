@@ -1,3 +1,11 @@
+# Co dodać
+  # stratyfikacja paths
+  # Historia updejtów
+  # Punktowo wymienione zastosowane metody
+  # Generalnie jak najwięcej info wrzucać do configu, bo potem można to łatwo zaciągnąć również do opisu w raporcie
+  # Robić historię raportów html wraz z modelami i opisem zmian
+
+
 default:
   dataset: path
 

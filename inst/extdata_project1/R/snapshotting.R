@@ -82,7 +82,7 @@ take_snapshot <- function(timestamp) {
 
 
 name_timestamp <- function(prefix, timestamp, extenstion) {
-  paste0(prefix, timestamp, ".", extenstion)
+  paste0(prefix, "_", timestamp, "_", Sys.getenv("R_CONFIG_ACTIVE"), ".", extenstion)
 }
 
 
