@@ -174,3 +174,18 @@ reg_tab <- function(mod, labels. = NULL, spss.lab = FALSE, digits = 2,
 
 
 }
+
+
+
+reg_tab_cabix_wrap <- function(data, y, predictors) {
+
+
+  formula <- reformulate(termlabels = predictors, response = y)
+  mod <- lm(formula, data = data)
+
+  Cabix::reg.tab3(
+    mod, spss.lab = T
+  )
+
+}
+

@@ -74,19 +74,15 @@ kurtosis <- function(z) {
 #'
 #'
 #' @export
-descriptives <- function(df, ..., IV1, IV2, digits = 2) {
+descriptives <- function(df, ..., IV1 = NULL, IV2 = NULL, digits = 2) {
 
   etykiety <- var_labels(df, ...)
 
-  IVs <- stringr::str_detect(c(deparse(substitute(IV1)), deparse(substitute(IV2))), pattern = "")
-  index <- sum(IVs) + 1
 
+  df <- group_by(df, {{IV1}}, {{IV2}})
+  index <- ncol(attr(df, "groups"))
+  if (length(index) == 0) {index <- 1}
 
-  df <- switch (index,
-                df,
-                dplyr::group_by(df, {{IV1}}),
-                dplyr::group_by(df, {{IV1}}, {{IV2}})
-  )
 
 
   shapiro <- rstatix::shapiro_test(df, ...)
@@ -103,17 +99,18 @@ descriptives <- function(df, ..., IV1, IV2, digits = 2) {
     ) %>%
     dplyr::select(variable, tidyselect::everything())
 
-  results <- switch (index,
-                results,
-                desc_arrange(results, {{IV1}}),
-                desc_arrange(results, {{IV1}}, {{IV2}})
-
-  )
+  results <- desc_arrange(results, {{IV1}}, {{IV2}})
 
   return(results)
 
 }
 
+
+
+
+
+
+# -------------------------------------------------------------------------
 
 
 

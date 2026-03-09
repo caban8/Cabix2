@@ -54,6 +54,11 @@ FAC_analyze <- function(
 }
 
 
+
+# -------------------------------------------------------------------------
+
+
+
 analyze_cor <- function(
     report_blueprint,
     data,
@@ -64,15 +69,91 @@ analyze_cor <- function(
     flextable_args = NULL,
     plot = FALSE) {
 
-  FAC_analyze(cor_tab, "correlation_spearman", Cabflex::flex_cor)(
+
+  if (purrr::pluck_exists(cor_args, "method")) ending <- paste_correlation_ending(cor_args$method, ending)
+
+  FAC_analyze(
+    analysis_fun = cor_tab,
+    system_prompt = "correlation",
+    flex_fun = Cabflex::flex_cor
+    )(
+      report_blueprint,
+      data,
+      cache,
+      ending,
+      analysis_type,
+      analysis_args = cor_args,
+      flextable_args = flextable_args,
+      plot = plot
+  )
+}
+
+
+# -------------------------------------------------------------------------
+
+
+
+analyze_regression <- function(
     report_blueprint,
     data,
     cache,
-    ending,
-    analysis_type,
-    analysis_args = cor_args,
-    flextable_args = flextable_args,
-    plot = plot
+    ending = "",
+    analysis_type = "reg",
+    cor_args = NULL,
+    flextable_args = NULL,
+    plot = FALSE) {
+
+
+
+
+  FAC_analyze(
+    analysis_fun = reg_tab_cabix_wrap,
+    system_prompt = "regression",
+    flex_fun = Cabflex::flex_reg2
+    )(
+      report_blueprint,
+      data,
+      cache,
+      ending,
+      analysis_type,
+      analysis_args = cor_args,
+      flextable_args = flextable_args,
+      plot = plot
+  )
+}
+
+
+# -------------------------------------------------------------------------
+
+
+
+
+analyze_ttest <- function(
+    report_blueprint,
+    data,
+    cache,
+    ending = "",
+    analysis_type = "t_test",
+    cor_args = NULL,
+    flextable_args = NULL,
+    plot = FALSE) {
+
+
+
+
+  FAC_analyze(
+    analysis_fun = comparison_bg1(),
+    system_prompt = "t_test",
+    flex_fun = Cabflex::flex_cor
+    )(
+      report_blueprint,
+      data,
+      cache,
+      ending,
+      analysis_type,
+      analysis_args = cor_args,
+      flextable_args = flextable_args,
+      plot = plot
   )
 }
 
@@ -81,6 +162,13 @@ analyze_cor <- function(
 
 # helpers -----------------------------------------------------------------
 
+
+paste_correlation_ending <- function(cor, ending) {
+  paste0(
+    "The table contains the results of the", cor,  "correlation test. ",
+    ending
+  )
+}
 
 if_mutate_wykres <- function(.data, wykres_fun, plot = FALSE) {
   if (!is.null(wykres_fun) && plot) {
