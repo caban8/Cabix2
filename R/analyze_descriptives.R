@@ -15,11 +15,17 @@ analyze_des_tab <- function(
     ) {
 
 
-  chat_des <- AIinterpreter::build_gpt("language", "grammar", language = "pl") |>
-    AIinterpreter::chat_to_fun_final(
-    tidy_table = FALSE,
-    reset_turns = TRUE,
-    cache = cache
+
+
+
+  chat_des <- AIinterpreter::build_gpt(
+    "stats",
+    "descriptives",
+    language = "pl") |>
+      AIinterpreter::chat_to_fun_final(
+      tidy_table = TRUE,
+      reset_turns = TRUE,
+      cache = cache
   )
 
   chat_des_intro <- AIinterpreter::build_gpt(
@@ -39,9 +45,10 @@ analyze_des_tab <- function(
 
 
 
+
   opisowe_flex <- prepare_flex_function(tab_opisowe, cfg_index)
 
-  browser()
+
 
 
   make_tab_opisowe_tibble(tab_opisowe, opisowe_flex, caption) %>%
@@ -53,14 +60,7 @@ analyze_des_tab <- function(
 # helpers -----------------------------------------------------------------
 
 
-parse_double <- function(x, na = c("", "NA"), locale = default_locale(), trim_ws = TRUE) {
-  readr::parse_double(
-    x,
-    na = na,
-    locale = locale,
-    trim_ws = trim_ws
-  )
-}
+
 
 make_tab_opisowe_tibble <- function(tab_opisowe, opisowe_flex, caption) {
   tibble(
@@ -68,7 +68,6 @@ make_tab_opisowe_tibble <- function(tab_opisowe, opisowe_flex, caption) {
     caption = caption,
     analiza = list(tab_opisowe),
     flextable = list(opisowe_flex),
-    interpretacja = list(opis_normalnosc(tab_opisowe)),
     typ_analizy = "opisowe"
   )
 }
@@ -77,16 +76,19 @@ make_tab_opisowe_tibble <- function(tab_opisowe, opisowe_flex, caption) {
 descriptives_interpretations <- function(data, chat_des, chat_intro) {
   data |>
     mutate(
-      interpretacja = map(interpretacja, chat_des),
-      wprowadzenie = map(analiza, chat_intro)
+      wprowadzenie = map(analiza, chat_intro),
+      interpretacja = map(analiza, chat_des)
     )
 }
 
 
 prepare_flex_function <- function(tab_opisowe, cfg_index) {
+
+
+
   tab_opisowe %>%
     row_labs(labs = cfg_index$row_labs, nrow = cfg_index$row_nr)  |>
-    Cabflex::flex_destab()  |>
+    Cabflex2::flex_destab()  |>
     Cabflex2::flex_labs(nrow = cfg_index$row_nr)
 }
 

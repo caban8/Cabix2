@@ -57,6 +57,19 @@ kurtosis <- function(z) {
   kurtosis}
 
 
+postprocess_descriptives <- function(data, stats, index, digits, etykiety) {
+  data %>%
+    dplyr::mutate(
+      dplyr::across(
+        .cols = (index + 2):(ncol(stats) + 1),
+        ~ round(., digits = digits) %>% formatC(format = "f", digits = digits)
+      ),
+      p = round(p, 3),
+      variable = plyr::mapvalues(variable, from = unique(variable), to = etykiety)
+    )
+}
+
+
 #' Compute common statistics and Shapiro-Wilk results
 #'
 #' `descriptives()` calculates common descriptive statistics with Shapiro-Wilk test results in an APA-like
@@ -76,8 +89,8 @@ kurtosis <- function(z) {
 #' @export
 descriptives <- function(df, ..., IV1 = NULL, IV2 = NULL, digits = 2) {
 
-  etykiety <- var_labels(df, ...)
 
+  etykiety <- var_labels(df, ...)
 
   df <- group_by(df, {{IV1}}, {{IV2}})
   index <- ncol(attr(df, "groups"))
@@ -85,18 +98,18 @@ descriptives <- function(df, ..., IV1 = NULL, IV2 = NULL, digits = 2) {
 
 
 
+
   shapiro <- rstatix::shapiro_test(df, ...)
+
+
 
   stats <- desc_helper(df, ...)
   stats <- pivot_helper(stats, cols = index:ncol(stats))
 
+
+
   results <- dplyr::left_join(stats, shapiro) %>%
-    dplyr::mutate(dplyr::across(.cols = (index + 2):(ncol(stats) + 1),
-                                ~round(., digits = digits) %>%
-                                  formatC(format = "f", digits = digits)),
-                  p = round(p, 3),
-                  variable = plyr::mapvalues(variable, from = unique(variable), to = etykiety)
-    ) %>%
+    postprocess_descriptives(stats, index, digits, etykiety) %>%
     dplyr::select(variable, tidyselect::everything())
 
   results <- desc_arrange(results, {{IV1}}, {{IV2}})
