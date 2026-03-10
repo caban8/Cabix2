@@ -36,6 +36,6 @@ check()
 # Może zrobić dependency na starszych wersjach tidyverse, ze względu na to, że zaczynają się pojawiać jakieś errory?
 
 library(devtools)
-usethis::use_version()
 document()
+usethis::use_version()
 install()

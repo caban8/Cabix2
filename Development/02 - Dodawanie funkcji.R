@@ -14,12 +14,7 @@ library(testthat)
 
 
 
-
-# google drive utils ------------------------------------------------------
-
-use_r("google_drive_utils")
-
-
+usethis::use_r("import_metoda")
 
 
 # save rdata export -------------------------------------------------------

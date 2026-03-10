@@ -4,7 +4,7 @@
 \alias{descriptives}
 \title{Compute common statistics and Shapiro-Wilk results}
 \usage{
-descriptives(df, ..., IV1, IV2, digits = 2)
+descriptives(df, ..., IV1 = NULL, IV2 = NULL, digits = 2)
 }
 \arguments{
 \item{df}{a data frame object}
