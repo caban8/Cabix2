@@ -88,7 +88,18 @@ row_labs <- function(df, labs, nrow) {
 
 
 
-
+#' Set variable labels
+#'
+#' This function sets the variable names of a dataset to be the same as another dataset.
+#'
+#' @param dane_surowe The raw dataset
+#' @param dane_renamed The dataset with desired variable names
+#' @return A dataset with variable names changed to match another dataset
+#' @export
+set_vars_labs <- function(dane_surowe, dane_renamed) {
+  names(dane_surowe) %>%
+    set_names(names(dane_renamed))
+}
 
 
 
