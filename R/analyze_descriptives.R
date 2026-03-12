@@ -4,6 +4,21 @@
 
 # descriptives ------------------------------------------------------------
 
+#' Detailed descriptive statistics and normality check for variables
+#'
+#' @param .data Data frame containing variables for analysis
+#' @param ... Variables to analyze
+#' @param IV1 Optional grouping variable 1
+#' @param IV2 Optional grouping variable 2
+#' @param cfg_index Index configuration for interpretation
+#' @param cache Logical flag indicating whether to cache results
+#' @param caption Caption for the output table
+#'
+#' @return A data frametable with detailed descriptive statistics and interpretations
+#' @importFrom AIinterpreter build_gpt chat_to_fun_final
+#'
+#'
+#' @export
 analyze_des_tab <- function(
     .data,
     ...,
