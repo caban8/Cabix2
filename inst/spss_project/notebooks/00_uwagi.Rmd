@@ -1,0 +1,13 @@
+---
+title: "Uwagi Projekt"
+# output: html_notebook
+---
+
+
+# Uwagi dla klienta
+
+
+
+# Metoda
+
+

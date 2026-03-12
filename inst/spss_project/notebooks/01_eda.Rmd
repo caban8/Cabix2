@@ -1,0 +1,103 @@
+---
+title: "EDA"
+# output: html_notebook
+---
+
+
+
+# Pomysły na update
+
+
+Przechowywanie metody itp.
+- Baserow albo Airtable, do tworzenia prostych baz danych z możliwością inline edytowania
+
+Baza da
+
+Funkcje:
+- funkcja do raportowania wielu hipotez (nie pamiętam o co chodzi)
+  - synchronizacja z funkcją do raportowania
+- funkcja do automatycznej numeracji tabeli
+- Może zrobić jeszcze jedną, wyżej poziomową funkcję, która będzie czytała pojedynczy wiersz nested tibble
+  - zawierający informacje o hipotezach, numeracji tabeli, itd.
+  
+A.I.
+- Zaktualizować poprawki korelacji chatgpt o podawanie grupy?
+  - bądź w samym moim pakiecie
+  
+Google drive
+- Ustalić jakiś system ochronny, żeby osoby nie ingerowały w nawigację ze strony tibble analiz
+
+Wyekstrahować wszystkie informacje o path itd. do dokumentu yaml?
+a przynajmniej o samym path
+
+Co robić w sytuacji, gdy chcę edytować wybrane z gotownych labels pytań?
+- eksporotować wpierw do codebook, edytować ręcznie, importować z powrotem?
+- dodać też grupowanie wybranych zmiennych, e.g. skal kwestionariuszy po kwestionariuszach (kolejna kolumna)
+
+Ujednolić nazewnictwo kolumn i zmiennych
+- Na poziomie google sheets metoda
+- Na poziomie nazywania obiektów w R (gotowy obiekt z interpretacjami = "report_...")
+
+UWAGA 
+  - Interpretacje eksporotować oddzielnie od całej reszty
+    - bo, gdy np. zmieniam nazwy tabelek, nie chcę za każdym razem przenosić tego do skorygowanej wersji interpretacji
+  - Izolacja!!
+  
+- Sporządzić gotową notkę do maila dla klienta o wyjaśnieniu, co jest czym
+
+
+```{r }
+knitr::opts_chunk$set(echo = TRUE)
+library(targets)
+targets::tar_source("R/general/setup.R")
+targets::tar_source("R/fun")
+cfg <- config::get()
+
+
+tar_load_everything()
+
+
+```
+
+
+# Missing data 
+
+
+# Zliczanie skal kwestionariusz
+
+
+
+# Eksploracja
+
+NAJPIERW ZROBIĆ ANALIZĘ EKSPLORACJI
+
+SPRAWDZAĆ, CZY ZAKRESY SKAL SIĘ ZGADZAJĄ Z TEORETYCZNYMI
+
+-   Analiza częstości
+    -   Czy nie ma dziwnych względem wskaźnika wartości (np. odpowiedź "23" dla itema w skali 1 - 4)
+-   Box-plots
+-   Inne?
+- zliczanie skal
+
+
+Sprawdzić, czy
+- Nie ma osób w wieku poniżej 18 lat
+- Nie ma ogólnie dziwnych wartości
+- Nie ma wartości ekstremalnych
+
+
+
+
+```{r include=FALSE}
+
+```
+
+
+
+
+
+
+# Features Engineering
+
+
+

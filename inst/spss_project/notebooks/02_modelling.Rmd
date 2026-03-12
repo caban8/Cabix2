@@ -1,0 +1,34 @@
+---
+title: "R Notebook"
+# output: html_notebook
+---
+
+
+```{r include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(targets)
+targets::tar_source("R/general/setup.R")
+targets::tar_source("R/fun")
+cfg <- config::get()
+
+tar_load_everything()
+
+
+```
+
+
+IDEA JEST TAKA
+WSZYSTKIE ANALIZY OSTATECZNIE ŁĄCZĘ DO JEDNEGO TIBBLE
+W RAMACH TIBBLE MAM NASTĘPUJĄCE KOLUMNY
+- nr tabeli
+- zmienna zależna
+- zmienne niezależne
+- nr hipotezy
+- tytuł tabeli
+- flextabela
+- p
+- interpretacja wyników
+- typ analizy
+- ewentualnie wykresy (w ramach wybranych wierszy - pytanie jak wpleść pomiędzy tekst interpretacji)
+
+
