@@ -63,7 +63,25 @@ hypotheses_by_tabs <- function(metoda, h_col = "Hipotezy", hipoteza = hipoteza) 
 
 
 
-
+#' Create Blueprint Function
+#'
+#' This function takes a method object and performs various operations to
+#' create a blueprint for the report and narrate workflow.
+#'
+#' @param metoda The input method.
+#' @param analizy Name of the analyses data frame within the method object. Default value is "Analizy".
+#' @param vars The variables' columns to be used in the report and narrate analyses.
+#' Default values are 'zmienne_zalezne' and 'zmienne_niezalezne'.
+#' @param pattern The pattern separating names of the variables in the strings that are cointained in vars columns.
+#' Default value is ', '.
+#'
+#' @return A blueprint created based on the input method and other parameters.
+#'
+#'
+#' @import purrr
+#' @import dplyr
+#' @importFrom stringr str_replace_all
+#' @export
 create_blueprint <- function(
     metoda,
     analizy = "Analizy",
