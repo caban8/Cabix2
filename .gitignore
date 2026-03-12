@@ -21,6 +21,18 @@
 # RStudio files
 .Rproj.user/
 
+# specific folders
+/man/
+/Development/
+/Archiwum/
+/Raw Functions/
+
+# ssh?
+ssh_key
+ssh_key.pub
+
+
+
 # produced vignettes
 vignettes/*.html
 vignettes/*.pdf
