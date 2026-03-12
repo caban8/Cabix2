@@ -1,4 +1,59 @@
 
+
+
+#' Convert SPSS labelled variables to factors
+#'
+#' This function takes a data frame as input and converts SPSS labelled variables to factors.
+#'
+#' @param df A data frame containing SPSS labelled variables
+#'
+#' @return A data frame with SPSS labelled variables converted to factors
+#'
+#' @import dplyr
+#' @importFrom haven as_factor
+#'
+#'
+#' @export
+spss_to_factored <- function(df) {
+  df |>
+    dplyr::mutate(
+      dplyr::across(
+        where(haven::is.labelled),
+        ~ haven::as_factor(.x)
+      )
+    )
+}
+
+#' Export a data.frame to an SPSS database object
+#'
+#' Exports a data.frame to an SPSS database object using the haven package.
+#' The function takes a data.frame and a path as input and writes the data to the specified location in SPSS format.
+#' If data.frame contains labelled objects (haven' attributes of label and labels),
+#' the function will preserve the labels in the exported SPSS file.
+#' The functiosn returns path to the exported SPSS file, which can be used for further processing or reference, i.e.
+#' in the targets workflow.
+#'
+#' @return The path to the exported SPSS file.
+#'
+#' @param df data.frame to be exported
+#' @param path filename / path, but without the need to add ".sav"
+#'
+#' @export
+export_spss <- function(df, path) {
+
+  df |>
+    haven::write_sav(path)
+
+  return(path)
+
+}
+
+
+
+
+
+
+
 #' Export data.frame to a spss database object with current date
 #'
 #' @param df data.frame to be exported

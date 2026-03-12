@@ -62,6 +62,28 @@ hypotheses_by_tabs <- function(metoda, h_col = "Hipotezy", hipoteza = hipoteza) 
 
 
 
+
+
+create_blueprint <- function(
+    metoda,
+    analizy = "Analizy",
+    vars = c("zmienne_zalezne", "zmienne_niezalezne"),
+    pattern = ", "
+    ) {
+
+  metoda |>
+    purrr::pluck(analizy)  |>
+    mutate(
+      across(
+        all_of(vars),
+        ~str_replace_all(., "\\n", " "))
+      ) %>%
+    split_vars_1(vars, pattern = pattern)
+}
+
+
+
+
 # helpers -----------------------------------------------------------------
 
 
