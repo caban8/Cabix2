@@ -4,8 +4,6 @@
 #'
 #' @param path Path to the Excel file
 #' @return A named list where each element represents a sheet from the Excel file
-#' @examples
-#' import_metoda("data.xlsx")
 #'
 #' @import readxl
 #' @importFrom purrr map set_names
@@ -53,10 +51,14 @@ hypotheses_by_tabs <- function(metoda, h_col = "Hipotezy", hipoteza = hipoteza) 
 
   h_col <- rlang::ensym(h_col) |> rlang::as_string()
 
-  metoda[[h_col]] %>%
-    mutate(hipoteza = paste0("H", nr, ": ", {{hipoteza}})) %>%
-    group_by(tab_nr) %>%
-    summarise(hipoteza = paste(hipoteza, collapse = ";\n "))
+  out <- metoda %>%
+    purrr::pluck(h_col) %>%
+    dplyr::mutate(hipoteza = paste0("H", nr, ": ", {{hipoteza}})) %>%
+    dplyr::group_by(tab_nr) %>%
+    dplyr::summarise(hipoteza = paste(hipoteza, collapse = ";\n "))
+
+
+  return(out)
 }
 
 
@@ -91,10 +93,10 @@ create_blueprint <- function(
 
   metoda |>
     purrr::pluck(analizy)  |>
-    mutate(
-      across(
-        all_of(vars),
-        ~str_replace_all(., "\\n", " "))
+    dplyr::mutate(
+      dplyr::across(
+        tidyselect::all_of(vars),
+        ~stringr::str_replace_all(., "\\n", " "))
       ) %>%
     split_vars_1(vars, pattern = pattern)
 }
@@ -106,10 +108,14 @@ create_blueprint <- function(
 
 
 join_analyses_hypotheses_base <- function(metoda, h_col, hipoteza, analysis_type, tab_nr) {
-  left_join(
-    metoda$Analizy,
-    hypotheses_by_tabs(metoda, {{h_col}}, {{hipoteza}})
-  ) %>%
+
+
+  metoda |>
+    purrr::pluck("Analizy") %>%
+    left_join(
+      hypotheses_by_tabs(metoda, {{h_col}}, {{hipoteza}}),
+      by = "tab_nr"
+    ) %>%
     mutate_intro(
       hipoteza = {{hipoteza}},
       analysis_type = {{analysis_type}},
@@ -127,7 +133,7 @@ mutate_intro <- function(
     ) {
 
   metoda_analizy %>%
-    mutate(
+    dplyr::mutate(
       intro_input = create_intro({{hipoteza}}, {{analysis_type}}, {{tab_nr}})
     )
 }

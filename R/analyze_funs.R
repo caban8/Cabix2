@@ -75,7 +75,9 @@ FAC_analyze <- function(
 
 #' Analyze correlations and create a report
 #'
-#' This function allows you to analyze correlations and create a report with the specified data. It leverages the FAC_analyze function, cor_tab for correlation analysis, and the flex_cor function for generating a flextable.
+#' This function allows you to analyze correlations and create a report with the specified data.
+#' It leverages the FAC_analyze function, cor_tab for correlation analysis, and the flex_cor
+#' function for generating a flextable.
 #'
 #' @param report_blueprint The report blueprint to use for creating the report.
 #' @param data The data to be analyzed for correlations.
@@ -142,11 +144,7 @@ analyze_cor <- function(
 #'
 #' @return The analyzed regression report based on the provided blueprint.
 #'
-#' @examples
-#' analyze_regression(report_blueprint, data, cache)
 #'
-#' @import Cabflex
-#' @importFrom FAC_analyze FAC_analyze
 #'
 #' @export
 analyze_regression <- function(
