@@ -91,8 +91,8 @@ make_tab_opisowe_tibble <- function(tab_opisowe, opisowe_flex, caption) {
 descriptives_interpretations <- function(data, chat_des, chat_intro) {
   data |>
     mutate(
-      wprowadzenie = map(analiza, chat_intro),
-      interpretacja = map(analiza, chat_des)
+      wprowadzenie = map_interpret(analiza, chat_intro),
+      interpretacja = map_interpret(analiza, chat_des)
     )
 }
 

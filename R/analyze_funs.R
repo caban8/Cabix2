@@ -59,7 +59,7 @@ FAC_analyze <- function(
           ~rlang::exec(analysis_fun, data, .x, .y, !!!analysis_args)
           ),
         flextable = map(analiza, ~rlang::exec(flex_fun, .x, !!!flextable_args)),
-        interpretacja = map(analiza, chat_reg_final)
+        interpretacja = map_interpret(analiza, chat_reg_final)
       ) |>
       if_mutate_wykres(wykres_fun, plot)
 
@@ -247,6 +247,10 @@ switch_bg1_system_prompt <- function(test_args) {
 
 # helpers -----------------------------------------------------------------
 
+map_interpret <- function(analiza, chat_fun) {
+  map_chr(analiza, chat_fun)
+
+}
 
 paste_correlation_ending <- function(cor, ending) {
   paste0(
