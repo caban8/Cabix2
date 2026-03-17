@@ -83,7 +83,8 @@ make_tab_opisowe_tibble <- function(tab_opisowe, opisowe_flex, caption) {
     caption = caption,
     analiza = list(tab_opisowe),
     flextable = list(opisowe_flex),
-    typ_analizy = "opisowe"
+    typ_analizy = "opisowe",
+    section = "descriptives"
   )
 }
 

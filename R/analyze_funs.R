@@ -37,14 +37,14 @@ FAC_analyze <- function(
     plot = FALSE
   ) {
 
-    chat_reg <- AIinterpreter::build_gpt(
+    chat_interpret <- AIinterpreter::build_gpt(
       "stats",
       system_prompt = system_prompt,
       language = "pl",
       ending = ending
     )
-    chat_reg_final <- AIinterpreter::chat_to_fun_final(
-      chat_reg,
+    chat_interpret_final <- AIinterpreter::chat_to_fun_final(
+      chat_interpret,
       tidy_table = TRUE,
       reset_turns = TRUE,
       cache = cache
@@ -59,7 +59,8 @@ FAC_analyze <- function(
           ~rlang::exec(analysis_fun, data, .x, .y, !!!analysis_args)
           ),
         flextable = map(analiza, ~rlang::exec(flex_fun, .x, !!!flextable_args)),
-        interpretacja = map_interpret(analiza, chat_reg_final)
+        interpretacja = map_interpret(analiza, chat_interpret_final),
+        section = "verification"
       ) |>
       if_mutate_wykres(wykres_fun, plot)
 
