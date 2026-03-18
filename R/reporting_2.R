@@ -98,11 +98,12 @@ rejoin_interpretacje <- function(
     vars = c(tab_nr, flextable, wykresy, analiza)
 ) {
   interpretacje_edited_imported |>
-    as_tibble() |>
-    left_join(
+    tibble::as_tibble() |>
+    dplyr::left_join(
       report_final |> select({{vars}}),
       by = "tab_nr"
-    )
+    ) |>
+    dplyr::arrange(tab_nr)
 }
 
 

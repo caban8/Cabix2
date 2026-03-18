@@ -19,6 +19,7 @@ default:
     introduction:
       program: "IBM SPSS 29"
       threshold: 0.05
+      significanc_testing: two-tailed tests
   analyses:
     h1:
       dv:
