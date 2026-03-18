@@ -62,8 +62,6 @@ narrate_1 <- function(
     purrr::flatten()
 
 
-  browser()
-
   cat(report[[1]])
   cat(space1())
   flex_process_rmd(report[[2]], report[[3]])

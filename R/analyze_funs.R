@@ -246,6 +246,15 @@ switch_bg1_system_prompt <- function(test_args) {
 
 
 
+# filter ------------------------------------------------------------------
+
+filter_report <- function(data, section_col = section, .filt) {
+  data %>%
+    dplyr::filter(!!rlang::ensym(section_col) == .filt)
+}
+
+
+
 # helpers -----------------------------------------------------------------
 
 map_interpret <- function(analiza, chat_fun) {
