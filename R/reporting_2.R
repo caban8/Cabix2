@@ -95,7 +95,7 @@ export_interpretacje <- function(
 rejoin_interpretacje <- function(
     report_final,
     interpretacje_edited_imported,
-    vars = c(tab_nr, flextable, wykresy, analiza)
+    vars = c(tab_nr, flextable, wykresy, analiza, section)
 ) {
   interpretacje_edited_imported |>
     tibble::as_tibble() |>
