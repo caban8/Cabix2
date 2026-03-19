@@ -2,14 +2,34 @@
 # markdown_chunk ----------------------------------------------------------
 
 
-make_chunk <- function(
+make_block <- function(
     expr,
+    heading = NULL,
+    heading_level = 2,
+    defuse = TRUE,
     label = NULL,
     options = list(),
     engine = "r"
 ) {
 
-  expr <- rlang::enexpr(expr)
+
+  chunk <- make_chunk(expr, defuse, label, options, engine)
+  glue_chunk_heading(chunk, heading, heading_level)
+
+
+}
+
+make_chunk <- function(
+    expr,
+    defuse = TRUE,
+    label = NULL,
+    options = list(),
+    engine = "r"
+) {
+
+
+  if (defuse) expr <- rlang::enexpr(expr)
+
   code <- chunk_code(expr)
 
   chunk_header <- create_chunk_header(label, options)
@@ -59,6 +79,13 @@ chunk_code <- function(expr) {
 
 
 
+glue_chunk_heading <- function(chunk, heading, level) {
+  if (is.null(heading)) {
+    return(chunk)
+  }
+
+  c(make_heading(heading, level), "<br>", chunk, "<br>")
+}
 
 
 
@@ -86,13 +113,14 @@ add_chunk <- function(doc,
                       options = list(),
                       heading = NULL,
                       heading_level = 2,
+                      defuse_expr = FALSE,
                       engine = "r") {
 
   validate_markdown_doc(doc)
 
   block <- c(
     if (!is.null(heading)) c(make_heading(heading, heading_level), "") else character(),
-    make_chunk(expr, label = label, options = options, engine = engine),
+    make_chunk(expr, defuse = defuse_expr, label = label, options = options, engine = engine),
     ""
   )
 

@@ -4,6 +4,8 @@
 
 narrate <- function(
     report,
+    section_col = section,
+    section,
     intro,
     flextable,
     caption,
@@ -12,7 +14,8 @@ narrate <- function(
 ) {
 
   report <- report |>
-    dplyr::mutate(!!ensym(caption) := paste0(caption_indent, {{caption}}))
+    dplyr::mutate(!!ensym(caption) := paste0(caption_indent, {{caption}})) |>
+    filter_report({{section_col}}, section)
 
 
   narrate_loop(
