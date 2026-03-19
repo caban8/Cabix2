@@ -1,3 +1,18 @@
+#' Create an R Markdown report using narrate workflow reporting style and data
+#'
+#'
+#' @param report_data Data frame containing the report data
+#' @param section_col Column in the report data used to define sections (default: section)
+#' @param intro Introductory column
+#' @param flextable Flextable column
+#' @param caption Caption column
+#' @param interpretation Interpretation of the report data column
+#' @param caption_indent String used to control caption indentation (default: '\n\n')
+#'
+#' @return An R Markdown document object with the specified parameters and content
+#'
+#'
+#' @export
 create_rmd_report <- function(
     report_data,
     section_col = section,
@@ -30,7 +45,7 @@ create_rmd_report <- function(
 
   doc$yaml <- yaml_report()
 
-  write_markdown(doc, path)
+  doc
 
 }
 

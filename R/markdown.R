@@ -1,12 +1,27 @@
-# =============================================================================
-# Minimal functional toolkit for building an R Markdown document
-# =============================================================================
 
-
-# -----------------------------------------------------------------------------
-# Core constructor
-# -----------------------------------------------------------------------------
-
+#' Create a new markdown document object
+#'
+#' Initializes an empty `markdown_doc` object used to incrementally
+#' build an R Markdown document. The object stores YAML metadata,
+#' body content, and bibliography information.
+#'
+#' @return A `markdown_doc` object (a list with class `"markdown_doc"`)
+#'   containing the following elements:
+#'   \describe{
+#'     \item{yaml}{A list of YAML metadata fields.}
+#'     \item{body}{A character vector representing the document body.}
+#'     \item{bibliography}{A list of bibliography-related metadata.}
+#'   }
+#'
+#' @examples
+#' doc <- new_markdown_doc()
+#'
+#' # Add content step by step
+#' doc <- doc |>
+#'   add_yaml_meta(title = "My Report") |>
+#'   add_markdown("Hello world")
+#'
+#' @export
 new_markdown_doc <- function() {
   structure(
     list(
@@ -18,9 +33,128 @@ new_markdown_doc <- function() {
   )
 }
 
-# -----------------------------------------------------------------------------
-# Small utilities
-# -----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+#' Render a markdown document to text
+#'
+#' Converts a `markdown_doc` object into a single character string
+#' representing the full markdown document, including YAML header
+#' and body content.
+#'
+#' @param doc A `markdown_doc` object.
+#'
+#' @return A character string containing the complete markdown document.
+#'
+#' @examples
+#' doc <- new_markdown_doc() |>
+#'   add_yaml_meta(title = "My report") |>
+#'   add_markdown("Hello world")
+#'
+#' cat(render_markdown(doc))
+#'
+#' @export
+render_markdown <- function(doc) {
+  validate_markdown_doc(doc)
+
+  c(
+    render_yaml(doc$yaml),
+    doc$body
+  ) |>
+    paste(collapse = "\n")
+}
+
+#' Write a markdown document to a file
+#'
+#' Renders a `markdown_doc` object and writes it to disk.
+#'
+#' @param doc A `markdown_doc` object.
+#' @param path File path where the markdown document will be written.
+#'
+#' @return Invisibly returns the output path.
+#'
+#' @examples
+#' doc <- new_markdown_doc() |>
+#'   add_yaml_meta(title = "Report") |>
+#'   add_markdown("Content")
+#'
+#' write_markdown(doc, "report.Rmd")
+#'
+#' @export
+write_markdown <- function(doc, path) {
+  out <- render_markdown(doc)
+  writeLines(out, con = path, useBytes = TRUE)
+  invisible(path)
+}
+
+
+
+
+
+
+
+#' Add raw markdown text to a document
+#'
+#' Appends arbitrary markdown text to the body of a `markdown_doc`.
+#'
+#' @param doc A `markdown_doc` object.
+#' @param text A character vector containing markdown text.
+#'
+#' @return A modified `markdown_doc` object.
+#'
+#' @examples
+#' doc <- new_markdown_doc()
+#'
+#' doc <- add_markdown(
+#'   doc,
+#'   c("This is a paragraph.", "", "Another paragraph.")
+#' )
+#'
+#' @export
+add_markdown <- function(doc, text) {
+  validate_markdown_doc(doc)
+
+  if (!is.character(text)) {
+    rlang::abort("`text` must be a character vector.")
+  }
+
+  doc$body <- c(doc$body, text, "")
+  doc
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# utils -------------------------------------------------------------------
+
+
+
 
 `%||%` <- function(x, y) {
   if (is.null(x)) y else x
@@ -50,71 +184,6 @@ ensure_named_list <- function(x, arg = "x") {
 }
 
 
-
-
-
-
-# Add bibliography-related YAML options
-add_bibliography <- function(doc,
-                             bibliography,
-                             csl = NULL,
-                             nocite = "@*",
-                             link_citations = TRUE,
-                             reference_section_title = "References") {
-  validate_markdown_doc(doc)
-
-  bib_fields <- purrr::compact(list(
-    bibliography = bibliography,
-    csl = csl,
-    nocite = nocite,
-    link_citations = link_citations,
-    reference_section_title = reference_section_title
-  ))
-
-  doc$yaml <- utils::modifyList(doc$yaml, bib_fields)
-  doc$bibliography <- bib_fields
-
-  doc
-}
-
-
-# -----------------------------------------------------------------------------
-# Rendering
-# -----------------------------------------------------------------------------
-
-
-render_markdown <- function(doc) {
-  validate_markdown_doc(doc)
-
-  c(
-    render_yaml(doc$yaml),
-    doc$body
-  ) |>
-    paste(collapse = "\n")
-}
-
-write_markdown <- function(doc, path) {
-  out <- render_markdown(doc)
-  writeLines(out, con = path, useBytes = TRUE)
-  invisible(path)
-}
-
-
-
-
-
-
-# Add arbitrary markdown text
-add_markdown <- function(doc, text) {
-  validate_markdown_doc(doc)
-
-  if (!is.character(text)) {
-    rlang::abort("`text` must be a character vector.")
-  }
-
-  doc$body <- c(doc$body, text, "")
-  doc
-}
 
 
 

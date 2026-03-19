@@ -1,5 +1,66 @@
 
-# markdown_chunk ----------------------------------------------------------
+#' Add a code chunk to a markdown document
+#'
+#' Appends a formatted code chunk to a `markdown_doc` object, optionally
+#' preceded by a heading.
+#'
+#' @param doc A `markdown_doc` object created by [new_markdown_doc()].
+#' @param code Code to include in the chunk. Can be a character vector,
+#'   expression, formula, function, or output from [chunk_code()].
+#' @param label Optional chunk label.
+#' @param options A named list of chunk options (e.g. `list(echo = TRUE)`).
+#' @param heading Optional heading to insert before the chunk.
+#' @param heading_level Heading level (integer >= 1). Defaults to 2.
+#' @param engine Chunk engine (default: `"r"`).
+#'
+#' @return A modified `markdown_doc` object.
+#'
+#' @examples
+#' doc <- new_markdown_doc()
+#'
+#' doc <- add_chunk(
+#'   doc,
+#'   code = chunk_code({
+#'     x <- 1:10
+#'     mean(x)
+#'   }),
+#'   label = "example",
+#'   options = list(echo = TRUE),
+#'   heading = "Example chunk"
+#' )
+#'
+#' @export
+add_chunk <- function(doc,
+                      expr,
+                      label = NULL,
+                      options = list(),
+                      heading = NULL,
+                      heading_level = 2,
+                      defuse_expr = FALSE,
+                      engine = "r") {
+
+  validate_markdown_doc(doc)
+
+  expr <- rlang::enexpr(expr)
+
+  block <- glue_chunk_heading(
+    make_chunk(expr, defuse_expr, label, options, engine),
+    heading,
+    heading_level
+  )
+
+  doc$body <- c(doc$body, block)
+  doc
+}
+
+
+
+
+
+
+# helpers -----------------------------------------------------------------
+
+
 
 
 make_block <- function(
@@ -105,28 +166,6 @@ create_chunk_header <- function(label, options) {
 }
 
 
-
-
-add_chunk <- function(doc,
-                      expr,
-                      label = NULL,
-                      options = list(),
-                      heading = NULL,
-                      heading_level = 2,
-                      defuse_expr = FALSE,
-                      engine = "r") {
-
-  validate_markdown_doc(doc)
-
-  block <- c(
-    if (!is.null(heading)) c(make_heading(heading, heading_level), "") else character(),
-    make_chunk(expr, defuse = defuse_expr, label = label, options = options, engine = engine),
-    ""
-  )
-
-  doc$body <- c(doc$body, block)
-  doc
-}
 
 
 
