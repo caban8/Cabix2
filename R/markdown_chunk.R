@@ -191,10 +191,13 @@ format_chunk_options <- function(options = list()) {
 
 
 preformat_chunk_option <- function(value, name) {
+
+
+
   value_txt <-
     case_when(
-      is.logical(value) ~ if_else(value, "TRUE", "FALSE"),
-      is.character(value) && length(value) == 1 ~ value,
+      is.logical(value) ~ as.character(value),
+      is.character(value) && length(value) == 1 ~ paste0("'", value, "'", sep = ""),
       is.numeric(value) && length(value) == 1 ~ as.character(value),
       is.null(value) ~ "NULL",
       TRUE ~ paste(deparse(value), collapse = "")

@@ -15,6 +15,7 @@
 #' @export
 create_rmd_report <- function(
     report_data,
+    target_objs,
     section_col = section,
     intro,
     flextable,
@@ -24,8 +25,6 @@ create_rmd_report <- function(
     caption_indent = "\n\n"
 ) {
 
-
-  doc <- new_markdown_doc()
 
   report_chunks <- create_report_chunks(
     report_data = {{report_data}},
@@ -37,15 +36,13 @@ create_rmd_report <- function(
     caption_indent = caption_indent
   )
 
+  doc <- new_markdown_doc() |>
+    add_setup_report(targets_objects = target_objs) |>
+    add_markdown(report_chunks) |>
+    add_yaml_report() |>
+    add_bibliography_report()
 
-  doc <- add_markdown(
-    doc,
-    report_chunks
-  )
-
-  doc$yaml <- yaml_report()
-
-  doc
+  return(doc)
 
 }
 
@@ -53,7 +50,50 @@ create_rmd_report <- function(
 
 
 
+add_setup_report <- function(doc, targets_objects) {
 
+  validate_markdown_doc(doc)
+  stopifnot(is.character(targets_objects))
+
+  targets_objects <- paste0("tar_load(", targets_objects, ")") |>
+    rlang::parse_exprs()
+  base_expr <- setup_chunk_base_expr()
+
+
+
+  doc |>
+    add_chunk(
+      expr = {
+        !!!base_expr
+        !!!targets_objects
+      }
+    )
+
+}
+
+
+add_bibliography_report <- function(doc) {
+
+  validate_markdown_doc(doc)
+
+  doc |>
+    add_bibliography(
+      bibliography = "references.bib",
+      csl = "apa.csl",
+      nocite = "@*"
+    )
+}
+
+
+add_yaml_report <- function(doc) {
+
+  validate_markdown_doc(doc)
+
+  doc$yaml <- yaml_report()
+
+  doc
+
+}
 
 yaml_report <- function() {
   list(
@@ -78,6 +118,11 @@ yaml_report <- function() {
     )
   )
 }
+
+
+
+# unit create report chunks -----------------------------------------------
+
 
 
 
@@ -114,6 +159,7 @@ create_report_chunk_1 <- function(
 
   make_block(
     expr,
+    options = list(results='asis'),
     defuse = FALSE,
     heading = heading_switch_if_null(section, heading),
     heading_level = 2
@@ -158,7 +204,8 @@ create_report_chunks <- function(
       .x,
       defuse = FALSE,
       heading = heading_switch_if_null(.y),
-      heading_level = 2
+      heading_level = 2,
+      options = list(results='asis')
     )
   ) |>
     unlist(use.names = F)
@@ -168,6 +215,20 @@ create_report_chunks <- function(
 
 
 # helpers -----------------------------------------------------------------
+
+
+setup_chunk_base_expr <- function() {
+  {
+    knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+    library(targets)
+    library(tidyverse)
+    if (requireNamespace("thematic"))
+      thematic::thematic_rmd(qualitative = qual_cols)
+  } |>
+    rlang::expr() |>
+    as.list() |>
+    purrr::discard_at(1)
+}
 
 
 heading_switch_if_null <- function(section, heading = NULL) {
