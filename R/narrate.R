@@ -30,6 +30,7 @@
 #' @return
 #' This function is called for its side effects. It emits R Markdown-compatible
 #' output to the current document rather than returning a structured result.
+#' @export
 narrate <- function(
     report,
     section_col = section,
@@ -110,6 +111,10 @@ narrate_1 <- function(
 
 
 flex_process_rmd <- function(ft, caption) {
+
+
+  if (is.null(ft)) return(invisible())
+
   ft |>
     flextable::set_caption(caption) |>
     flextable::flextable_to_rmd()

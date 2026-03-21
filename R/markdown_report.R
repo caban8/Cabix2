@@ -26,6 +26,18 @@ create_rmd_report <- function(
 ) {
 
 
+   target_objs <- substitute(target_objs) |> 
+     as.list() 
+  
+  if (length(target_objs) > 1) target_objs <- purrr::discard_at(target_objs, 1)
+
+
+  target_objs <-  target_objs |> 
+     purrr::map_chr(rlang::as_string)
+
+  
+  
+
   report_chunks <- create_report_chunks(
     report_data = {{report_data}},
     section_col = {{section_col}},
@@ -66,8 +78,9 @@ add_setup_report <- function(doc, targets_objects) {
       expr = {
         !!!base_expr
         !!!targets_objects
-      }
+      }, options = list(include = FALSE)
     )
+    
 
 }
 
@@ -221,6 +234,7 @@ setup_chunk_base_expr <- function() {
   {
     knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
     library(targets)
+    library(Cabix2)
     library(tidyverse)
     if (requireNamespace("thematic"))
       thematic::thematic_rmd(qualitative = qual_cols)
