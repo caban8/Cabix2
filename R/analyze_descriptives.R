@@ -24,6 +24,7 @@ analyze_des_tab <- function(
     ...,
     IV1 = NULL,
     IV2 = NULL,
+    standard = c("continental", "english"),
     cfg_index,
     cache,
     caption = "Szczegółowe statystyki opisowe oraz sprawdzenie normalności rozkładu dla badanych zmiennych ilościowych"
@@ -36,7 +37,9 @@ analyze_des_tab <- function(
   chat_des <- AIinterpreter::build_gpt(
     "stats",
     "descriptives",
-    language = "pl") |>
+    ending = switch_standard(standard),
+    language = "pl"
+  ) |>
       AIinterpreter::chat_to_fun_final(
       tidy_table = TRUE,
       reset_turns = TRUE,
