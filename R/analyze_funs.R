@@ -30,6 +30,7 @@ FAC_analyze <- function(
     report_blueprint,
     data,
     cache,
+    standard = c("continental", "english"),
     ending,
     analysis_type,
     analysis_args = NULL,
@@ -41,7 +42,10 @@ FAC_analyze <- function(
       "stats",
       system_prompt = system_prompt,
       language = "pl",
-      ending = ending
+      ending = paste0(
+        switch_standard(standard), 
+        ending
+      )
     )
     chat_interpret_final <- AIinterpreter::chat_to_fun_final(
       chat_interpret,
@@ -97,6 +101,7 @@ analyze_cor <- function(
     report_blueprint,
     data,
     cache,
+    standard = c("continental", "english"),
     ending = "",
     analysis_type = "cor",
     cor_args = NULL,
@@ -116,6 +121,7 @@ analyze_cor <- function(
       report_blueprint,
       data,
       cache,
+      standard = standard,
       ending,
       analysis_type,
       analysis_args = cor_args,
@@ -152,6 +158,7 @@ analyze_regression <- function(
     report_blueprint,
     data,
     cache,
+    standard = c("continental", "english"),
     ending = "",
     analysis_type = "reg",
     reg_args = NULL,
@@ -169,6 +176,7 @@ analyze_regression <- function(
       report_blueprint,
       data,
       cache,
+      standard = standard,
       ending,
       analysis_type,
       analysis_args = reg_args,
@@ -205,6 +213,7 @@ analyze_comparison_bg1 <- function(
     report_blueprint,
     data,
     cache,
+    standard = c("continental", "english"),
     ending = "",
     analysis_type = "",
     test_args = NULL,
@@ -222,6 +231,7 @@ analyze_comparison_bg1 <- function(
       report_blueprint,
       data,
       cache,
+      standard = standard,
       ending,
       analysis_type,
       analysis_args = test_args,
@@ -256,6 +266,21 @@ filter_report <- function(data, section_col = section, .filt) {
 
 
 # helpers -----------------------------------------------------------------
+
+switch_standard <- function(standard = c("continental", "english")) {
+
+  standard <- match.arg(standard)
+
+  switch(
+    standard,
+    continental = "Apply european continental standard",
+    english = "Apply English standard"
+  ) |> 
+    paste("whenever reporting values with decimals.")
+
+} 
+
+standard = c("continental", "english")
 
 map_interpret <- function(analiza, chat_fun) {
   map_chr(analiza, chat_fun)
