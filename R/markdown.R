@@ -134,6 +134,63 @@ add_markdown <- function(doc, text) {
 
 
 
+#' Create a Simple HTML Markdown Document
+#'
+#' Builds a minimal markdown_doc configured for HTML output.
+#' It adds simple HTML YAML metadata, an optional heading,
+#' and the supplied markdown content.
+#'
+#' @param text A character string or character vector containing markdown
+#'   content to add to the document body.
+#' @param title A character string giving the document title suffix.
+#'   Defaults to an empty string.
+#' @param heading A character string used as a heading added before text.
+#'   Defaults to an empty string.
+#'
+#' @return A markdown_doc object containing HTML YAML metadata,
+#'   an optional heading, and the supplied markdown content.
+#'
+#' @examples
+#' doc <- markdown_simple_html(
+#'   text = "This is **markdown** content.",
+#'   title = "Example",
+#'   heading = "Introduction"
+#' )
+#'
+#' @export
+markdown_simple_html <- function(text, title = "", heading = "") {
+
+  doc <- new_markdown_doc()
+  validate_markdown_doc(doc)
+
+  doc |> 
+    add_yaml_simple_html(title) |> 
+    add_heading(text = heading) |> 
+    add_markdown(text)
+
+
+}
+
+
+
+add_yaml_simple_html <- function(doc, title = "") {
+  validate_markdown_doc(doc)
+
+  doc$yaml <- yaml_simple_html(title = title)
+  doc
+
+}
+
+yaml_simple_html <- function(title = "") {
+  list(
+    title = paste("Statistical Analysis report", title),
+    output = list(
+      output = "html_document"
+    )
+      
+  )
+}
+
 
 
 
