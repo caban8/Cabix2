@@ -1,6 +1,6 @@
 add_heading <- function(doc, text, level = 1) {
   validate_markdown_doc(doc)
-  doc$body <- c(doc$body, make_heading(text, level), "")
+  doc$body <- c(doc$body, make_heading(text, level))
   doc
 }
 
@@ -34,7 +34,11 @@ make_heading <- function(text, level = 1) {
     rlang::abort("`level` must be a single number >= 1.")
   }
 
-  paste0(str_dup("#", level), " ", text)
+  c(
+    "",
+    paste0(str_dup("#", level), " ", text),
+    ""
+  )
 }
 
 

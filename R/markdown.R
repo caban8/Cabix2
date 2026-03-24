@@ -205,7 +205,7 @@ add_function_chunk <- function(doc,
   validate_markdown_doc(doc)
 
   block <- c(
-    if (!is.null(heading)) c(make_heading(heading, heading_level), "") else character(),
+    if (!is.null(heading)) make_heading(heading, heading_level) else character(),
     make_function_chunk(..., label = label, options = options, engine = engine),
     ""
   )
