@@ -8,11 +8,62 @@ defuse_auto <- function(defuse) {
   if (is.symbol(defuse)) ensym(defuse)
    else sym(defuse)
 }
-# NA RAZIE NIE DZIAŁA POWYŻSZE
+# NA RAZIE NIE DZIAĹA POWYĹ»SZE
 
 
 
 
+#' Create a switch function from a named list
+#'
+#' Builds and returns a function that maps input keys to values stored in a
+#' named list. Names are treated as valid inputs and list elements as outputs.
+#'
+#' @param mapping A named list used as a lookup map.
+#' @param default A default value returned when the input key is missing.
+#'   If NULL and error_on_missing = FALSE, missing keys return NULL.
+#' @param error_on_missing Logical; if TRUE, throws an error for unknown keys.
+#'
+#' @return A function with one argument (key) that returns mapped values.
+#'
+#' @examples
+#' f <- make_switch_fun(list(a = "Apple", b = "Banana"))
+#' f("a")
+#' f("b")
+#'
+#' @export
+make_switch_fun <- function(mapping, default = NULL, error_on_missing = FALSE) {
+
+  if (!is.list(mapping) || is.null(names(mapping)) || any(names(mapping) == "")) {
+    stop("mapping must be a named list with non-empty names.")
+  }
+
+  force(mapping)
+  force(default)
+  force(error_on_missing)
+
+  function(key) {
+    key <- as.character(key)
+
+    if (length(key) != 1) {
+      stop("key must be a single value.")
+    }
+
+    if (key %in% names(mapping)) {
+      return(mapping[[key]])
+    } else {
+      return(key)
+    }
+
+    if (isTRUE(error_on_missing)) {
+      stop(paste0(
+        "Unknown key: ", key, ". Available keys: ",
+        paste(names(mapping), collapse = ", ")
+      ))
+    }
+
+    default
+  }
+}
 # Helper functions --------------------------------------------------------
 
 comma_if <- function(x, comma = T) {

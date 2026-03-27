@@ -103,7 +103,7 @@ rejoin_interpretacje <- function(
       report_final |> select({{vars}}),
       by = "tab_nr"
     ) |>
-    dplyr::arrange(tab_nr) |> 
+    rearrange_report_final() |> 
     mutate_replace_na_with_empty_string()
 }
 
@@ -113,6 +113,14 @@ rejoin_interpretacje <- function(
 replace_na_with_empty_string <- function(.x) {
   if_else(is.na(.x), "", .x)
 }
+
+rearrange_report_final <- function(report_final) {
+  report_final |>
+    mutate(section = factor(section, levels = names(headings_list()))) |> 
+    arrange(section, tab_nr) |> 
+    mutate(tab_nr = row_number() - 1)
+}
+
 
 
 mutate_replace_na_with_empty_string <- function(.data) {

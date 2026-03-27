@@ -61,12 +61,7 @@ analyze_des_tab <- function(
     IV2 = {{IV2}}
     )
 
-
-
-
   opisowe_flex <- prepare_flex_function(tab_opisowe, cfg_index)
-
-
 
 
   make_tab_opisowe_tibble(tab_opisowe, opisowe_flex, caption) %>%
@@ -75,9 +70,94 @@ analyze_des_tab <- function(
 }
 
 
+
+analyze_demographics <- function(
+    .data,
+    categorical_vars,
+    continuous_vars,
+    standard = c("continental", "english"),
+    cache,
+    caption = "Opis demograficzny próby"
+    ) {
+
+
+
+  demo_cat <- demographics_apa(
+    .data,
+    {{categorical_vars}},
+    spss.lab = TRUE
+  )
+
+  markdown_tables <- demographics_tables_to_markdown(.data, {{categorical_vars}}, {{continuous_vars}})
+
+
+  chat_inter <- AIinterpreter::build_gpt(
+    "stats",
+    "demographics2",
+    ending = switch_standard(standard),
+    language = "pl"
+  ) |>
+      AIinterpreter::chat_to_fun_final(
+      reset_turns = TRUE,
+      cache = cache
+  )
+
+  tibble(
+    tab_nr = 1,
+    caption = caption,
+    analiza = list(demo_cat),
+    flextable = list(Cabflex2::flex_demographics(demo_cat)),
+    typ_analizy = "demographics",
+    section = "demographics",
+    interpretacja = map_interpret(markdown_tables, chat_inter)
+  )
+
+
+
+}
+
+
+
 # helpers -----------------------------------------------------------------
 
 
+demographics_tables_to_markdown <- function(.data, categorical_vars, continuous_vars) {
+  
+  demographics_tables(.data, {{categorical_vars}}, {{continuous_vars}}) |>
+    purrr::set_names(c("categorical variables", "continuous variables")) |>
+    connect_dfs_to_markdown_tables()
+}
+
+demographics_tables <- function(.data, categorical_vars, continuous_vars) {
+  list(
+    demographics_apa(
+      .data,
+      {{categorical_vars}},
+      spss.lab = TRUE
+    ),
+    demo_continuous_raw(
+      .data,
+      {{continuous_vars}},
+      spss.lab = TRUE
+    )
+  )
+}
+
+
+connect_dfs_to_markdown_tables <- function(.l) {
+  
+  .l |> 
+    purrr::map(df_to_markdown) |> 
+    purrr::imap_chr(~ paste0("### ", .y, "\n\n", .x, "\n\n")) |> 
+    paste(collapse = "\n\n")
+
+  
+}
+
+df_to_markdown <- function(df) {
+  knitr::kable(df, format = "markdown") |> 
+    paste(collapse = "\n") 
+}
 
 
 make_tab_opisowe_tibble <- function(tab_opisowe, opisowe_flex, caption) {

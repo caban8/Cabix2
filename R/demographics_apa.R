@@ -22,7 +22,7 @@ demographics_apa <- function(df, vars, spss.lab = T, labels. = NULL) {
 
   etykiety <- var_labels(df, {{vars}}, spss.lab = spss.lab, labels. = labels.)
 
-  if(spss.lab) {df <- dplyr::mutate(df, dplyr::across(where(haven::is.labelled), ~haven::as_factor(.)))}
+  df <- convert_labelled_columns_to_factors_if(df, spss.lab)
 
   nested <- df %>%
     dplyr::select({{vars}}) %>%
@@ -59,3 +59,42 @@ demographics_apa <- function(df, vars, spss.lab = T, labels. = NULL) {
 
 }
 
+# create a function for descriptive statistics of demographic variables in APA style
+
+
+
+demo_continuous_raw <- function(df, vars, spss.lab = T, labels. = NULL) {
+
+  etykiety <- var_labels(df, {{vars}}, spss.lab = spss.lab, labels. = labels.)
+
+  summary_stats <- df |> 
+    dplyr::summarise(
+      across({{vars}}, list(
+        mean = mean, 
+        sd = sd,
+        min = min,
+        max = max
+      ), na.rm = TRUE)
+    ) |> 
+    tidyr::pivot_longer(everything(), names_to = c("variable", "stat"), names_sep = "_") |>
+    tidyr::pivot_wider(names_from = stat, values_from = value) |> 
+    mutate(
+      label = etykiety, .after = variable
+    )
+
+
+  return(summary_stats)
+
+}
+
+
+# Helpers
+convert_labelled_columns_to_factors_if <- function(df, spss.lab) {
+  if (spss.lab) {
+    df <- dplyr::mutate(
+      df,
+      dplyr::across(where(haven::is.labelled), ~haven::as_factor(.))
+    )
+  }
+  df
+}

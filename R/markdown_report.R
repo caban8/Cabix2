@@ -259,14 +259,30 @@ heading_switch_if_null <- function(section, heading = NULL) {
 
 }
 
-heading_switch <- function(section) {
-  switch(
-    section,
-    introduction = NULL,
-    descriptives = "Statystyki opisowe",
-    verification = "Weryfikacja hipotez",
-    summary = "Podsumowanie",
-    section
-  )
+
+fct_names_order_as_is <- function(x) {
+  stopifnot(length(x) == length(names(x)))
+  
+  factor(names(x), levels = names(x))
+
+
 }
 
+heading_switch <- function(section) {
+  
+  make_switch_fun(
+    headings_list(),
+    default = section
+  )(section)
+}
+
+
+headings_list <- function() {
+  list(
+    introduction = NULL,
+    demographics = "Charakterystyka próby",
+    descriptives = "Statystyki opisowe",
+    verification = "Weryfikacja hipotez",
+    summary = "Podsumowanie"
+  )
+}
