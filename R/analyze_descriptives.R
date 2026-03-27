@@ -27,7 +27,7 @@ analyze_des_tab <- function(
     standard = c("continental", "english"),
     cfg_index,
     cache,
-    caption = "Szczegółowe statystyki opisowe oraz sprawdzenie normalności rozkładu dla badanych zmiennych ilościowych"
+    caption = "SzczegĂ„â€šÄąâ€šĂ„Ä…Ă˘â‚¬Ĺˇowe statystyki opisowe oraz sprawdzenie normalnoĂ„Ä…Ă˘â‚¬Ĺźci rozkĂ„Ä…Ă˘â‚¬Ĺˇadu dla badanych zmiennych iloĂ„Ä…Ă˘â‚¬Ĺźciowych"
     ) {
 
 
@@ -71,13 +71,32 @@ analyze_des_tab <- function(
 
 
 
+#' Analyze Sample Demographics
+#'
+#' Tworzy tabele demograficzna dla zmiennych kategorialnych, generuje tabele
+#' w formacie flextable oraz przygotowuje automatyczna interpretacje
+#' obejmujaca zmienne kategorialne i ciagle.
+#'
+#' @param .data Ramka danych zawierajaca zmienne do opisu demograficznego.
+#' @param categorical_vars Zmienne kategorialne przekazywane w stylu tidyselect.
+#' @param continuous_vars Zmienne ciagle przekazywane w stylu tidyselect.
+#' @param standard Standard zapisu liczbowego uzywany w interpretacji
+#'   ("continental" lub "english").
+#' @param cache Wartosc logiczna okreslajaca, czy cache'owac odpowiedz modelu.
+#' @param caption Podpis tabeli wynikowej.
+#'
+#' @return Jednowierszowy tibble z kolumnami:
+#'   tab_nr, caption, analiza, flextable, typ_analizy, section,
+#'   interpretacja.
+#'
+#' @export
 analyze_demographics <- function(
     .data,
     categorical_vars,
     continuous_vars,
     standard = c("continental", "english"),
     cache,
-    caption = "Opis demograficzny próby"
+    caption = "Opis demograficzny prĂ„â€šÄąâ€šby"
     ) {
 
 
