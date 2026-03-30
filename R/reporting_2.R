@@ -72,7 +72,7 @@ report_i2 <- function(intros, tables, captions, interpretation) {
 export_interpretacje <- function(
     report_final,
     path,
-    vars = c(tab_nr, caption, wprowadzenie, interpretacja)
+    vars = c(tab_nr, section, caption, wprowadzenie, interpretacja)
 ) {
   report_final |>
     select({{vars}}) |>
@@ -101,7 +101,7 @@ rejoin_interpretacje <- function(
     tibble::as_tibble() |>
     dplyr::left_join(
       report_final |> select({{vars}}),
-      by = "tab_nr"
+      by = c("tab_nr", "section")
     ) |>
     rearrange_report_final() |> 
     mutate_replace_na_with_empty_string()

@@ -247,6 +247,7 @@ analyze_comparison_bg1 <- function(
 
 switch_bg1_system_prompt <- function(test_args) {
   if (purrr::pluck_exists(test_args, "test")) {
+    stopifnot(test_args$test %in% c("t_test", "u_mann", "anova", "kruskal"))
     test_args$test
   } else {
     "t_test"

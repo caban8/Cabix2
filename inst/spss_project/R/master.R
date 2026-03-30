@@ -3,7 +3,9 @@
 
 
 targets::tar_source("R/general/snapshotting.R")
-run_pipeline(script = "_targets_spss.R", config = "default")
+targets::tar_visnetwork(targets_only = TRUE, script = "_targets_spss.R")
+run_pipeline(config = "default", script = "_targets_spss.R")
+
 
 
 
