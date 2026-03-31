@@ -97,7 +97,8 @@ row_labs <- function(df, labs, nrow) {
 #' @return A dataset with variable names changed to match another dataset
 #' @export
 set_vars_labs <- function(dane_surowe, dane_renamed) {
-  names(dane_surowe) %>%
+  names(dane_surowe) |> 
+  stringr::str_to_sentence() |> 
     set_names(names(dane_renamed))
 }
 
