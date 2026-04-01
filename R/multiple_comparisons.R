@@ -252,6 +252,7 @@ comparison_bg1 <- function(.data, DVs, IV,
                            type = c("mean_sd", "median_iqr", "mrank_median"),
                            posthoc = NULL,
                            alpha = 0.05,
+                           raw_variable = FALSE,
                            one.tailed = FALSE
                            ) {
 
@@ -321,6 +322,8 @@ comparison_bg1 <- function(.data, DVs, IV,
     posthoc_cond = posthoc_cond
   )
 
+
+  if (!raw_variable) result <- dplyr::select(result, -variable)
 
   return(result)
 
