@@ -41,11 +41,11 @@ report_i2 <- function(intros, tables, captions, interpretation) {
   for (i in seq_along(tables)) {
 
     cat(intros[[i]])
-    cat("\u00A0\n\n") # Spacja na końcu, żeby dodało akapit
+    cat("\u00A0\n\n") # Spacja na koÄąâ€žcu, ÄąÄ˝eby dodaÄąâ€šo akapit
     tables[[i]] %>% flextable::set_caption(captions[[i]]) %>%  flextable::flextable_to_rmd()
-    cat("\u00A0\n\n") # Spacja na końcu, żeby dodało akapit
+    cat("\u00A0\n\n") # Spacja na koÄąâ€žcu, ÄąÄ˝eby dodaÄąâ€šo akapit
     cat(interpretation[[i]])
-    cat("\n\n\u00A0") # Spacja na początku, żeby dodało akapit
+    cat("\n\n\u00A0") # Spacja na poczĂ„â€¦tku, ÄąÄ˝eby dodaÄąâ€šo akapit
 
   }
 
@@ -103,7 +103,7 @@ rejoin_interpretacje <- function(
       report_final |> select({{vars}}),
       by = c("tab_nr", "section")
     ) |>
-    rearrange_report_final() |> 
+    rearrange_report_final() |>
     mutate_replace_na_with_empty_string()
 }
 
@@ -112,6 +112,23 @@ rejoin_interpretacje <- function(
 # helpers
 replace_na_with_empty_string <- function(.x) {
   if_else(is.na(.x), "", .x)
+}
+
+
+#' Combine and Rearrange Final Report Tables
+#'
+#' Binds multiple report fragments into one data frame and applies
+#' `rearrange_report_final()` to reorder rows and reset `tab_nr`.
+#'
+#' @param ... Data frames or tibbles with compatible columns to combine.
+#' @return A data frame with rows arranged by `section` and `tab_nr`, with
+#'   `tab_nr` renumbered from 0.
+#' @export
+combine_and_rearrange_reports <- function(...) {
+  
+  bind_rows(...) |> 
+    rearrange_report_final() 
+
 }
 
 rearrange_report_final <- function(report_final) {

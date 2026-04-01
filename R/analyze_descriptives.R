@@ -26,6 +26,7 @@ analyze_des_tab <- function(
     IV2 = NULL,
     standard = c("continental", "english"),
     cfg_index,
+    model = "gpt-5.4-mini",
     cache,
     caption = "SzczegĂ„â€šÄąâ€šĂ„Ä…Ă˘â‚¬Ĺˇowe statystyki opisowe oraz sprawdzenie normalnoĂ„Ä…Ă˘â‚¬Ĺźci rozkĂ„Ä…Ă˘â‚¬Ĺˇadu dla badanych zmiennych iloĂ„Ä…Ă˘â‚¬Ĺźciowych"
     ) {
@@ -38,6 +39,7 @@ analyze_des_tab <- function(
     "stats",
     "descriptives",
     ending = switch_standard(standard),
+    model = model,
     language = "pl"
   ) |>
       AIinterpreter::chat_to_fun_final(
@@ -49,7 +51,8 @@ analyze_des_tab <- function(
   chat_des_intro <- AIinterpreter::build_gpt(
     category = "language",
     system_prompt = "descriptives",
-    language = "pl"
+    language = "pl",
+    model = model
   )  |>
     AIinterpreter::chat_to_fun_final(reset_turns = FALSE, tidy_table = T, cache = cache)
 
@@ -96,6 +99,7 @@ analyze_demographics <- function(
     continuous_vars,
     standard = c("continental", "english"),
     cache,
+    model = "gpt-5.4-mini",
     caption = "Opis demograficzny prĂ„â€šÄąâ€šby"
     ) {
 
@@ -114,7 +118,8 @@ analyze_demographics <- function(
     "stats",
     "demographics2",
     ending = switch_standard(standard),
-    language = "pl"
+    language = "pl", 
+    model = model
   ) |>
       AIinterpreter::chat_to_fun_final(
       reset_turns = TRUE,
