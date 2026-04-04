@@ -103,7 +103,7 @@ rejoin_interpretacje <- function(
       report_final |> select({{vars}}),
       by = c("tab_nr", "section")
     ) |>
-    rearrange_report_final() |>
+    rearrange_report_final(substract = 1) |>
     mutate_replace_na_with_empty_string()
 }
 
@@ -131,11 +131,11 @@ combine_and_rearrange_reports <- function(...) {
 
 }
 
-rearrange_report_final <- function(report_final) {
+rearrange_report_final <- function(report_final, substract = 0) {
   report_final |>
     mutate(section = factor(section, levels = names(headings_list()))) |> 
     arrange(section, tab_nr) |> 
-    mutate(tab_nr = row_number() - 1)
+    mutate(tab_nr = row_number() - substract)
 }
 
 

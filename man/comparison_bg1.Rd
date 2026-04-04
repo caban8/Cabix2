@@ -16,6 +16,7 @@ comparison_bg1(
   type = c("mean_sd", "median_iqr", "mrank_median"),
   posthoc = NULL,
   alpha = 0.05,
+  raw_variable = FALSE,
   one.tailed = FALSE
 )
 }

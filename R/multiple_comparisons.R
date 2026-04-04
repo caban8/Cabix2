@@ -167,14 +167,19 @@ maybe_add_posthoc <- function(.data, result, alpha, posthoc, posthoc_cond) {
 
   if (posthoc_cond) {
 
-    result <- add_posthoc(
+    result_with_posthoc <- add_posthoc(
       .data              = .data,
       comparison_result  = result,
       alpha              = alpha,
       adj                = posthoc
     )
 
-    attr(result, "test") <- "anova_posthoc"
+  if (all(is.na(result_with_posthoc$posthoc))) {
+    warning("Post-hoc test was not added, because no significant differences were found between groups.")
+    return(result)
+  }
+
+    attr(result_with_posthoc , "test") <- "anova_posthoc"
   }
 
   return(result)
