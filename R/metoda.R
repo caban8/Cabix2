@@ -27,9 +27,7 @@ import_metoda <- function(path) {
 join_analyses_hypotheses <- function(
     metoda,
     h_col = Hipotezy,
-    hipoteza = hipoteza,
-    analysis_type = typ_long,
-    tab_nr = tab_nr
+    hipoteza = hipoteza
     ) {
 
   h_col <- rlang::ensym(h_col)
@@ -38,9 +36,7 @@ join_analyses_hypotheses <- function(
   metoda$Analizy <- join_analyses_hypotheses_base(
     metoda,
     !!h_col,
-    !!hipoteza,
-    {{analysis_type}},
-    {{tab_nr}}
+    !!hipoteza
   )
 
   return(metoda)
