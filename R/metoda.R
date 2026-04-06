@@ -107,7 +107,7 @@ create_blueprint <- function(
 # helpers -----------------------------------------------------------------
 
 
-join_analyses_hypotheses_base <- function(metoda, h_col, hipoteza, analysis_type, tab_nr) {
+join_analyses_hypotheses_base <- function(metoda, h_col, hipoteza) {
 
 
   metoda |>
@@ -115,35 +115,7 @@ join_analyses_hypotheses_base <- function(metoda, h_col, hipoteza, analysis_type
     left_join(
       hypotheses_by_tabs(metoda, {{h_col}}, {{hipoteza}}),
       by = "tab_nr"
-    ) %>%
-    mutate_intro(
-      hipoteza = {{hipoteza}},
-      analysis_type = {{analysis_type}},
-      tab_nr = {{tab_nr}}
-    )
+    ) 
 }
 
 
-
-mutate_intro <- function(
-    metoda_analizy,
-    hipoteza = hipoteza,
-    analysis_type = analysis_type,
-    tab_nr = tab_nr
-    ) {
-
-  metoda_analizy %>%
-    dplyr::mutate(
-      intro_input = create_intro({{hipoteza}}, {{analysis_type}}, {{tab_nr}})
-    )
-}
-
-create_intro <- function(hipoteza, analysis_type, tab_nr) {
-
-
-  paste0(
-    hipoteza, "\n",
-    "analysis: ", analysis_type, "\n",
-    "table: ", tab_nr, "\n"
-  )
-}
