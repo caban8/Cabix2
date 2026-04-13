@@ -119,7 +119,7 @@ analyze_cor <- function(
   FAC_analyze(
     analysis_fun = cor_tab,
     system_prompt = "correlation",
-    flex_fun = Cabflex::flex_cor
+    flex_fun = Cabflex2::flex_cor
     )(
       report_blueprint,
       data,
