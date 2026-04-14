@@ -17,19 +17,25 @@
 #' @import tibble
 #' @import dplyr
 #'
-extract_codebook <- function(.data, group = TRUE, editable = TRUE) {
-
-  if (!is.data.frame(.data)) stop("The input must be a data frame.")
-
+extract_codebook <- function(
+  .data,
+  group = TRUE,
+  editable = TRUE
+) {
+  if (!is.data.frame(.data)) {
+    stop("The input must be a data frame.")
+  }
 
   .data <- extract_labels(.data)
 
-  if (group) .data <- dplyr::mutate(.data, group_idx = group_index(Nazwa))
-  if (editable) .data <- dplyr::mutate(.data, Etykieta2 = "")
+  if (group) {
+    .data <- dplyr::mutate(.data, group_idx = group_index(Nazwa))
+  }
+  if (editable) {
+    .data <- dplyr::mutate(.data, Etykieta2 = "")
+  }
 
   return(.data)
-
-
 }
 
 
@@ -50,19 +56,21 @@ extract_codebook <- function(.data, group = TRUE, editable = TRUE) {
 #'
 #' @export
 assign_labs <- function(data, labs) {
-
-  if (!is.data.frame(data)) stop("The input must be a data frame.")
-  if (length(setdiff(names(labs), names(data))) > 0) stop("Some labels' names do not match the variable names in the data frame.")
+  if (!is.data.frame(data)) {
+    stop("The input must be a data frame.")
+  }
+  if (length(setdiff(names(labs), names(data))) > 0) {
+    stop(
+      "Some labels' names do not match the variable names in the data frame."
+    )
+  }
 
   for (var in names(labs)) {
     attr(data[[var]], "label") <- labs[[var]]
   }
 
   return(data)
-
-
 }
-
 
 
 #' Add indices' labels as separate rows
@@ -72,20 +80,20 @@ assign_labs <- function(data, labs) {
 #' @param nrow a numeric vector providing the row numbers for the labels
 #'
 #' @export
-row_labs <- function(df, labs, nrow) {
-
+row_labs <- function(
+  df,
+  labs,
+  nrow
+) {
   stopifnot(length(labs) == length(nrow))
   names(df)[1] <- "Zmienna"
   for (i in 1:length(labs)) {
     df <- df %>%
       dplyr::add_row(tibble::tibble(Zmienna = labs[i]), .before = nrow[i])
-
   }
 
   return(df)
-
 }
-
 
 
 #' Set variable labels
@@ -97,21 +105,19 @@ row_labs <- function(df, labs, nrow) {
 #' @return A dataset with variable names changed to match another dataset
 #' @export
 set_vars_labs <- function(dane_surowe, dane_renamed) {
-  names(dane_surowe) |> 
-  stringr::str_to_sentence() |> 
+  names(dane_surowe) |>
+    stringr::str_to_sentence() |>
     set_names(names(dane_renamed))
 }
 
 
-
 # Label functions' helpers ------------------------------------------------
-
-
 
 #' Extract class attribute labels to a mapped data.frame
 extract_labels <- function(.data) {
-
-  if (any_Nlabelled(.data)) warning("Not all variables are labelled. The codebook will contain NULLs.")
+  if (any_Nlabelled(.data)) {
+    warning("Not all variables are labelled. The codebook will contain NULLs.")
+  }
 
   .data %>%
     names() %>%
@@ -124,33 +130,29 @@ extract_labels <- function(.data) {
 #' Extract the first part of a string before a separator.
 #' Used to extract grouping category of a variable in a dataset.
 group_index <- function(x, sep = "_") {
-
   pattern <- paste0("^[^", sep, "]+")
 
   stringr::str_extract(x, pattern = pattern)
-
 }
-
 
 
 any_Nlabelled <- function(data) {
-
   data %>%
-    purrr::map(~attr(., which = "label", exact = T))  %>%
+    purrr::map(~ attr(., which = "label", exact = T)) %>%
     purrr::map_lgl(is.null) %>%
     any()
-
 }
 
 
-
-
-
 # Extract spss labels or assign user-defined labels
-var_labels <- function(df, ..., spss.lab = T, labels. = NULL) {
-
+var_labels <- function(
+  df,
+  ...,
+  spss.lab = T,
+  labels. = NULL
+) {
   # Select variables
-  df <- dplyr::select(df,  ...)
+  df <- dplyr::select(df, ...)
   stopifnot(ncol(df) > 0)
 
   # Extract spss labels, if present
@@ -158,7 +160,9 @@ var_labels <- function(df, ..., spss.lab = T, labels. = NULL) {
   null <- list(NULL) %in% etykiety
 
   # If there are no spss labels or they are not wanted, extract names
-  if (null || !spss.lab) etykiety <- names(df)
+  if (null || !spss.lab) {
+    etykiety <- names(df)
+  }
 
   # Assign user-defined labels
   if (!is.null(labels.)) {
@@ -168,29 +172,23 @@ var_labels <- function(df, ..., spss.lab = T, labels. = NULL) {
 
   # return(as.character(etykiety))
   return(unlist(etykiety))
-
 }
-
 
 
 # -------------------------------------------------------------------------
 
-
-
 value_labels <- function(df, ...) {
-  dplyr::mutate(df, dplyr::across(c(...), ~haven::as_factor(.)))
+  dplyr::mutate(df, dplyr::across(c(...), ~ haven::as_factor(.)))
 }
 
 
 value_labels2 <- function(df, var) {
-
   # Extract the variable
-  var <- dplyr::select(df, {{var}})[[1]]
+  var <- dplyr::select(df, {{ var }})[[1]]
 
   #Extract the spss labels
   labs <- names(attr(var, which = "labels"))
 
   # Compute either spss labels (if present) or unique values as labels
   if (is.null(labs)) sort(unique(var)) else labs
-
 }

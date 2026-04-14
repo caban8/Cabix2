@@ -9,56 +9,46 @@
 #' @importFrom purrr map set_names
 #' @export
 import_metoda <- function(path) {
-
   readxl::excel_sheets(path) %>%
     purrr::set_names() %>%
     purrr::map(readxl::read_excel, path = path)
-
 }
-
-
-
-
 
 
 #' Join analyses metadata with hypotheses strings in metoda object
 #'
 #' @export
 join_analyses_hypotheses <- function(
-    metoda,
-    h_col = Hipotezy,
-    hipoteza = hipoteza
-    ) {
-
+  metoda,
+  h_sheet = Hipotezy,
+  h_col = hipoteza,
+  p_sheet = NULL,
+  p_col = NULL
+) {
+  h_sheet <- rlang::ensym(h_sheet)
   h_col <- rlang::ensym(h_col)
-  hipoteza <- rlang::ensym(hipoteza)
+  p_sheet <- rlang::enexpr(p_sheet)
+  p_col <- rlang::enexpr(p_col)
 
   metoda$Analizy <- join_analyses_hypotheses_base(
     metoda,
-    !!h_col,
-    !!hipoteza
+    !!h_sheet,
+    !!h_col
   )
+
+  if (!is.null(p_sheet) && !is.null(p_col)) {
+    metoda$Analizy <- join_analyses_hypotheses_base(
+      metoda,
+      !!p_sheet,
+      !!p_col
+    ) |>
+      mutate(
+        !!h_col := paste0(!!p_col, ";\n ", !!h_col)
+      )
+  }
 
   return(metoda)
 }
-
-
-hypotheses_by_tabs <- function(metoda, h_col = "Hipotezy", hipoteza = hipoteza) {
-
-  h_col <- rlang::ensym(h_col) |> rlang::as_string()
-
-  out <- metoda %>%
-    purrr::pluck(h_col) %>%
-    dplyr::mutate(hipoteza = paste0("H", nr, ": ", {{hipoteza}})) %>%
-    dplyr::group_by(tab_nr) %>%
-    dplyr::summarise(hipoteza = paste(hipoteza, collapse = ";\n "))
-
-
-  return(out)
-}
-
-
-
 
 
 #' Create Blueprint Function
@@ -81,37 +71,56 @@ hypotheses_by_tabs <- function(metoda, h_col = "Hipotezy", hipoteza = hipoteza) 
 #' @importFrom stringr str_replace_all
 #' @export
 create_blueprint <- function(
-    metoda,
-    analizy = "Analizy",
-    vars = c("zmienne_zalezne", "zmienne_niezalezne"),
-    pattern = ", "
-    ) {
-
+  metoda,
+  analizy = "Analizy",
+  vars = c("zmienne_zalezne", "zmienne_niezalezne"),
+  pattern = ", "
+) {
   metoda |>
-    purrr::pluck(analizy)  |>
+    purrr::pluck(analizy) |>
     dplyr::mutate(
       dplyr::across(
         tidyselect::all_of(vars),
-        ~stringr::str_replace_all(., "\\n", " "))
-      ) %>%
+        ~ stringr::str_replace_all(., "\\n", " ")
+      )
+    ) %>%
     split_vars_1(vars, pattern = pattern)
 }
 
 
-
-
 # helpers -----------------------------------------------------------------
 
+collapse_by_tab_nr <- function(
+  metoda,
+  sheet,
+  col_name
+) {
+  sheet <- rlang::ensym(sheet) |> rlang::as_string()
+  col_name <- rlang::ensym(col_name)
 
-join_analyses_hypotheses_base <- function(metoda, h_col, hipoteza) {
+  out <- metoda %>%
+    purrr::pluck(sheet) %>%
+    dplyr::mutate(
+      !!col_name := paste0(rlang::as_string(col_name), nr, ": ", !!col_name)
+    ) %>%
+    dplyr::group_by(tab_nr) %>%
+    dplyr::summarise(
+      !!col_name := paste(!!col_name, collapse = ";\n ")
+    )
 
-
-  metoda |>
-    purrr::pluck("Analizy") %>%
-    left_join(
-      hypotheses_by_tabs(metoda, {{h_col}}, {{hipoteza}}),
-      by = "tab_nr"
-    ) 
+  return(out)
 }
 
 
+join_analyses_hypotheses_base <- function(
+  metoda,
+  h_sheet,
+  h_col
+) {
+  metoda |>
+    purrr::pluck("Analizy") %>%
+    left_join(
+      collapse_by_tab_nr(metoda, {{ h_sheet }}, {{ h_col }}),
+      by = "tab_nr"
+    )
+}
