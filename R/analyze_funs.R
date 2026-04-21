@@ -1,4 +1,3 @@
-
 #' Analysis Factory Function
 #'
 #' Create a function for analyzing data and generating reports based on a specified
@@ -15,16 +14,17 @@
 #'
 #' @export
 FAC_analyze <- function(
-    analysis_fun,
-    system_prompt,
-    flex_fun,
-    wykres_fun = NULL
+  analysis_fun,
+  system_prompt,
+  flex_fun,
+  section = c("verification"),
+  wykres_fun = NULL
 ) {
-
   force(analysis_fun)
   force(system_prompt)
   force(flex_fun)
-
+  section <- match.arg(section)
+  force(wykres_fun)
 
   function(
     report_blueprint,
@@ -38,14 +38,13 @@ FAC_analyze <- function(
     flextable_args = NULL,
     plot = FALSE
   ) {
-
     chat_interpret <- AIinterpreter::build_gpt(
       "stats",
       system_prompt = system_prompt,
       model = model,
       language = "pl",
       ending = paste0(
-        switch_standard(standard), 
+        switch_standard(standard),
         ending
       )
     )
@@ -62,23 +61,35 @@ FAC_analyze <- function(
         analiza = map2(
           zmienne_zalezne,
           zmienne_niezalezne,
-          ~rlang::exec(analysis_fun, data, .x, .y, !!!analysis_args)
-          ),
-        flextable = map(analiza, ~rlang::exec(flex_fun, .x, !!!flextable_args)),
-        interpretacja = map_interpret(analiza, chat_interpret_final),
-        section = "verification"
+          ~ rlang::exec(analysis_fun, data, .x, .y, !!!analysis_args)
+        )
       ) |>
+      mutate_flex_and_int(flex_fun, flextable_args, chat_interpret_final) |>
+      mutate(section = section) |>
       if_mutate_wykres(wykres_fun, plot)
-
   }
-
-
 }
 
 
+# FAC_analyze helpers
+mutate_flex_and_int <- function(
+  data,
+  flex_fun,
+  flextable_args,
+  chat_interpret_final
+) {
+  data |>
+    mutate(
+      flextable = map(
+        analiza,
+        ~ rlang::exec(flex_fun, .x, !!!flextable_args)
+      ),
+      interpretacja = map_interpret(analiza, chat_interpret_final)
+    )
+}
+
 
 # -------------------------------------------------------------------------
-
 
 #' Analyze correlations and create a report
 #'
@@ -100,44 +111,41 @@ FAC_analyze <- function(
 #' @importFrom purrr pluck_exists
 #' @export
 analyze_cor <- function(
-    report_blueprint,
-    data,
-    cache,
-    standard = c("continental", "english"),
-    ending = "",
-    model = "gpt-5.4-mini",
-    analysis_type = "cor",
-    cor_args = NULL,
-    flextable_args = NULL,
-    plot = FALSE) {
-
-
-  if (purrr::pluck_exists(cor_args, "method")) ending <- paste_correlation_ending(cor_args$method, ending)
-
-
+  report_blueprint,
+  data,
+  cache,
+  standard = c("continental", "english"),
+  ending = "",
+  model = "gpt-5.4-mini",
+  analysis_type = "cor",
+  cor_args = NULL,
+  flextable_args = NULL,
+  plot = FALSE
+) {
+  if (purrr::pluck_exists(cor_args, "method")) {
+    ending <- paste_correlation_ending(cor_args$method, ending)
+  }
 
   FAC_analyze(
     analysis_fun = cor_tab,
     system_prompt = "correlation",
     flex_fun = Cabflex2::flex_cor
-    )(
-      report_blueprint,
-      data,
-      cache,
-      standard = standard,
-      ending,
-      model = model,
-      analysis_type,
-      analysis_args = cor_args,
-      flextable_args = flextable_args,
-      plot = plot
+  )(
+    report_blueprint,
+    data,
+    cache,
+    standard = standard,
+    ending,
+    model = model,
+    analysis_type,
+    analysis_args = cor_args,
+    flextable_args = flextable_args,
+    plot = plot
   )
 }
 
 
 # -------------------------------------------------------------------------
-
-
 
 #' Analyze regression data
 #'
@@ -159,42 +167,37 @@ analyze_cor <- function(
 #'
 #' @export
 analyze_regression <- function(
-    report_blueprint,
-    data,
-    cache,
-    standard = c("continental", "english"),
-    ending = "",
-    model = "gpt-5.4-mini",
-    analysis_type = "reg",
-    reg_args = NULL,
-    flextable_args = NULL,
-    plot = FALSE) {
-
-
-
-
+  report_blueprint,
+  data,
+  cache,
+  standard = c("continental", "english"),
+  ending = "",
+  model = "gpt-5.4-mini",
+  analysis_type = "reg",
+  reg_args = NULL,
+  flextable_args = NULL,
+  plot = FALSE
+) {
   FAC_analyze(
     analysis_fun = reg_tab_cabix_wrap,
     system_prompt = "regression",
     flex_fun = Cabflex::flex_reg2
-    )(
-      report_blueprint,
-      data,
-      cache,
-      standard = standard,
-      ending,
-      model = model,
-      analysis_type,
-      analysis_args = reg_args,
-      flextable_args = flextable_args,
-      plot = plot
+  )(
+    report_blueprint,
+    data,
+    cache,
+    standard = standard,
+    ending,
+    model = model,
+    analysis_type,
+    analysis_args = reg_args,
+    flextable_args = flextable_args,
+    plot = plot
   )
 }
 
 
 # -------------------------------------------------------------------------
-
-
 
 #' Run multiple independent samples comparison tests
 #'
@@ -216,41 +219,34 @@ analyze_regression <- function(
 #'
 #' @export
 analyze_comparison_bg1 <- function(
-    report_blueprint,
-    data,
-    cache,
-    standard = c("continental", "english"),
-    ending = "",
-    model = "gpt-5.4-mini",
-    analysis_type = "",
-    test_args = NULL,
-    flextable_args = NULL,
-    plot = FALSE) {
-
-
-
-
+  report_blueprint,
+  data,
+  cache,
+  standard = c("continental", "english"),
+  ending = "",
+  model = "gpt-5.4-mini",
+  analysis_type = "",
+  test_args = NULL,
+  flextable_args = NULL,
+  plot = FALSE
+) {
   FAC_analyze(
     analysis_fun = comparison_bg1,
     system_prompt = switch_bg1_system_prompt(test_args),
     flex_fun = Cabflex2::flex_bg1
-    )(
-      report_blueprint,
-      data,
-      cache,
-      standard = standard,
-      ending,
-      model = model,
-      analysis_type,
-      analysis_args = test_args,
-      flextable_args = flextable_args,
-      plot = plot
+  )(
+    report_blueprint,
+    data,
+    cache,
+    standard = standard,
+    ending,
+    model = model,
+    analysis_type,
+    analysis_args = test_args,
+    flextable_args = flextable_args,
+    plot = plot
   )
 }
-
-
-
-
 
 
 switch_bg1_system_prompt <- function(test_args) {
@@ -263,8 +259,6 @@ switch_bg1_system_prompt <- function(test_args) {
 }
 
 
-
-
 # filter ------------------------------------------------------------------
 
 filter_report <- function(data, section_col = section, .filt) {
@@ -273,32 +267,30 @@ filter_report <- function(data, section_col = section, .filt) {
 }
 
 
-
 # helpers -----------------------------------------------------------------
 
 switch_standard <- function(standard = c("continental", "english")) {
-
   standard <- match.arg(standard)
 
   switch(
     standard,
     continental = "Apply european continental standard",
     english = "Apply English standard"
-  ) |> 
+  ) |>
     paste("whenever reporting values with decimals.")
-
-} 
+}
 
 standard = c("continental", "english")
 
 map_interpret <- function(analiza, chat_fun) {
   map_chr(analiza, chat_fun)
-
 }
 
 paste_correlation_ending <- function(cor, ending) {
   paste0(
-    "The table contains the results of the", cor,  "correlation test. ",
+    "The table contains the results of the",
+    cor,
+    "correlation test. ",
     ending
   )
 }
@@ -311,4 +303,3 @@ if_mutate_wykres <- function(.data, wykres_fun, plot = FALSE) {
     .data
   }
 }
-

@@ -1,6 +1,4 @@
-
 # analyze_descriptives ----------------------------------------------------
-
 
 # descriptives ------------------------------------------------------------
 
@@ -20,21 +18,16 @@
 #'
 #' @export
 analyze_des_tab <- function(
-    .data,
-    ...,
-    IV1 = NULL,
-    IV2 = NULL,
-    standard = c("continental", "english"),
-    cfg_index,
-    model = "gpt-5.4-mini",
-    cache,
-    caption = "SzczegĂ„â€šÄąâ€šĂ„Ä…Ă˘â‚¬Ĺˇowe statystyki opisowe oraz sprawdzenie normalnoĂ„Ä…Ă˘â‚¬Ĺźci rozkĂ„Ä…Ă˘â‚¬Ĺˇadu dla badanych zmiennych iloĂ„Ä…Ă˘â‚¬Ĺźciowych"
-    ) {
-
-
-
-
-
+  .data,
+  ...,
+  IV1 = NULL,
+  IV2 = NULL,
+  standard = c("continental", "english"),
+  cfg_index,
+  model = "gpt-5.4-mini",
+  cache,
+  caption = "Szczegółowe statystyki opisowe oraz sprawdzenie normalności rozkładu dla badanych zmiennych ilościowych"
+) {
   chat_des <- AIinterpreter::build_gpt(
     "stats",
     "descriptives",
@@ -42,36 +35,36 @@ analyze_des_tab <- function(
     model = model,
     language = "pl"
   ) |>
-      AIinterpreter::chat_to_fun_final(
+    AIinterpreter::chat_to_fun_final(
       tidy_table = TRUE,
       reset_turns = TRUE,
       cache = cache
-  )
+    )
 
   chat_des_intro <- AIinterpreter::build_gpt(
     category = "language",
     system_prompt = "descriptives",
     language = "pl",
     model = model
-  )  |>
-    AIinterpreter::chat_to_fun_final(reset_turns = FALSE, tidy_table = T, cache = cache)
-
+  ) |>
+    AIinterpreter::chat_to_fun_final(
+      reset_turns = FALSE,
+      tidy_table = T,
+      cache = cache
+    )
 
   tab_opisowe <- descriptives(
     .data,
     ...,
-    IV1 = {{IV1}},
-    IV2 = {{IV2}}
-    )
+    IV1 = {{ IV1 }},
+    IV2 = {{ IV2 }}
+  )
 
   opisowe_flex <- prepare_flex_function(tab_opisowe, cfg_index)
 
-
   make_tab_opisowe_tibble(tab_opisowe, opisowe_flex, caption) %>%
     descriptives_interpretations(chat_des, chat_des_intro)
-
 }
-
 
 
 #' Analyze Sample Demographics
@@ -94,37 +87,37 @@ analyze_des_tab <- function(
 #'
 #' @export
 analyze_demographics <- function(
-    .data,
-    categorical_vars,
-    continuous_vars,
-    standard = c("continental", "english"),
-    cache,
-    model = "gpt-5.4-mini",
-    caption = "Opis demograficzny prĂ„â€šÄąâ€šby"
-    ) {
-
-
-
+  .data,
+  categorical_vars,
+  continuous_vars,
+  standard = c("continental", "english"),
+  cache,
+  model = "gpt-5.4-mini",
+  caption = "Opis demograficzny próby"
+) {
   demo_cat <- demographics_apa(
     .data,
-    {{categorical_vars}},
+    {{ categorical_vars }},
     spss.lab = TRUE
   )
 
-  markdown_tables <- demographics_tables_to_markdown(.data, {{categorical_vars}}, {{continuous_vars}})
-
+  markdown_tables <- demographics_tables_to_markdown(
+    .data,
+    {{ categorical_vars }},
+    {{ continuous_vars }}
+  )
 
   chat_inter <- AIinterpreter::build_gpt(
     "stats",
     "demographics2",
     ending = switch_standard(standard),
-    language = "pl", 
+    language = "pl",
     model = model
   ) |>
-      AIinterpreter::chat_to_fun_final(
+    AIinterpreter::chat_to_fun_final(
       reset_turns = TRUE,
       cache = cache
-  )
+    )
 
   tibble(
     tab_nr = 1,
@@ -135,19 +128,17 @@ analyze_demographics <- function(
     section = "demographics",
     interpretacja = map_interpret(markdown_tables, chat_inter)
   )
-
-
-
 }
-
 
 
 # helpers -----------------------------------------------------------------
 
-
-demographics_tables_to_markdown <- function(.data, categorical_vars, continuous_vars) {
-  
-  demographics_tables(.data, {{categorical_vars}}, {{continuous_vars}}) |>
+demographics_tables_to_markdown <- function(
+  .data,
+  categorical_vars,
+  continuous_vars
+) {
+  demographics_tables(.data, {{ categorical_vars }}, {{ continuous_vars }}) |>
     purrr::set_names(c("categorical variables", "continuous variables")) |>
     connect_dfs_to_markdown_tables()
 }
@@ -156,12 +147,12 @@ demographics_tables <- function(.data, categorical_vars, continuous_vars) {
   list(
     demographics_apa(
       .data,
-      {{categorical_vars}},
+      {{ categorical_vars }},
       spss.lab = TRUE
     ),
     demo_continuous_raw(
       .data,
-      {{continuous_vars}},
+      {{ continuous_vars }},
       spss.lab = TRUE
     )
   )
@@ -169,18 +160,15 @@ demographics_tables <- function(.data, categorical_vars, continuous_vars) {
 
 
 connect_dfs_to_markdown_tables <- function(.l) {
-  
-  .l |> 
-    purrr::map(df_to_markdown) |> 
-    purrr::imap_chr(~ paste0("### ", .y, "\n\n", .x, "\n\n")) |> 
+  .l |>
+    purrr::map(df_to_markdown) |>
+    purrr::imap_chr(~ paste0("### ", .y, "\n\n", .x, "\n\n")) |>
     paste(collapse = "\n\n")
-
-  
 }
 
 df_to_markdown <- function(df) {
-  knitr::kable(df, format = "markdown") |> 
-    paste(collapse = "\n") 
+  knitr::kable(df, format = "markdown") |>
+    paste(collapse = "\n")
 }
 
 
@@ -206,12 +194,8 @@ descriptives_interpretations <- function(data, chat_des, chat_intro) {
 
 
 prepare_flex_function <- function(tab_opisowe, cfg_index) {
-
-
-
   tab_opisowe %>%
-    row_labs(labs = cfg_index$row_labs, nrow = cfg_index$row_nr)  |>
-    Cabflex2::flex_destab()  |>
+    row_labs(labs = cfg_index$row_labs, nrow = cfg_index$row_nr) |>
+    Cabflex2::flex_destab() |>
     Cabflex2::flex_labs(nrow = cfg_index$row_nr)
 }
-
