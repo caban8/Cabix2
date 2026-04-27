@@ -1,32 +1,28 @@
-
-
 # Helper functions --------------------------------------------------------
 
-
-
 cross_freq <- function(df, x, y, percents = c("rows", "cols")) {
-
-
-  df <- switch(percents[1],
-    cols = rstatix::freq_table(df, {{y}}, {{x}}),
-    rows = rstatix::freq_table(df, {{x}}, {{y}})
+  df <- switch(
+    percents[1],
+    cols = rstatix::freq_table(df, {{ y }}, {{ x }}),
+    rows = rstatix::freq_table(df, {{ x }}, {{ y }})
   )
 
   df <- df %>%
-    tidyr::complete({{x}}, {{y}}, fill = list(n = 0, prop = 0)) %>%
-    dplyr::mutate(n_prop = str_stat(n, prop, percent = T, .round = c(0,1), comma = FALSE)) %>%
+    tidyr::complete({{ x }}, {{ y }}, fill = list(n = 0, prop = 0)) %>%
+    dplyr::mutate(
+      n_prop = str_stat(n, prop, percent = T, .round = c(0, 1), comma = FALSE)
+    ) %>%
     dplyr::select(-c(n, prop)) %>%
-    tidyr::pivot_wider(names_from = {{y}}, values_from = n_prop)
-
+    tidyr::pivot_wider(names_from = {{ y }}, values_from = n_prop)
 
   return(df)
 }
 
 chi_stat <- function(df, x, y, correct = TRUE) {
   chi <- df %>%
-    dplyr::summarise(rstatix::chisq_test({{x}}, {{y}}, correct = correct))
+    dplyr::summarise(rstatix::chisq_test({{ x }}, {{ y }}, correct = correct))
   efekt <- df %>%
-    dplyr::summarise(rstatix::cramer_v({{x}}, {{y}}, correct = correct))
+    dplyr::summarise(rstatix::cramer_v({{ x }}, {{ y }}, correct = correct))
 
   result <- tibble::add_column(chi, efekt)
   names(result)[ncol(result)] <- "Cramer"
@@ -38,9 +34,6 @@ chi_stat <- function(df, x, y, correct = TRUE) {
       Cramer = round(Cramer, 2)
     ) %>%
     dplyr::select(chi, p, Cramer)
-
-
-
 }
 
 chi_stat_helper <- function(df, correct = TRUE) {
@@ -50,8 +43,7 @@ chi_stat_helper <- function(df, correct = TRUE) {
 
 # Obtains frequencies for either of the levels of DV binary variable
 freq_many <- function(df, x, y, yes_row = c(1, 2)) {
-
-  raw <- cross_freq(df, x = {{y}}, y = {{x}}, percents = "cols")
+  raw <- cross_freq(df, x = {{ y }}, y = {{ x }}, percents = "cols")
   stopifnot(nrow(raw) == 2)
   raw %>%
     dplyr::slice(yes_row[1]) %>%
@@ -71,7 +63,6 @@ freq_many_helper2 <- function(df, yes_row = c(1, 2)) {
 
 
 # Chi-square many rows ----------------------------------------------------
-
 
 #' Iterate many independent chi-squares over a common variable
 #'
@@ -98,29 +89,46 @@ freq_many_helper2 <- function(df, yes_row = c(1, 2)) {
 #' @param labels. adds user defined labels
 #'
 #' @export
-chi_many <- function(df, ..., x, yes_row = c(1, 2), correct = TRUE, binary_x = TRUE,
-                     spss.lab = TRUE, labels. = NULL) {
-
+chi_many <- function(
+  df,
+  ...,
+  x,
+  yes_row = c(1, 2),
+  correct = TRUE,
+  binary_x = TRUE,
+  spss.lab = TRUE,
+  labels. = NULL
+) {
   # Select variables for analysis
-  df <- dplyr::select(df, ..., {{x}})
+  x <- rlang::ensym(x)
+  df <- dplyr::select(df, ..., !!x)
 
   # Extract proper value labels
-  val_labs <-  if (binary_x) {value_labels2(df, {{x}})} else {value_labels2(df, names(df)[[1]])}
-
+  val_labs <- if (binary_x) {
+    value_labels2(df, !!x)
+  } else {
+    value_labels2(df, names(df)[[1]])
+  }
 
   # Assign variabe labels
-  labs <- var_labels(df, {{x}}, ..., spss.lab = spss.lab, labels. = labels.)
+  labs <- var_labels(df, !!x, ..., spss.lab = spss.lab, labels. = labels.)
 
   # Calculate chi-square tests and frequencies
   result <- df %>%
-    tidyr::pivot_longer(cols = -{{x}}) %>%
-    dplyr::rename(y = value, x = {{x}}) %>%
+    tidyr::pivot_longer(cols = -!!x) %>%
+    dplyr::rename(y = value, x = !!x) %>%
     tidyr::nest(.by = name) %>%
     {
       if (binary_x) {
-        dplyr::mutate(., purrr::map_df(data, freq_many_helper, yes_row = yes_row))
+        dplyr::mutate(
+          .,
+          purrr::map_df(data, freq_many_helper, yes_row = yes_row)
+        )
       } else {
-        dplyr::mutate(., purrr::map_df(data, freq_many_helper2, yes_row = yes_row))
+        dplyr::mutate(
+          .,
+          purrr::map_df(data, freq_many_helper2, yes_row = yes_row)
+        )
       }
     } %>%
     dplyr::mutate(
@@ -129,19 +137,13 @@ chi_many <- function(df, ..., x, yes_row = c(1, 2), correct = TRUE, binary_x = T
     ) %>%
     dplyr::select(-data)
 
-  result_list <- list(val_labs, result) %>%
-    setNames(c("val_labs", "result"))
+  attr(result, "val_labs") <- val_labs
 
-  return(result_list)
-
+  return(result)
 }
 
 
-
-
 # Chi-square cross table --------------------------------------------------
-
-
 
 #' Compute a cross table with chi-square test
 #'
@@ -162,20 +164,28 @@ chi_many <- function(df, ..., x, yes_row = c(1, 2), correct = TRUE, binary_x = T
 #' @param percents character value defining the calculation of percents. The default is to "rows".
 #'
 #' @export
-chi_table <- function(df, x, y, correct = TRUE, spss.lab = TRUE, labels. = NULL,
-                      spss.val = TRUE, percents = c("rows", "cols")) {
+chi_table <- function(
+  df,
+  x,
+  y,
+  correct = TRUE,
+  spss.lab = TRUE,
+  labels. = NULL,
+  spss.val = TRUE,
+  percents = c("rows", "cols")
+) {
+  x <- rlang::ensym(x)
+  y <- rlang::ensym(y)
+  if (spss.val) {
+    df <- value_labels(df, !!x, !!y)
+  }
 
-  if (spss.val) {df <- value_labels(df, {{x}}, {{y}})}
-
-  labs <- var_labels(df, {{x}}, {{y}}, spss.lab = spss.lab, labels. = labels.)
-  freq <- cross_freq(df, x = {{x}}, y = {{y}}, percents = percents[1])
-  chi <- chi_stat(df, x = {{x}}, y = {{y}}, correct = correct) %>%
-    tibble::add_row(tibble::tibble(chi = rep("", nrow(freq) - 1 )), .before = 1)
-
+  labs <- var_labels(df, !!x, !!y, spss.lab = spss.lab, labels. = labels.)
+  freq <- cross_freq(df, x = !!x, y = !!y, percents = percents[1])
+  chi <- chi_stat(df, x = !!x, y = !!y, correct = correct) %>%
+    tibble::add_row(tibble::tibble(chi = rep("", nrow(freq) - 1)), .before = 1)
 
   result <- tibble::add_column(freq, chi)
-  all <- list(labs, result)
-  names(all) <- c("labs", "result")
-  all
-
+  attr(result, "labs") <- labs
+  return(result)
 }

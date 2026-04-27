@@ -9,6 +9,7 @@ default:
     interpretacje_edited: "dane/interpretacje/opis_analiz_edited.yml"
     reliability: "raporty/inne/reliability.docx"
     markdown: "report_final.Rmd"
+    markdown_out: "raporty/report_final.docx"
     cache: ".cache"
   patterns:
     items: ""

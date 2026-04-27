@@ -259,6 +259,84 @@ switch_bg1_system_prompt <- function(test_args) {
 }
 
 
+#' Analyze Sten Score Distributions and Generate Verification Output
+#'
+#' This function analyzes sten score distributions for selected dependent variables
+#' defined in a report blueprint. For each variable, it computes sten counts (with
+#' optional categorization and chi-square testing), formats results as a flextable,
+#' and generates AI-based interpretations.
+#'
+#' @param report_blueprint A data frame containing analysis blueprint rows.
+#' @param data A data frame used for analysis.
+#' @param cache Cache object passed to the AI interpreter.
+#' @param standard Character string specifying decimal/reporting standard.
+#'   Supported values are `"continental"` and `"english"`.
+#' @param ending Character string appended to the interpretation prompt.
+#' @param model Character string with the model name used for interpretation.
+#' @param analysis_type Character string used to filter blueprint rows
+#'   (`typ_analizy == analysis_type`).
+#' @param categorization Optional categorization specification passed to
+#'   [count_steny()].
+#' @param chisq Logical; if `TRUE`, chi-square statistics are computed in
+#'   [count_steny()].
+#' @param flextable_args Optional list of additional arguments passed to
+#'   [Cabflex2::flex_steny()].
+#'
+#' @return A data frame based on `report_blueprint` filtered by `analysis_type`,
+#'   with added analysis results, flextables, interpretations, and
+#'   `section = "verification"`.
+#' @export
+analyze_steny <- function(
+  report_blueprint,
+  data,
+  cache,
+  standard = c("continental", "english"),
+  ending = "",
+  model = "gpt-5.4-mini",
+  analysis_type,
+  categorization = NULL,
+  chisq = TRUE,
+  flextable_args = NULL
+) {
+  chat_interpret <- AIinterpreter::build_gpt(
+    "stats",
+    system_prompt = "steny",
+    model = model,
+    language = "pl",
+    ending = paste0(
+      switch_standard(standard),
+      ending
+    )
+  ) |>
+    AIinterpreter::chat_to_fun_final(
+      tidy_table = TRUE,
+      reset_turns = TRUE,
+      cache = cache
+    )
+
+  report_blueprint |>
+    filter(typ_analizy == analysis_type) |>
+    mutate(
+      analiza = map(
+        zmienne_zalezne,
+        ~ rlang::exec(
+          count_steny,
+          data,
+          .x,
+          categorization = categorization,
+          chisq = chisq
+        )
+      )
+    ) |>
+    mutate_flex_and_int(
+      Cabflex2::flex_steny,
+      flextable_args,
+      chat_interpret
+    ) |>
+    mutate(section = "verification")
+}
+
+
 # filter ------------------------------------------------------------------
 
 filter_report <- function(data, section_col = section, .filt) {
