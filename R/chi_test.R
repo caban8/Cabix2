@@ -174,8 +174,11 @@ chi_table <- function(
   spss.val = TRUE,
   percents = c("rows", "cols")
 ) {
-  x <- rlang::ensym(x)
-  y <- rlang::ensym(y)
+  x_arg <- substitute(x)
+  y_arg <- substitute(y)
+  x <- if (is.symbol(x_arg)) rlang::ensym(x) else rlang::sym(x)
+  y <- if (is.symbol(y_arg)) rlang::ensym(y) else rlang::sym(y)
+
   if (spss.val) {
     df <- value_labels(df, !!x, !!y)
   }
@@ -187,5 +190,6 @@ chi_table <- function(
 
   result <- tibble::add_column(freq, chi)
   attr(result, "labs") <- labs
+
   return(result)
 }

@@ -178,7 +178,7 @@ var_labels <- function(
 # -------------------------------------------------------------------------
 
 value_labels <- function(df, ...) {
-  dplyr::mutate(df, dplyr::across(c(...), ~ haven::as_factor(.)))
+  dplyr::mutate(df, dplyr::across(c(...), ~ haven::as_factor(.x)))
 }
 
 
