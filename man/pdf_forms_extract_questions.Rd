@@ -15,7 +15,7 @@ pdf_forms_extract_questions(
 
 \item{split_pattern}{A regular expression used to split the string into individual lines. Default is '\n'.}
 
-\item{question_pattern}{A regular expression pattern to identify questions in the string. Default is '^\link{0-9}+\\.'.}
+\item{question_pattern}{A regular expression pattern to identify questions in the string.}
 }
 \value{
 A data frame with columns: \code{question} (string) and \code{answers} (list of strings).

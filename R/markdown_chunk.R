@@ -4,9 +4,9 @@
 #' Appends a formatted code chunk to a `markdown_doc` object, optionally
 #' preceded by a heading.
 #'
-#' @param doc A `markdown_doc` object created by [new_markdown_doc()].
+#' @param doc A `markdown_doc` object created by new_markdown_doc().
 #' @param code Code to include in the chunk. Can be a character vector,
-#'   expression, formula, function, or output from [chunk_code()].
+#'   expression, formula, function, or output from.
 #' @param label Optional chunk label.
 #' @param options A named list of chunk options (e.g. `list(echo = TRUE)`).
 #' @param heading Optional heading to insert before the chunk.

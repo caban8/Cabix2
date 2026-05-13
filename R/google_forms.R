@@ -98,8 +98,8 @@ group_questions <- function(df, question, answers, clean_pattern = "\\s\\*$") {
 #'
 #' @param string The string extracted from the Google Forms PDF.
 #' @param split_pattern The regular expression pattern used for splitting the text into separate elements (questions, answers, descriptions) of the google forms survey. Defaults to '\n\n'.
-#' @param clean_pattern A vector of regular expression patterns used for cleaning unwanted text elements from the extracted string. Defaults to c('http', '^\\d{1,2}\\.\\d{1,2}\\.\\d{1,4}', 'Google', 'Forms$').
-#' @param question_pattern The regular expression pattern used for identifying questions. Defaults to '[*]'.
+#' @param clean_pattern A vector of regular expression patterns used for cleaning unwanted text elements from the extracted string.
+#' @param question_pattern The regular expression pattern used for identifying questions. Defaults to.
 #' @return A tibble with columns indicating the question and corresponding answers.
 #' @export
 pdf_gforms_extract_q <- function(
@@ -187,7 +187,7 @@ pdf_gforms_clean <- function(
 #'
 #' @param string A character vector containing the input string to extract questions from.
 #' @param split_pattern A regular expression used to split the string into individual lines. Default is '\n'.
-#' @param question_pattern A regular expression pattern to identify questions in the string. Default is '^[0-9]+\\.'.
+#' @param question_pattern A regular expression pattern to identify questions in the string.
 #'
 #' @return A data frame with columns: \code{question} (string) and \code{answers} (list of strings).
 #'
