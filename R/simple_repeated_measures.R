@@ -4,24 +4,21 @@ comparison_wg1 <- function(
   id = NULL,
   cols,
   test = c("anova", "kendall"),
-  .labels = NULL
+  dv_label = "Zmienna"
 ) {
   id <- rlang::enquo(id)
   test <- match.arg(test)
 
-  measurement_labels <- get_repeated_measurement_labels(
-    data,
-    {{ cols }},
-    .labels = .labels
-  )
+  measurement_labels <- var_labels(data, {{ cols }})
 
   data <- pivot_longer_with_id(data, id, {{ cols }})
 
-  stats <- within_groups_stats(data) |>
-    purrr::set_names(measurement_labels)
+  stats <- within_groups_stats(data)
   aov_res <- switch_wg1_test(test, data)
 
-  dplyr::bind_cols(stats, aov_res)
+  dplyr::bind_cols(stats, aov_res) |>
+    dplyr::mutate(Zmienna = dv_label, .before = 1) |>
+    add_repeated_measures_attributes(measurement_labels, test)
 }
 
 
@@ -109,25 +106,17 @@ prepare_repeated_measures_row_id <- function(data, id) {
 }
 
 
-get_repeated_measurement_labels <- function(data, cols, .labels = NULL) {
-  if (!is.null(.labels) && .labels == "repeated") {
-    measurement_labels <- var_labels(data, {{ cols }})
-    measurement_labels[seq_along(measurement_labels)] <- paste(
-      "Pomiar",
-      seq_along(measurement_labels)
-    )
-  } else {
-    measurement_labels <- var_labels(data, {{ cols }}, .labels = .labels)
-  }
-
-  measurement_labels
-}
-
-
-within_groups_stats <- function(data) {
-  data |>
+within_groups_stats <- function(data, measurement_labels = NULL) {
+  data <- data |>
     within_groups_stats_raw() |>
     within_groups_stats_reorganize()
+
+  if (!is.null(measurement_labels)) {
+    data <- data |>
+      purrr::set_names(measurement_labels)
+  }
+
+  data
 }
 
 
@@ -147,4 +136,29 @@ within_groups_stats_reorganize <- function(data) {
     ) |>
     dplyr::select(measurement, m_sd) |>
     tidyr::pivot_wider(names_from = measurement, values_from = m_sd)
+}
+
+
+add_repeated_measures_attributes <- function(out, measurement_labels, test) {
+  attr(out, "measurement_labels") <- measurement_labels
+  attr(out, "test") <- test
+
+  out
+}
+
+
+# Deprecated
+
+get_repeated_measurement_labels <- function(data, cols, .labels = NULL) {
+  if (!is.null(.labels) && .labels == "repeated") {
+    measurement_labels <- var_labels(data, {{ cols }})
+    measurement_labels[seq_along(measurement_labels)] <- paste(
+      "Pomiar",
+      seq_along(measurement_labels)
+    )
+  } else {
+    measurement_labels <- var_labels(data, {{ cols }}, .labels = .labels)
+  }
+
+  measurement_labels
 }
