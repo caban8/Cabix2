@@ -4,21 +4,23 @@ comparison_wg1 <- function(
   id = NULL,
   cols,
   test = c("anova", "kendall"),
+  type = c("mean_sd", "median_iqr", "mrank_median"),
   dv_label = "Zmienna"
 ) {
   id <- rlang::enquo(id)
   test <- match.arg(test)
+  type <- type[1]
 
   measurement_labels <- var_labels(data, {{ cols }})
 
   data <- pivot_longer_with_id(data, id, {{ cols }})
 
-  stats <- within_groups_stats(data)
+  stats <- within_groups_stats(data, type = type)
   aov_res <- switch_wg1_test(test, data)
 
   dplyr::bind_cols(stats, aov_res) |>
     dplyr::mutate(Zmienna = dv_label, .before = 1) |>
-    add_repeated_measures_attributes(measurement_labels, test)
+    add_repeated_measures_attributes(measurement_labels, test, type)
 }
 
 
@@ -32,6 +34,7 @@ switch_wg1_test <- function(test, data) {
 }
 
 
+# Anova WG test
 anova_within_test <- function(data) {
   data |>
     anova_within_test_raw() |>
@@ -55,6 +58,7 @@ anova_within_test_raw <- function(data) {
 }
 
 
+# Kendall WG test
 kendall_within_test <- function(data) {
   data |>
     kendall_within_test_raw() |>
@@ -84,6 +88,7 @@ kendall_within_test_raw <- function(data) {
 }
 
 
+# Helper functions for repeated measures stats
 pivot_longer_with_id <- function(data, id = NULL, cols) {
   # id <- rlang::enquo(id)
   data |>
@@ -106,42 +111,15 @@ prepare_repeated_measures_row_id <- function(data, id) {
 }
 
 
-within_groups_stats <- function(data, measurement_labels = NULL) {
-  data <- data |>
-    within_groups_stats_raw() |>
-    within_groups_stats_reorganize()
-
-  if (!is.null(measurement_labels)) {
-    data <- data |>
-      purrr::set_names(measurement_labels)
-  }
-
-  data
-}
-
-
-within_groups_stats_raw <- function(data) {
-  data |>
-    dplyr::group_by(measurement) |>
-    dplyr::summarise(
-      M = mean(value, na.rm = TRUE),
-      SD = sd(value, na.rm = TRUE)
-    )
-}
-
-within_groups_stats_reorganize <- function(data) {
-  data |>
-    dplyr::mutate(
-      m_sd = str_stat(M, SD)
-    ) |>
-    dplyr::select(measurement, m_sd) |>
-    tidyr::pivot_wider(names_from = measurement, values_from = m_sd)
-}
-
-
-add_repeated_measures_attributes <- function(out, measurement_labels, test) {
+add_repeated_measures_attributes <- function(
+  out,
+  measurement_labels,
+  test,
+  type
+) {
   attr(out, "measurement_labels") <- measurement_labels
   attr(out, "test") <- test
+  attr(out, "type") <- type
 
   out
 }
