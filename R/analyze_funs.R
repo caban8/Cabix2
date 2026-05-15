@@ -259,6 +259,49 @@ switch_bg1_system_prompt <- function(test_args) {
 }
 
 
+analyze_comparison_wg1 <- function(
+  report_blueprint,
+  data,
+  cache,
+  standard = c("continental", "english"),
+  ending = "",
+  model = "gpt-5.4-mini",
+  analysis_type = "",
+  test_args = NULL,
+  flextable_args = NULL,
+  plot = FALSE
+) {
+  FAC_analyze(
+    analysis_fun = comparison_wg1,
+    system_prompt = switch_wg1_system_prompt(test_args),
+    flex_fun = Cabflex2::flex_wg1
+  )(
+    report_blueprint,
+    data,
+    cache,
+    standard = standard,
+    ending,
+    model = model,
+    analysis_type,
+    analysis_args = test_args,
+    flextable_args = flextable_args,
+    plot = plot
+  )
+}
+
+switch_wg1_system_prompt <- function(test) {
+  if (purrr::pluck_exists(test_args, "test")) {
+    stopifnot(test_args$test %in% c("anova", "friedman"))
+    switch(
+      test_args$test,
+      anova = "anova_within",
+      friedman = "friedman"
+    )
+  } else {
+    "anova_within"
+  }
+}
+
 #' Analyze Sten Score Distributions and Generate Verification Output
 #'
 #' This function analyzes sten score distributions for selected dependent variables

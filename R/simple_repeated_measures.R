@@ -1,9 +1,43 @@
-# Helpers
+#' Compare repeated measurements within one group
+#'
+#' `comparison_wg1()` carries out a one-factor within-group comparison for a
+#' set of repeated numeric measurements. It calculates descriptive statistics
+#' for each measurement and appends the result of a repeated-measures ANOVA or
+#' Friedman test with friedman's W effect size.
+#'
+#' The selected measurement columns are reshaped to long format before the
+#' analysis. If `id` is not supplied, row numbers are used as subject
+#' identifiers. Variable labels are stored in the `measurement_labels`
+#' attribute and can be used by `Cabflex2::flex_wg1()` when formatting the
+#' result as an APA-like table.
+#'
+#' @param data A data frame containing repeated measurements.
+#' @param id Optional subject identifier. If `NULL`, row numbers are used.
+#' @param cols Repeated-measurement columns to compare, supplied with
+#'   tidy-selection semantics.
+#' @param test Statistical test used for the comparison. Supported values are
+#'   `"anova"` for repeated-measures ANOVA and `"friedman"` for Friedman test
+#'   with friedman's W effect size.
+#' @param type Type of descriptive statistics shown for each measurement.
+#'   Supported values are `"mean_sd"`, `"median_iqr"`, and `"mrank_median"`.
+#' @param dv_label Character scalar used as the dependent-variable label in the
+#'   output. Defaults to `"Zmienna"`.
+#'
+#' @return A tibble with one row containing the dependent-variable label,
+#'   descriptive statistics for each repeated measurement, test statistic,
+#'   p-value, and effect size. The returned object also contains the attributes
+#'   `measurement_labels`, `test`, and `type`.
+#'
+#' @examples
+#' comparison_wg1(iris, cols = c(Sepal.Length, Sepal.Width))
+#' comparison_wg1(iris, cols = c(Sepal.Length, Sepal.Width), test = "friedman")
+#'
+#' @export
 comparison_wg1 <- function(
   data,
   id = NULL,
   cols,
-  test = c("anova", "kendall"),
+  test = c("anova", "friedman"),
   type = c("mean_sd", "median_iqr", "mrank_median"),
   dv_label = "Zmienna"
 ) {
@@ -29,7 +63,7 @@ switch_wg1_test <- function(test, data) {
   switch(
     test,
     anova = anova_within_test(data),
-    kendall = kendall_within_test(data)
+    friedman = friedman_within_test(data)
   )
 }
 
@@ -58,14 +92,14 @@ anova_within_test_raw <- function(data) {
 }
 
 
-# Kendall WG test
-kendall_within_test <- function(data) {
+# friedman WG test
+friedman_within_test <- function(data) {
   data |>
-    kendall_within_test_raw() |>
-    kendall_within_test_process()
+    friedman_within_test_raw() |>
+    friedman_within_test_process()
 }
 
-kendall_within_test_process <- function(data) {
+friedman_within_test_process <- function(data) {
   data |>
     dplyr::mutate(
       chi_df = paste0(round(statistic, 2), " (", df, ")"),
@@ -75,7 +109,7 @@ kendall_within_test_process <- function(data) {
     dplyr::select(chi_df, p, w)
 }
 
-kendall_within_test_raw <- function(data) {
+friedman_within_test_raw <- function(data) {
   test <- data |>
     rstatix::friedman_test(value ~ measurement | row_id)
 
