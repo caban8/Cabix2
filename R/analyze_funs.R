@@ -255,6 +255,34 @@ switch_bg1_system_prompt <- function(test_args) {
 }
 
 
+#' Run multiple within-group comparison tests
+#'
+#' This function performs repeated-measures comparisons for rows defined in a
+#' report blueprint.
+#'
+#'
+#' @param report_blueprint A report blueprint data frame containing rows that
+#'   define analyses to run.
+#' @param data A data frame containing the repeated-measures variables.
+#' @param cache Cache object passed to the AI interpreter.
+#' @param standard Character string specifying decimal/reporting standard.
+#'   Supported values are `"continental"` and `"english"`.
+#' @param ending Character string appended to the interpretation prompt.
+#' @param model Character string with the model name used for interpretation.
+#' @param analysis_type Character string used to filter blueprint rows for this
+#'   analysis.
+#' @param test_args Optional list of arguments passed to [comparison_wg1()].
+#'   If it contains `test`, it must be `"anova"` or `"friedman"` and determines
+#'   the interpretation prompt.
+#' @param flextable_args Optional list of additional arguments passed to
+#'   `Cabflex2::flex_wg1()`.
+#' @param plot Logical; if `TRUE`, include plots in the generated report output.
+#'
+#' @return A data frame based on `report_blueprint` filtered by `analysis_type`,
+#'   with repeated-measures comparison results, flextables, optional plots, and
+#'   AI-generated interpretations.
+#'
+#' @export
 analyze_comparison_wg1 <- function(
   report_blueprint,
   data,
