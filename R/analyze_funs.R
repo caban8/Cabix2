@@ -17,6 +17,7 @@ FAC_analyze <- function(
   analysis_fun,
   system_prompt,
   flex_fun,
+  functional_type = c("2", "1"),
   section = c("verification"),
   wykres_fun = NULL
 ) {
@@ -24,6 +25,7 @@ FAC_analyze <- function(
   force(system_prompt)
   force(flex_fun)
   section <- match.arg(section)
+  functional_type <- match.arg(functional_type)
   force(wykres_fun)
 
   function(
@@ -57,13 +59,7 @@ FAC_analyze <- function(
 
     report_blueprint |>
       filter(typ_analizy == analysis_type) |>
-      mutate(
-        analiza = map2(
-          zmienne_zalezne,
-          zmienne_niezalezne,
-          ~ rlang::exec(analysis_fun, data, .x, .y, !!!analysis_args)
-        )
-      ) |>
+      choose_mutate_fun(functional_type)(data, analysis_fun, analysis_args) |>
       mutate_flex_and_int(flex_fun, flextable_args, chat_interpret_final) |>
       mutate(section = section) |>
       if_mutate_wykres(wykres_fun, plot)
@@ -274,7 +270,8 @@ analyze_comparison_wg1 <- function(
   FAC_analyze(
     analysis_fun = comparison_wg1,
     system_prompt = switch_wg1_system_prompt(test_args),
-    flex_fun = Cabflex2::flex_wg1
+    flex_fun = Cabflex2::flex_wg1,
+    functional_type = "1",
   )(
     report_blueprint,
     data,
@@ -289,7 +286,7 @@ analyze_comparison_wg1 <- function(
   )
 }
 
-switch_wg1_system_prompt <- function(test) {
+switch_wg1_system_prompt <- function(test_args) {
   if (purrr::pluck_exists(test_args, "test")) {
     stopifnot(test_args$test %in% c("anova", "friedman"))
     switch(
@@ -385,6 +382,37 @@ analyze_steny <- function(
 filter_report <- function(data, section_col = section, .filt) {
   data %>%
     dplyr::filter(!!rlang::ensym(section_col) == .filt)
+}
+
+
+# mutate functional versions
+choose_mutate_fun <- function(functional_type) {
+  switch(
+    functional_type,
+    "1" = mutate_map1,
+    "2" = mutate_map2
+  )
+}
+
+mutate_map1 <- function(report_blueprint, data, analysis_fun, analysis_args) {
+  report_blueprint |>
+    mutate(
+      analiza = map(
+        zmienne_zalezne,
+        ~ rlang::exec(analysis_fun, data, .x, !!!analysis_args)
+      )
+    )
+}
+
+mutate_map2 <- function(report_blueprint, data, analysis_fun, analysis_args) {
+  report_blueprint |>
+    mutate(
+      analiza = map2(
+        zmienne_zalezne,
+        zmienne_niezalezne,
+        ~ rlang::exec(analysis_fun, data, .x, .y, !!!analysis_args)
+      )
+    )
 }
 
 

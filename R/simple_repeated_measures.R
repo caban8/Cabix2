@@ -12,9 +12,9 @@
 #' result as an APA-like table.
 #'
 #' @param data A data frame containing repeated measurements.
-#' @param id Optional subject identifier. If `NULL`, row numbers are used.
 #' @param cols Repeated-measurement columns to compare, supplied with
 #'   tidy-selection semantics.
+#' @param id Optional subject identifier. If `NULL`, row numbers are used.
 #' @param test Statistical test used for the comparison. Supported values are
 #'   `"anova"` for repeated-measures ANOVA and `"friedman"` for Friedman test
 #'   with friedman's W effect size.
@@ -35,21 +35,27 @@
 #' @export
 comparison_wg1 <- function(
   data,
-  id = NULL,
   cols,
+  id = NULL,
   test = c("anova", "friedman"),
   type = c("mean_sd", "median_iqr", "mrank_median"),
-  dv_label = "Zmienna"
+  dv_label = "Zmienna",
+  .labels = NULL
 ) {
   id <- rlang::enquo(id)
   test <- match.arg(test)
   type <- type[1]
 
-  measurement_labels <- var_labels(data, {{ cols }})
+  measurement_labels <- get_repeated_measurement_labels(
+    data,
+    {{ cols }},
+    .labels = .labels
+  )
 
   data <- pivot_longer_with_id(data, id, {{ cols }})
 
-  stats <- within_groups_stats(data, type = type)
+  stats <- within_groups_stats(data, type = type) |>
+    purrr::set_names(paste0(measurement_labels))
   aov_res <- switch_wg1_test(test, data)
 
   dplyr::bind_cols(stats, aov_res) |>
