@@ -1,11 +1,6 @@
-
 # Load SPSS markdown setup ------------------------------------------------
 
-
-
 # Libraries ---------------------------------------------------------------
-
-
 
 pacman::p_load(
   car,
@@ -22,18 +17,12 @@ library(flextable)
 library(officer)
 
 # Load my own libraries
-library(Cabix)
 library(Cabix2)
 library(Cabflex)
 library(Cabflex2)
-library(CabStrings)
-
 
 
 # Global options ----------------------------------------------------------
-
-
-
 
 # Set figures and tables centralized options
 knitr::opts_chunk$set(
@@ -52,14 +41,15 @@ knitr::opts_chunk$set(
     italic = FALSE,
     bold = TRUE,
     font.size = 12,
-    font.family = "Times New Roman"),
+    font.family = "Times New Roman"
+  ),
   fig.cap.fp_text = officer::fp_text_lite(
     italic = FALSE,
     bold = TRUE,
     font.size = 12,
-    font.family = "Times New Roman")
+    font.family = "Times New Roman"
+  )
 )
-
 
 
 # Set Polish characters
@@ -67,21 +57,16 @@ Sys.setlocale("LC_ALL", "Polish") # Z jakiegoś powodu to jednak nie działa z p
 Sys.setlocale("LC_CTYPE", "en_US.UTF-8")
 
 
-
 # Set comma as the decimal mark
 options(OutDec = ",")
 set_flextable_defaults(
-  font.family = "Times New Roman",  decimal.mark = ",", big.mark = ""
+  font.family = "Times New Roman",
+  decimal.mark = ",",
+  big.mark = ""
 )
 
 
-
-
-
-
 # ggplot Aesthetics -------------------------------------------------------
-
-
 
 # Set centralized plot styling
 qual_cols <- c(
@@ -90,5 +75,3 @@ qual_cols <- c(
   "#DD5746",
   "#8B322C"
 )
-
-

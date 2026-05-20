@@ -60,10 +60,12 @@ tar_load_everything()
 ```
 
 
-# Missing data 
+# Cleaning
+
+## Missing data 
 
 
-# Zliczanie skal kwestionariusz
+## Zliczanie skal kwestionariusz
 
 
 
