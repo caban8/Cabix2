@@ -17,5 +17,5 @@ git_setup(path, files = NULL)
 This function initializes a new Git repository in a specified directory and adds the specified files and folders to the repository.
 }
 \examples{
-git_setup(path = "~/myproject", files = c("script.R", "data.csv"), folders = "docs")
+git_setup(path = "~/myproject", files = c("script.R", "data.csv"))
 }

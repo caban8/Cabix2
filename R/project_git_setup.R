@@ -1,10 +1,4 @@
-
-
-
 # Git setup functions -----------------------------------------------------
-
-
-
 
 #' Set up a git repository in a specified path with specified files and folders
 #'
@@ -16,22 +10,16 @@
 #' @return NULL
 #' @export
 #' @examples
-#' git_setup(path = "~/myproject", files = c("script.R", "data.csv"), folders = "docs")
+#' git_setup(path = "~/myproject", files = c("script.R", "data.csv"))
 git_setup <- function(path, files = NULL) {
-
   handle_zip(path)
 
   git_files <- add_folder_slash(path)
   git_setup_base(path, files = git_files)
-
 }
 
 
-
-
 git_setup_base <- function(path, files = NULL) {
-
-
   oldwd <- getwd()
   on.exit(setwd(oldwd), add = TRUE)
   setwd(path)
@@ -42,21 +30,17 @@ git_setup_base <- function(path, files = NULL) {
       ".gitignore",
       shQuote(files)
     ),
-    collapse = " ")
+    collapse = " "
+  )
 
   # Setup the git user name and email
   system('git config --global user.name "Caban"', intern = TRUE)
   system('git config --global user.email "caban8@gmail.com"', intern = TRUE)
 
-
-
   # Initialize Git Repository
   message("Initializing Git repository...")
   system("git init")
   message("Git repository initialized.")
-
-
-
 
   # Step 4: Add files to Git
   message("Adding files to Git...")
@@ -69,21 +53,12 @@ git_setup_base <- function(path, files = NULL) {
   system(paste("git commit -m", shQuote(commit_message)))
 
   message("Git repository setup complete!")
-
 }
-
 
 
 # helper functions --------------------------------------------------------
 
-
-
-
-
-
-
-handle_zip <- function(path)  {
+handle_zip <- function(path) {
   unzip(file.path(path, "setup_files.zip"), overwrite = T, exdir = path)
   file.remove(file.path(path, "setup_files.zip"))
 }
-
