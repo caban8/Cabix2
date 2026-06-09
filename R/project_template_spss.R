@@ -32,6 +32,7 @@ folders_spss <- function() {
   c(
     "tests/testthat",
     "docs",
+    "examples",
     "materials",
     paste0("R/", c("fun", "general")),
     paste0("raporty/", c("wykresy", "tabele", "inne")),

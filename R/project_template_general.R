@@ -29,12 +29,17 @@ make_project_template <- function(path) {
 
 folders_standard_project <- function() {
   c(
-    "data",
+    paste(
+      "data/",
+      c("raw", "processed", "codebooks", "interpretations"),
+      sep = ""
+    ),
+    "references",
+    paste("results/", c("figures", "tables", "other"), sep = ""),
+    "docs",
     "R/fun",
     "tests/testthat",
     "materials",
-    "results/figures",
-    "results/tables",
     "notebooks"
   )
 }
