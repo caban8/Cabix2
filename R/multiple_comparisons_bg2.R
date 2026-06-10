@@ -581,7 +581,7 @@ aov2_mixed <- function(
 }
 
 
-aov2_mixed_results_to_markdown <- function(results) {
+aov2_results_to_markdown <- function(results) {
   results %>%
     map(Cabix2:::df_to_markdown) %>%
     imap(~ paste("###", .y, "\n", .x)) %>%
