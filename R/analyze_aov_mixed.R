@@ -73,8 +73,9 @@ analyze_aov_mixed <- function(
         analiza,
         ~ rlang::exec(Cabflex2::flex_mixed_aov, .x, !!!flextable_args)
       ),
+      analiza = map_chr(analiza, aov2_results_to_markdown),
       interpretacja = map_interpret(
-        aov2_results_to_markdown(analiza),
+        analiza,
         chat_interpret_final
       ),
       section = "verification"
