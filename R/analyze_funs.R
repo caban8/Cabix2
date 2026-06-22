@@ -18,13 +18,11 @@ FAC_analyze <- function(
   system_prompt,
   flex_fun,
   functional_type = c("2", "1"),
-  section = c("verification"),
   wykres_fun = NULL
 ) {
   force(analysis_fun)
   force(system_prompt)
   force(flex_fun)
-  section <- match.arg(section)
   functional_type <- match.arg(functional_type)
   force(wykres_fun)
 
@@ -38,8 +36,10 @@ FAC_analyze <- function(
     analysis_type,
     analysis_args = NULL,
     flextable_args = NULL,
+    section = c("verification", "descriptives"),
     plot = FALSE
   ) {
+    section <- match.arg(section)
     chat_interpret <- AIinterpreter::build_gpt(
       "stats",
       system_prompt = system_prompt,
@@ -116,12 +116,13 @@ analyze_cor <- function(
   analysis_type = "cor",
   cor_args = NULL,
   flextable_args = NULL,
+  section = c("verification", "descriptives"),
   plot = FALSE
 ) {
   if (purrr::pluck_exists(cor_args, "method")) {
     ending <- paste_correlation_ending(cor_args$method, ending)
   }
-
+  section <- match.arg(section)
   FAC_analyze(
     analysis_fun = cor_tab,
     system_prompt = "correlation",
@@ -136,6 +137,7 @@ analyze_cor <- function(
     analysis_type,
     analysis_args = cor_args,
     flextable_args = flextable_args,
+    section = section,
     plot = plot
   )
 }
@@ -172,8 +174,10 @@ analyze_regression <- function(
   analysis_type = "reg",
   reg_args = NULL,
   flextable_args = NULL,
+  section = c("verification", "descriptives"),
   plot = FALSE
 ) {
+  section <- match.arg(section)
   FAC_analyze(
     analysis_fun = reg_tab_cabix_wrap,
     system_prompt = "regression",
@@ -188,6 +192,7 @@ analyze_regression <- function(
     analysis_type,
     analysis_args = reg_args,
     flextable_args = flextable_args,
+    section = section,
     plot = plot
   )
 }
@@ -224,8 +229,10 @@ analyze_comparison_bg1 <- function(
   analysis_type = "",
   test_args = NULL,
   flextable_args = NULL,
+  section = c("verification", "descriptives"),
   plot = FALSE
 ) {
+  section <- match.arg(section)
   FAC_analyze(
     analysis_fun = comparison_bg1,
     system_prompt = switch_bg1_system_prompt(test_args),
@@ -240,6 +247,7 @@ analyze_comparison_bg1 <- function(
     analysis_type,
     analysis_args = test_args,
     flextable_args = flextable_args,
+    section = section,
     plot = plot
   )
 }
@@ -293,8 +301,10 @@ analyze_comparison_wg1 <- function(
   analysis_type = "",
   test_args = NULL,
   flextable_args = NULL,
+  section = c("verification", "descriptives"),
   plot = FALSE
 ) {
+  section <- match.arg(section)
   FAC_analyze(
     analysis_fun = comparison_wg1,
     system_prompt = switch_wg1_system_prompt(test_args),
@@ -310,6 +320,7 @@ analyze_comparison_wg1 <- function(
     analysis_type,
     analysis_args = test_args,
     flextable_args = flextable_args,
+    section = section,
     plot = plot
   )
 }
@@ -457,7 +468,7 @@ switch_standard <- function(standard = c("continental", "english")) {
     paste("whenever reporting values with decimals.")
 }
 
-standard = c("continental", "english")
+standard <- c("continental", "english")
 
 map_interpret <- function(analiza, chat_fun) {
   map_chr(analiza, chat_fun)

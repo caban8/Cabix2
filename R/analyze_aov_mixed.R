@@ -66,18 +66,19 @@ analyze_aov_mixed <- function(
   )
 
   report_blueprint |>
-    filter(typ_analizy == analysis_type) |>
+    dplyr::filter(typ_analizy == analysis_type) |>
     choose_mutate_fun(2)(data, aov2_mixed, analysis_args) |>
-    mutate(
+    dplyr::mutate(
       flextable = map(
         analiza,
         ~ rlang::exec(Cabflex2::flex_mixed_aov, .x, !!!flextable_args)
       ),
-      analiza = map_chr(analiza, aov2_results_to_markdown),
+      analiza_collapsed_markdown = map_chr(analiza, aov2_results_to_markdown),
       interpretacja = map_interpret(
-        analiza,
+        analiza_collapsed_markdown,
         chat_interpret_final
       ),
       section = "verification"
-    )
+    ) |>
+    dplyr::select(-analiza_collapsed_markdown)
 }
