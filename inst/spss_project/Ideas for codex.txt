@@ -1,0 +1,223 @@
+For repeated empirical-analysis projects in **R + `{targets}`**, I’d organize the reusable docs like this:
+
+```txt
+AGENTS.md
+docs/
+  project-blueprint.md
+  targets-pipeline-patterns.md
+  statistical-analysis-patterns.md
+  client-customization-points.md
+  decision-rules.md
+  reproducibility-checklist.md
+examples/
+  example-target.R
+  example-model-module.R
+  example-report.qmd
+R/
+  functions/
+  modules/
+  utils/
+_targets.R
+```
+
+## `project-blueprint.md`
+
+Purpose: explain the standard lifecycle of every analysis.
+
+Include:
+
+```md
+# Empirical Analysis Blueprint
+
+Every project follows this flow:
+
+1. Raw data ingestion
+2. Data validation
+3. Cleaning and harmonization
+4. Feature construction
+5. Exploratory analysis
+6. Main empirical analysis
+7. Robustness checks
+8. Tables and figures
+9. Report generation
+10. Reproducibility checks
+
+The `{targets}` pipeline is the source of truth.
+Do not run analysis manually outside the pipeline unless debugging.
+```
+
+This teaches Codex the overall “shape” of the project.
+
+## `targets-pipeline-patterns.md`
+
+Purpose: tell Codex how to structure `_targets.R`.
+
+Include:
+
+```md
+# Targets Pipeline Patterns
+
+Rules:
+
+- `_targets.R` defines orchestration only.
+- Analytical logic must live in `R/` functions.
+- Each target should do one conceptual step.
+- Prefer explicit dependencies over hidden global state.
+- Never read raw data inside modeling functions.
+- Never write output files from inside intermediate targets unless they are final artifacts.
+- Use meaningful target names:
+  - `raw_survey_data`
+  - `clean_panel_data`
+  - `model_baseline`
+  - `table_regression_main`
+  - `figure_effect_sizes`
+  - `report_html`
+```
+
+Also include a canonical structure:
+
+```r
+list(
+  tar_target(raw_data, read_raw_data(path_raw)),
+  tar_target(clean_data, clean_data(raw_data)),
+  tar_target(analysis_data, construct_features(clean_data)),
+  tar_target(model_main, estimate_main_model(analysis_data)),
+  tar_target(table_main, make_regression_table(model_main)),
+  tar_render(report, "reports/main-report.qmd")
+)
+```
+
+## `statistical-analysis-patterns.md`
+
+Purpose: prevent Codex from inventing sloppy analysis logic.
+
+Include:
+
+```md
+# Statistical Analysis Patterns
+
+Before estimating models:
+
+- Define the unit of observation.
+- Identify outcome variables.
+- Identify treatment/exposure/key predictors.
+- Identify controls.
+- Identify clustering level.
+- Identify fixed effects.
+- State the estimand.
+
+Regression rules:
+
+- Baseline model first.
+- Add controls incrementally.
+- Add fixed effects explicitly.
+- Cluster standard errors where theoretically appropriate.
+- Never silently drop missing values without reporting counts.
+
+Every model function should return:
+- model object
+- estimation sample size
+- variable definitions
+- any warnings or exclusions
+```
+
+This is very valuable for empirical work because Codex otherwise may produce “technically valid R” but weak methodology.
+
+## `client-customization-points.md`
+
+Purpose: define what changes between clients/projects.
+
+```md
+# Client Customization Points
+
+Expected to vary:
+
+- Raw data source paths
+- Variable names
+- Business/domain definitions
+- Inclusion/exclusion criteria
+- Outcome variables
+- Treatment/exposure definitions
+- Control variables
+- Fixed effects
+- Clustering level
+- Report branding
+- Output table/figure formats
+
+Should usually not vary:
+
+- Pipeline structure
+- Folder layout
+- Naming conventions
+- Reproducibility checks
+- Validation workflow
+```
+
+This teaches Codex: “customize inputs and assumptions, not the whole system.”
+
+## `decision-rules.md`
+
+Purpose: encode your analytical judgment.
+
+```md
+# Decision Rules
+
+When modifying an analysis:
+
+1. Prefer adding a new target over mutating an existing one if the analytical step is conceptually distinct.
+2. Prefer pure R functions over code embedded directly in `_targets.R`.
+3. Prefer explicit data validation before modeling.
+4. Prefer readable empirical code over clever abstractions.
+5. Never change the estimand silently.
+6. If changing sample restrictions, update the sample-flow table.
+7. If changing model specification, update the robustness checklist.
+```
+
+## `reproducibility-checklist.md`
+
+Purpose: make Codex verify the project before finalizing.
+
+```md
+# Reproducibility Checklist
+
+Before final answer:
+
+- Run `tar_manifest()`
+- Run `tar_visnetwork()` if pipeline structure changed
+- Run `tar_make()`
+- Confirm all final tables and figures are produced
+- Confirm report renders
+- Confirm no raw data is modified
+- Confirm paths are project-relative
+- Confirm random seeds are fixed
+- Confirm package dependencies are declared
+```
+
+## `AGENTS.md`
+
+This is the controller file.
+
+```md
+# Codex Instructions
+
+This is an empirical data analysis project in R using `{targets}`.
+
+Before editing:
+
+1. Read `docs/project-blueprint.md`
+2. Read `docs/targets-pipeline-patterns.md`
+3. Read `docs/statistical-analysis-patterns.md`
+4. Read `docs/client-customization-points.md`
+5. Read `docs/decision-rules.md`
+
+Rules:
+
+- Treat `_targets.R` as orchestration only.
+- Put reusable logic in `R/`.
+- Preserve reproducibility.
+- Do not change estimands, sample definitions, or model specifications without making the change explicit.
+- When unsure, inspect existing targets and mirror their pattern.
+- After changes, suggest the exact `{targets}` commands to validate the pipeline.
+```
+
+The key idea: for this kind of work, Codex should not just know **how to code in R**. It should know how to protect the **empirical design**, the **pipeline graph**, and the **reproducibility contract**.

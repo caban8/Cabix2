@@ -1,0 +1,11 @@
+main:
+  store: _targets
+
+development:
+  store: _targets/_targets_dev
+
+testing:
+  store: _targets/_targets_test
+
+production:
+  store: _targets/_targets_prod
